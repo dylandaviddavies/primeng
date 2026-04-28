@@ -9,7 +9,8 @@ import { DomHandler } from 'primeng/dom';
     selector: '[pAutoFocus]',
     host: {
         class: 'p-element'
-    }
+    },
+    standalone: false
 })
 export class AutoFocus {
     /**

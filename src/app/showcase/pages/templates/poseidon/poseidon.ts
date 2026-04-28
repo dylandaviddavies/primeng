@@ -11,7 +11,6 @@ import { PoseidonSeparator } from './poseidonseparator';
 import { PoseidonLogo } from './poseidonlogo';
 
 @Component({
-    standalone: true,
     selector: 'poseidon-page',
     imports: [
         TemplateHeroModule,

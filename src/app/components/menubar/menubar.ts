@@ -206,7 +206,8 @@ export class MenubarService {
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'p-element'
-    }
+    },
+    standalone: false
 })
 export class MenubarSub implements OnInit, OnDestroy {
     @Input() items: any[];
@@ -413,7 +414,8 @@ export class MenubarSub implements OnInit, OnDestroy {
     host: {
         class: 'p-element'
     },
-    providers: [MenubarService]
+    providers: [MenubarService],
+    standalone: false
 })
 export class Menubar implements AfterContentInit, OnDestroy, OnInit {
     /**

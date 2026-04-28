@@ -38,7 +38,8 @@ import { Nullable, VoidListener } from 'primeng/ts-helpers';
 import { UniqueComponentId, ZIndexUtils } from 'primeng/utils';
 
 @Pipe({
-    name: 'safeHtml'
+    name: 'safeHtml',
+    standalone: false
 })
 export class SafeHtmlPipe implements PipeTransform {
     constructor(@Inject(PLATFORM_ID) private readonly platformId: any, private readonly sanitizer: DomSanitizer) {}
@@ -113,7 +114,8 @@ export class SafeHtmlPipe implements PipeTransform {
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'p-element'
-    }
+    },
+    standalone: false
 })
 export class MenuItemContent {
     @Input('pMenuItemContent') item: MenuItem | undefined;
@@ -245,7 +247,8 @@ export class MenuItemContent {
     styleUrls: ['./menu.css'],
     host: {
         class: 'p-element'
-    }
+    },
+    standalone: false
 })
 export class Menu implements OnDestroy {
     /**

@@ -3,19 +3,22 @@ import { Component, Directive, Input, NgModule, TemplateRef } from '@angular/cor
 
 @Component({
     selector: 'p-header',
-    template: '<ng-content></ng-content>'
+    template: '<ng-content></ng-content>',
+    standalone: false
 })
 export class Header {}
 
 @Component({
     selector: 'p-footer',
-    template: '<ng-content></ng-content>'
+    template: '<ng-content></ng-content>',
+    standalone: false
 })
 export class Footer {}
 
 @Directive({
     selector: '[pTemplate]',
-    host: {}
+    host: {},
+    standalone: false
 })
 export class PrimeTemplate {
     @Input() type: string | undefined;

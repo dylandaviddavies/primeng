@@ -363,7 +363,8 @@ import {
     styleUrls: ['./picklist.css'],
     host: {
         class: 'p-element'
-    }
+    },
+    standalone: false
 })
 export class PickList implements AfterViewChecked, AfterContentInit {
     /**

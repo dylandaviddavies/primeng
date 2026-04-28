@@ -27,7 +27,8 @@ import { TimesIcon } from 'primeng/icons/times';
         <button type="button" pButton (click)="clearWithService()" label="Use Service"></button>
         <button type="button" pButton (click)="clearWithServiceAndKey()" label="Use Service"></button>
         <button type="button" pButton (click)="showClosableFalse()" label="Not Closable"></button>
-    `
+    `,
+    standalone: false
 })
 class TestMessagesComponent {
     msgs: Message[] = [];

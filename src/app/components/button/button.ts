@@ -44,7 +44,8 @@ const INTERNAL_BUTTON_CLASSES = {
     selector: '[pButton]',
     host: {
         class: 'p-element'
-    }
+    },
+    standalone: false
 })
 export class ButtonDirective implements AfterViewInit, OnDestroy {
     /**
@@ -368,7 +369,8 @@ export class ButtonDirective implements AfterViewInit, OnDestroy {
     host: {
         class: 'p-element',
         '[class.p-disabled]': 'disabled' || 'loading'
-    }
+    },
+    standalone: false
 })
 export class Button implements AfterContentInit {
     /**

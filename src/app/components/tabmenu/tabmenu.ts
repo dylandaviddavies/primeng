@@ -129,7 +129,8 @@ import { ObjectUtils } from 'primeng/utils';
     styleUrls: ['./tabmenu.css'],
     host: {
         class: 'p-element'
-    }
+    },
+    standalone: false
 })
 export class TabMenu implements AfterContentInit, AfterViewInit, AfterViewChecked, OnDestroy {
     /**

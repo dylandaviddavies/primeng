@@ -195,7 +195,8 @@ import { ObjectUtils, UniqueComponentId } from 'primeng/utils';
     encapsulation: ViewEncapsulation.None,
     host: {
         class: 'p-element'
-    }
+    },
+    standalone: false
 })
 export class MegaMenuSub {
     @Input() id: string | undefined;
@@ -410,7 +411,8 @@ export class MegaMenuSub {
     styleUrls: ['./megamenu.css'],
     host: {
         class: 'p-element'
-    }
+    },
+    standalone: false
 })
 export class MegaMenu implements AfterContentInit, OnDestroy, OnInit {
     /**

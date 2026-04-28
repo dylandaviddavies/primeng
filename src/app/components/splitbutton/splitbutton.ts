@@ -97,7 +97,8 @@ type SplitButtonIconPosition = 'left' | 'right';
     styleUrls: ['./splitbutton.css'],
     host: {
         class: 'p-element'
-    }
+    },
+    standalone: false
 })
 export class SplitButton {
     /**
