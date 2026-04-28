@@ -1,4 +1,4 @@
-import { InjectOptions, Injector, ProviderToken, InjectFlags } from '@angular/core';
+import { InjectOptions, Injector, ProviderToken } from '@angular/core';
 
 export class DynamicDialogInjector implements Injector {
     constructor(private _parentInjector: Injector, private _additionalTokens: WeakMap<any, any>) {}
