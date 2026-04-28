@@ -39,19 +39,24 @@ import { DataViewLayoutChangeEvent, DataViewLazyLoadEvent, DataViewPageEvent, Da
     selector: 'p-dataView',
     template: `
         <div [ngClass]="{ 'p-dataview p-component': true, 'p-dataview-list': layout === 'list', 'p-dataview-grid': layout === 'grid' }" [ngStyle]="style" [class]="styleClass">
-            <div class="p-dataview-loading" *ngIf="loading">
+            @if (loading) {
+            <div class="p-dataview-loading">
                 <div class="p-dataview-loading-overlay p-component-overlay">
-                    <i *ngIf="loadingIcon" [class]="'p-dataview-loading-icon pi-spin ' + loadingIcon"></i>
-                    <ng-container *ngIf="!loadingIcon">
-                        <SpinnerIcon *ngIf="!loadingIconTemplate" [spin]="true" [styleClass]="'p-dataview-loading-icon'" />
-                        <ng-template *ngTemplateOutlet="loadingIconTemplate"></ng-template>
-                    </ng-container>
+                    @if (loadingIcon) {
+                    <i [class]="'p-dataview-loading-icon pi-spin ' + loadingIcon"></i>
+                    } @if (!loadingIcon) { @if (!loadingIconTemplate) {
+                    <SpinnerIcon [spin]="true" [styleClass]="'p-dataview-loading-icon'" />
+                    }
+                    <ng-template *ngTemplateOutlet="loadingIconTemplate"></ng-template>
+                    }
                 </div>
             </div>
-            <div class="p-dataview-header" *ngIf="header || headerTemplate">
+            } @if (header || headerTemplate) {
+            <div class="p-dataview-header">
                 <ng-content select="p-header"></ng-content>
                 <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
             </div>
+            } @if (paginator && (paginatorPosition === 'top' || paginatorPosition == 'both')) {
             <p-paginator
                 [rows]="rows"
                 [first]="first"
@@ -61,7 +66,6 @@ import { DataViewLayoutChangeEvent, DataViewLazyLoadEvent, DataViewPageEvent, Da
                 (onPageChange)="paginate($event)"
                 styleClass="p-paginator-top"
                 [rowsPerPageOptions]="rowsPerPageOptions"
-                *ngIf="paginator && (paginatorPosition === 'top' || paginatorPosition == 'both')"
                 [dropdownAppendTo]="paginatorDropdownAppendTo"
                 [dropdownScrollHeight]="paginatorDropdownScrollHeight"
                 [templateLeft]="paginatorLeftTemplate"
@@ -74,19 +78,25 @@ import { DataViewLayoutChangeEvent, DataViewLazyLoadEvent, DataViewPageEvent, Da
                 [showPageLinks]="showPageLinks"
                 [styleClass]="paginatorStyleClass"
             ></p-paginator>
+            }
 
             <div class="p-dataview-content">
                 <ng-container *ngTemplateOutlet="itemTemplate; context: { $implicit: paginator ? (filteredValue || value | slice : (lazy ? 0 : first) : (lazy ? 0 : first) + rows) : filteredValue || value }"></ng-container>
 
-                <div *ngIf="isEmpty() && !loading">
+                @if (isEmpty() && !loading) {
+                <div>
                     <div class="p-dataview-emptymessage">
-                        <ng-container *ngIf="!emptyMessageTemplate; else empty">
-                            {{ emptyMessageLabel }}
-                        </ng-container>
+                        @if (!emptyMessageTemplate) {
+                        {{ emptyMessageLabel }}
+                        } @else {
+                        <ng-template [ngTemplateOutlet]="empty"></ng-template>
+                        }
                         <ng-container #empty *ngTemplateOutlet="emptyMessageTemplate"></ng-container>
                     </div>
                 </div>
+                }
             </div>
+            @if (paginator && (paginatorPosition === 'bottom' || paginatorPosition == 'both')) {
             <p-paginator
                 [rows]="rows"
                 [first]="first"
@@ -96,7 +106,6 @@ import { DataViewLayoutChangeEvent, DataViewLazyLoadEvent, DataViewPageEvent, Da
                 (onPageChange)="paginate($event)"
                 styleClass="p-paginator-bottom"
                 [rowsPerPageOptions]="rowsPerPageOptions"
-                *ngIf="paginator && (paginatorPosition === 'bottom' || paginatorPosition == 'both')"
                 [dropdownAppendTo]="paginatorDropdownAppendTo"
                 [dropdownScrollHeight]="paginatorDropdownScrollHeight"
                 [templateLeft]="paginatorLeftTemplate"
@@ -109,10 +118,12 @@ import { DataViewLayoutChangeEvent, DataViewLazyLoadEvent, DataViewPageEvent, Da
                 [showPageLinks]="showPageLinks"
                 [styleClass]="paginatorStyleClass"
             ></p-paginator>
-            <div class="p-dataview-footer" *ngIf="footer || footerTemplate">
+            } @if (footer || footerTemplate) {
+            <div class="p-dataview-footer">
                 <ng-content select="p-footer"></ng-content>
                 <ng-container *ngTemplateOutlet="footerTemplate"></ng-container>
             </div>
+            }
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
@@ -569,10 +580,14 @@ export class DataView implements OnInit, AfterContentInit, OnDestroy, BlockableU
     template: `
         <div [ngClass]="'p-dataview-layout-options p-selectbutton p-buttonset'" [ngStyle]="style" [class]="styleClass">
             <button type="button" class="p-button p-button-icon-only" [ngClass]="{ 'p-highlight': dv.layout === 'list' }" (click)="changeLayout($event, 'list')" (keydown.enter)="changeLayout($event, 'list')">
-                <BarsIcon *ngIf="!dv.listIconTemplate" />
+                @if (!dv.listIconTemplate) {
+                <BarsIcon />
+                }
                 <ng-template *ngTemplateOutlet="dv.listIconTemplate"></ng-template></button
             ><button type="button" class="p-button p-button-icon-only" [ngClass]="{ 'p-highlight': dv.layout === 'grid' }" (click)="changeLayout($event, 'grid')" (keydown.enter)="changeLayout($event, 'grid')">
-                <ThLargeIcon *ngIf="!dv.gridIconTemplate" />
+                @if (!dv.gridIconTemplate) {
+                <ThLargeIcon />
+                }
                 <ng-template *ngTemplateOutlet="dv.gridIconTemplate"></ng-template>
             </button>
         </div>

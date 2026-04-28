@@ -1,27 +1,27 @@
 import { animate, animation, AnimationEvent, style, transition, trigger, useAnimation } from '@angular/animations';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
-  AfterContentInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ContentChildren,
-  ElementRef,
-  EventEmitter,
-  forwardRef,
-  Inject,
-  Input,
-  NgModule,
-  NgZone,
-  OnDestroy,
-  Output,
-  PLATFORM_ID,
-  QueryList,
-  Renderer2,
-  TemplateRef,
-  ViewChild,
-  ViewEncapsulation,
-  DOCUMENT
+    AfterContentInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ContentChildren,
+    ElementRef,
+    EventEmitter,
+    forwardRef,
+    Inject,
+    Input,
+    NgModule,
+    NgZone,
+    OnDestroy,
+    Output,
+    PLATFORM_ID,
+    QueryList,
+    Renderer2,
+    TemplateRef,
+    ViewChild,
+    ViewEncapsulation,
+    DOCUMENT
 } from '@angular/core';
 import { NG_VALUE_ACCESSOR } from '@angular/forms';
 import { OverlayModeType, OverlayOnBeforeHideEvent, OverlayOnBeforeShowEvent, OverlayOnHideEvent, OverlayOnShowEvent, OverlayOptions, OverlayService, PrimeNGConfig, PrimeTemplate, ResponsiveOverlayOptions, SharedModule } from 'primeng/api';
@@ -45,8 +45,8 @@ const hideOverlayContentAnimation = animation([animate('{{hideTransitionParams}}
 @Component({
     selector: 'p-overlay',
     template: `
+        @if (modalVisible) {
         <div
-            *ngIf="modalVisible"
             #overlay
             [ngStyle]="style"
             [class]="styleClass"
@@ -69,8 +69,8 @@ const hideOverlayContentAnimation = animation([animate('{{hideTransitionParams}}
             }"
             (click)="onOverlayClick()"
         >
+            @if (visible) {
             <div
-                *ngIf="visible"
                 #content
                 [ngStyle]="contentStyle"
                 [class]="contentStyleClass"
@@ -83,7 +83,9 @@ const hideOverlayContentAnimation = animation([animate('{{hideTransitionParams}}
                 <ng-content></ng-content>
                 <ng-container *ngTemplateOutlet="contentTemplate; context: { $implicit: { mode: overlayMode } }"></ng-container>
             </div>
+            }
         </div>
+        }
     `,
     animations: [trigger('overlayContentAnimation', [transition(':enter', [useAnimation(showOverlayContentAnimation)]), transition(':leave', [useAnimation(hideOverlayContentAnimation)])])],
     changeDetection: ChangeDetectionStrategy.OnPush,

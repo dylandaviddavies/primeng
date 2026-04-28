@@ -8,26 +8,34 @@ import { Doc } from 'src/app/showcase/domain/doc';
 
 @Component({
     selector: 'app-docsection-nav',
-    template: ` <ul #nav *ngIf="docs && docs.length" class="doc-section-nav" [ngClass]="{ hidden: visible }">
-        <li *ngFor="let doc of docs; let i = index" class="navbar-item" [ngClass]="{ 'active-navbar-item': activeId === doc.id }">
-            <ng-container *ngIf="!doc.isInterface">
+    template: ` @if (docs && docs.length) {
+        <ul #nav class="doc-section-nav" [ngClass]="{ hidden: visible }">
+            @for (doc of docs; track doc; let i = $index) {
+            <li class="navbar-item" [ngClass]="{ 'active-navbar-item': activeId === doc.id }">
+                @if (!doc.isInterface) {
                 <div class="navbar-item-content">
                     <button class="px-link" (click)="onButtonClick($event, doc)">{{ doc.label }}</button>
                 </div>
                 <ng-container>
-                    <ul *ngIf="doc.children">
-                        <li *ngFor="let child of doc.children; let isFirst = first" class="navbar-item" [ngClass]="{ 'active-navbar-item': activeId === child.id }">
+                    @if (doc.children) {
+                    <ul>
+                        @for (child of doc.children; track child; let isFirst = $first) {
+                        <li class="navbar-item" [ngClass]="{ 'active-navbar-item': activeId === child.id }">
                             <div class="navbar-item-content">
                                 <button class="px-link" (click)="onButtonClick($event, child)">
                                     {{ child.label }}
                                 </button>
                             </div>
                         </li>
+                        }
                     </ul>
+                    }
                 </ng-container>
-            </ng-container>
-        </li>
-    </ul>`,
+                }
+            </li>
+            }
+        </ul>
+        }`,
     standalone: false
 })
 export class AppDocSectionNavComponent implements OnInit, OnDestroy {

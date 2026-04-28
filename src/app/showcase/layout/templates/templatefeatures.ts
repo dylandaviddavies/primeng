@@ -7,42 +7,41 @@ import { AppConfigService } from '../../service/appconfigservice';
     selector: 'template-features',
     template: `
         <div class="template-features">
-            <ng-container *ngIf="displayType === 'horizontal'; else vertical">
-                <div class="template-features-horizontal-wrapper">
-                    <div class="template-features-horizontal">
-                        <ng-container *ngFor="let feature of featuresData">
-                            <div class="template-features-horizontal-card">
-                                <div class="template-features-horizontal-card-top">
-                                    <img [src]="isDarkMode ? feature.darkSrc || feature.src : feature.src" [alt]="feature.title" />
-                                </div>
-                                <div class="template-features-horizontal-card-bottom">
-                                    <h5 class="template-features-horizontal-card-bottom-title">{{ feature.title }}</h5>
-                                    <p class="template-features-horizontal-card-bottom-description">{{ feature.description }}</p>
-                                </div>
-                            </div>
-                        </ng-container>
+            @if (displayType === 'horizontal') {
+            <div class="template-features-horizontal-wrapper">
+                <div class="template-features-horizontal">
+                    @for (feature of featuresData; track feature) {
+                    <div class="template-features-horizontal-card">
+                        <div class="template-features-horizontal-card-top">
+                            <img [src]="isDarkMode ? feature.darkSrc || feature.src : feature.src" [alt]="feature.title" />
+                        </div>
+                        <div class="template-features-horizontal-card-bottom">
+                            <h5 class="template-features-horizontal-card-bottom-title">{{ feature.title }}</h5>
+                            <p class="template-features-horizontal-card-bottom-description">{{ feature.description }}</p>
+                        </div>
                     </div>
+                    }
                 </div>
-            </ng-container>
-            <ng-template #vertical>
-                <div class="template-features-vertical-wrapper">
-                    <div class="template-features-vertical">
-                        <ng-container *ngFor="let _ of [].constructor(2); let i = index">
-                            <div class="template-features-vertical-col">
-                                <ng-container *ngFor="let data of i === 0 ? firstColumnData : secondColumnData; let j = index">
-                                    <div class="template-features-vertical-card">
-                                        <div class="template-features-vertical-card-image">
-                                            <img [src]="isDarkMode ? data.darkSrc || data.src : data.src" [alt]="data.title" />
-                                        </div>
-                                        <h2>{{ data.title }}</h2>
-                                        <p>{{ data.description }}</p>
-                                    </div>
-                                </ng-container>
+            </div>
+            } @else {
+            <div class="template-features-vertical-wrapper">
+                <div class="template-features-vertical">
+                    @for (_ of [].constructor(2); track _; let i = $index) {
+                    <div class="template-features-vertical-col">
+                        @for (data of i === 0 ? firstColumnData : secondColumnData; track data; let j = $index) {
+                        <div class="template-features-vertical-card">
+                            <div class="template-features-vertical-card-image">
+                                <img [src]="isDarkMode ? data.darkSrc || data.src : data.src" [alt]="data.title" />
                             </div>
-                        </ng-container>
+                            <h2>{{ data.title }}</h2>
+                            <p>{{ data.description }}</p>
+                        </div>
+                        }
                     </div>
+                    }
                 </div>
-            </ng-template>
+            </div>
+            }
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,

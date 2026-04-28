@@ -10,10 +10,12 @@ import { Code } from '@domain/code';
         </app-docsectiontext>
         <div class="card flex justify-content-center">
             <form class="flex flex-column gap-3" [formGroup]="formGroup">
-                <div *ngFor="let category of categories" class="field-checkbox">
+                @for (category of categories; track category) {
+                <div class="field-checkbox">
                     <p-radioButton [inputId]="category.key" [value]="category" formControlName="selectedCategory" />
                     <label [for]="category.key" class="ml-2">{{ category.name }}</label>
                 </div>
+                }
             </form>
         </div>
         <app-code [code]="code" selector="radio-button-reactive-forms-demo"></app-code>

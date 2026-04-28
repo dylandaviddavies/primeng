@@ -38,17 +38,13 @@ export const TOGGLEBUTTON_VALUE_ACCESSOR: any = {
             pAutoFocus
             [autofocus]="autofocus"
         >
-            @if(!iconTemplate) {
-            <span
-                *ngIf="onIcon || offIcon"
-                [class]="checked ? this.onIcon : this.offIcon"
-                [ngClass]="{ 'p-button-icon': true, 'p-button-icon-left': iconPos === 'left', 'p-button-icon-right': iconPos === 'right' }"
-                [attr.data-pc-section]="'icon'"
-            ></span>
-            } @else {
+            @if(!iconTemplate) { @if (onIcon || offIcon) {
+            <span [class]="checked ? this.onIcon : this.offIcon" [ngClass]="{ 'p-button-icon': true, 'p-button-icon-left': iconPos === 'left', 'p-button-icon-right': iconPos === 'right' }" [attr.data-pc-section]="'icon'"></span>
+            } } @else {
             <ng-container *ngTemplateOutlet="iconTemplate; context: { $implicit: checked }"></ng-container>
+            } @if (onLabel || offLabel) {
+            <span class="p-button-label" [attr.data-pc-section]="'label'">{{ checked ? (hasOnLabel ? onLabel : '') : hasOffLabel ? offLabel : '' }}</span>
             }
-            <span class="p-button-label" *ngIf="onLabel || offLabel" [attr.data-pc-section]="'label'">{{ checked ? (hasOnLabel ? onLabel : '') : hasOffLabel ? offLabel : '' }}</span>
         </div>
     `,
     providers: [TOGGLEBUTTON_VALUE_ACCESSOR],

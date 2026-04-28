@@ -1,29 +1,29 @@
 import { animate, AnimationEvent, state, style, transition, trigger } from '@angular/animations';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
-  AfterContentInit,
-  booleanAttribute,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ContentChildren,
-  ElementRef,
-  EventEmitter,
-  HostListener,
-  Inject,
-  Input,
-  NgModule,
-  NgZone,
-  numberAttribute,
-  OnDestroy,
-  Output,
-  PLATFORM_ID,
-  QueryList,
-  Renderer2,
-  TemplateRef,
-  ViewEncapsulation,
-  ViewRef,
-  DOCUMENT
+    AfterContentInit,
+    booleanAttribute,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ContentChildren,
+    ElementRef,
+    EventEmitter,
+    HostListener,
+    Inject,
+    Input,
+    NgModule,
+    NgZone,
+    numberAttribute,
+    OnDestroy,
+    Output,
+    PLATFORM_ID,
+    QueryList,
+    Renderer2,
+    TemplateRef,
+    ViewEncapsulation,
+    ViewRef,
+    DOCUMENT
 } from '@angular/core';
 import { OverlayService, PrimeNGConfig, PrimeTemplate, SharedModule } from 'primeng/api';
 import { ConnectedOverlayScrollHandler, DomHandler } from 'primeng/dom';
@@ -39,8 +39,8 @@ import { Subscription } from 'rxjs';
 @Component({
     selector: 'p-overlayPanel',
     template: `
+        @if (render) {
         <div
-            *ngIf="render"
             [ngClass]="'p-overlaypanel p-component'"
             [ngStyle]="style"
             [class]="styleClass"
@@ -57,27 +57,42 @@ import { Subscription } from 'rxjs';
                 <ng-content></ng-content>
                 <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
             </div>
-            <button *ngIf="showCloseIcon" type="button" class="p-overlaypanel-close p-link" (click)="onCloseClick($event)" (keydown.enter)="hide()" [attr.aria-label]="ariaCloseLabel" pRipple>
-                <TimesIcon *ngIf="!closeIconTemplate" [styleClass]="'p-overlaypanel-close-icon'" />
-                <span class="p-overlaypanel-close-icon" *ngIf="closeIconTemplate">
+            @if (showCloseIcon) {
+            <button type="button" class="p-overlaypanel-close p-link" (click)="onCloseClick($event)" (keydown.enter)="hide()" [attr.aria-label]="ariaCloseLabel" pRipple>
+                @if (!closeIconTemplate) {
+                <TimesIcon [styleClass]="'p-overlaypanel-close-icon'" />
+                } @if (closeIconTemplate) {
+                <span class="p-overlaypanel-close-icon">
                     <ng-template *ngTemplateOutlet="closeIconTemplate"></ng-template>
                 </span>
+                }
             </button>
+            }
         </div>
+        }
     `,
     animations: [
         trigger('animation', [
-            state('void', style({
-                transform: 'scaleY(0.8)',
-                opacity: 0
-            })),
-            state('close', style({
-                opacity: 0
-            })),
-            state('open', style({
-                transform: 'translateY(0)',
-                opacity: 1
-            })),
+            state(
+                'void',
+                style({
+                    transform: 'scaleY(0.8)',
+                    opacity: 0
+                })
+            ),
+            state(
+                'close',
+                style({
+                    opacity: 0
+                })
+            ),
+            state(
+                'open',
+                style({
+                    transform: 'translateY(0)',
+                    opacity: 1
+                })
+            ),
             transition('void => open', animate('{{showTransitionParams}}')),
             transition('open => close', animate('{{hideTransitionParams}}'))
         ])

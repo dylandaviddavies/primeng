@@ -1,9 +1,8 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 
 @Component({
     selector: 'block-section',
-    imports: [CommonModule],
+    imports: [],
     template: `
         <section id="blocks-section" class="landing-blocks pt-8 overflow-hidden">
             <div class="section-header">PrimeBlocks</div>

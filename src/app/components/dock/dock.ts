@@ -32,8 +32,8 @@ import { DomHandler } from 'primeng/dom';
                     (keydown)="onListKeyDown($event)"
                     (mouseleave)="onListMouseLeave()"
                 >
+                    @for (item of model; track item; let i = $index) {
                     <li
-                        *ngFor="let item of model; let i = index"
                         [attr.id]="getItemId(item, i)"
                         [ngClass]="itemClass(item, i)"
                         role="menuitem"
@@ -46,8 +46,8 @@ import { DomHandler } from 'primeng/dom';
                         [attr.data-p-disabled]="disabled(item) || false"
                     >
                         <div class="p-menuitem-content" [attr.data-pc-section]="'content'">
+                            @if (isClickableRouterLink(item)) {
                             <a
-                                *ngIf="isClickableRouterLink(item); else elseBlock"
                                 pRipple
                                 [routerLink]="item.routerLink"
                                 [queryParams]="item.queryParams"
@@ -66,28 +66,33 @@ import { DomHandler } from 'primeng/dom';
                                 [state]="item.state"
                                 [attr.aria-hidden]="true"
                             >
-                                <span class="p-dock-action-icon" *ngIf="item.icon && !itemTemplate" [ngClass]="item.icon" [ngStyle]="item.iconStyle"></span>
+                                @if (item.icon && !itemTemplate) {
+                                <span class="p-dock-action-icon" [ngClass]="item.icon" [ngStyle]="item.iconStyle"></span>
+                                }
                                 <ng-container *ngTemplateOutlet="itemTemplate; context: { $implicit: item }"></ng-container>
                             </a>
-                            <ng-template #elseBlock>
-                                <a
-                                    [tooltipPosition]="item.tooltipPosition"
-                                    [attr.href]="item.url || null"
-                                    class="p-dock-link"
-                                    pRipple
-                                    pTooltip
-                                    [tooltipOptions]="item.tooltipOptions"
-                                    [ngClass]="{ 'p-disabled': item.disabled }"
-                                    [target]="item.target"
-                                    [attr.tabindex]="item.disabled || (i !== activeIndex && readonly) ? null : item.tabindex ? item.tabindex : '-1'"
-                                    [attr.aria-hidden]="true"
-                                >
-                                    <span class="p-dock-action-icon" *ngIf="item.icon && !itemTemplate" [ngClass]="item.icon" [ngStyle]="item.iconStyle"></span>
-                                    <ng-container *ngTemplateOutlet="itemTemplate; context: { $implicit: item }"></ng-container>
-                                </a>
-                            </ng-template>
+                            } @else {
+                            <a
+                                [tooltipPosition]="item.tooltipPosition"
+                                [attr.href]="item.url || null"
+                                class="p-dock-link"
+                                pRipple
+                                pTooltip
+                                [tooltipOptions]="item.tooltipOptions"
+                                [ngClass]="{ 'p-disabled': item.disabled }"
+                                [target]="item.target"
+                                [attr.tabindex]="item.disabled || (i !== activeIndex && readonly) ? null : item.tabindex ? item.tabindex : '-1'"
+                                [attr.aria-hidden]="true"
+                            >
+                                @if (item.icon && !itemTemplate) {
+                                <span class="p-dock-action-icon" [ngClass]="item.icon" [ngStyle]="item.iconStyle"></span>
+                                }
+                                <ng-container *ngTemplateOutlet="itemTemplate; context: { $implicit: item }"></ng-container>
+                            </a>
+                            }
                         </div>
                     </li>
+                    }
                 </ul>
             </div>
         </div>

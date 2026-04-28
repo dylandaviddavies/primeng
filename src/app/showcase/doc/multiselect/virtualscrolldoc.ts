@@ -26,8 +26,11 @@ import { MultiSelect } from 'primeng/multiselect';
                 #ms
             >
                 <ng-template pTemplate="headercheckboxicon" let-allSelected let-partialSelected="partialSelected">
-                    <i class="pi pi-check" *ngIf="allSelected"></i>
-                    <i class="pi pi-minus" *ngIf="partialSelected" [ngStyle]="{ color: 'var(--text-color)' }"></i>
+                    @if (allSelected) {
+                    <i class="pi pi-check"></i>
+                    } @if (partialSelected) {
+                    <i class="pi pi-minus" [ngStyle]="{ color: 'var(--text-color)' }"></i>
+                    }
                 </ng-template>
             </p-multiSelect>
         </div>

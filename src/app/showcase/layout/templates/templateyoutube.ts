@@ -10,7 +10,9 @@ import { DomSanitizer, SafeResourceUrl } from '@angular/platform-browser';
         <div class="template-youtube-wrapper">
             <div class="template-youtube">
                 <div class="template-youtube-title">
-                    <h2 *ngFor="let data of title; let i = index" [key]="i">{{ data }}</h2>
+                    @for (data of title; track data; let i = $index) {
+                    <h2 [key]="i">{{ data }}</h2>
+                    }
                 </div>
                 <div class="template-youtube-description">{{ description }}</div>
                 <div class="template-youtube-screen" (click)="setYoutubeVideoVisible(true)">

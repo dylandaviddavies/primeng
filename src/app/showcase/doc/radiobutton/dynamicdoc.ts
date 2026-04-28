@@ -9,10 +9,12 @@ import { Code } from '@domain/code';
         </app-docsectiontext>
         <div class="card flex justify-content-center">
             <div class="flex flex-column gap-3">
-                <div *ngFor="let category of categories" class="field-checkbox">
+                @for (category of categories; track category) {
+                <div class="field-checkbox">
                     <p-radioButton [inputId]="category.key" name="category" [value]="category" [(ngModel)]="selectedCategory" />
                     <label [for]="category.key" class="ml-2">{{ category.name }}</label>
                 </div>
+                }
             </div>
         </div>
         <app-code [code]="code" selector="radio-button-dynamic-demo"></app-code>

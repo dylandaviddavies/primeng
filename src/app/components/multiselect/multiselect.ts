@@ -78,16 +78,19 @@ export const MULTISELECT_VALUE_ACCESSOR: any = {
         >
             <div class="p-checkbox p-component" [ngClass]="{ 'p-variant-filled': config.inputStyle() === 'filled' }">
                 <div class="p-checkbox-box" [ngClass]="{ 'p-highlight': selected }">
-                    <ng-container *ngIf="selected">
-                        <CheckIcon *ngIf="!checkIconTemplate || !itemCheckboxIconTemplate" [styleClass]="'p-checkbox-icon'" [attr.aria-hidden]="true" />
-                        <span *ngIf="checkIconTemplate" class="p-checkbox-icon" [attr.aria-hidden]="true">
-                            <ng-template *ngTemplateOutlet="checkIconTemplate && !itemCheckboxIconTemplate"></ng-template>
-                            <ng-template *ngTemplateOutlet="itemCheckboxIconTemplate; context: { $implicit: selected }"></ng-template>
-                        </span>
-                    </ng-container>
+                    @if (selected) { @if (!checkIconTemplate || !itemCheckboxIconTemplate) {
+                    <CheckIcon [styleClass]="'p-checkbox-icon'" [attr.aria-hidden]="true" />
+                    } @if (checkIconTemplate) {
+                    <span class="p-checkbox-icon" [attr.aria-hidden]="true">
+                        <ng-template *ngTemplateOutlet="checkIconTemplate && !itemCheckboxIconTemplate"></ng-template>
+                        <ng-template *ngTemplateOutlet="itemCheckboxIconTemplate; context: { $implicit: selected }"></ng-template>
+                    </span>
+                    } }
                 </div>
             </div>
-            <span *ngIf="!template">{{ label ?? 'empty' }}</span>
+            @if (!template) {
+            <span>{{ label ?? 'empty' }}</span>
+            }
             <ng-container *ngTemplateOutlet="template; context: { $implicit: option }"></ng-container>
         </li>
     `,
@@ -187,49 +190,48 @@ export class MultiSelectItem {
                 [tooltipStyleClass]="tooltipStyleClass"
             >
                 <div [ngClass]="labelClass">
-                    <ng-container *ngIf="!selectedItemsTemplate">
-                        <ng-container *ngIf="display === 'comma'">{{ label() || 'empty' }}</ng-container>
-                        <ng-container *ngIf="display === 'chip'">
-                            <div #token *ngFor="let item of chipSelectedItems(); let i = index" class="p-multiselect-token">
-                                <span class="p-multiselect-token-label">{{ getLabelByValue(item) }}</span>
-                                <ng-container *ngIf="!disabled">
-                                    <TimesCircleIcon *ngIf="!removeTokenIconTemplate" [styleClass]="'p-multiselect-token-icon'" (click)="removeOption(item, event)" [attr.data-pc-section]="'clearicon'" [attr.aria-hidden]="true" />
-                                    <span *ngIf="removeTokenIconTemplate" class="p-multiselect-token-icon" (click)="removeOption(item, event)" [attr.data-pc-section]="'clearicon'" [attr.aria-hidden]="true">
-                                        <ng-container *ngTemplateOutlet="removeTokenIconTemplate"></ng-container>
-                                    </span>
-                                </ng-container>
-                            </div>
-                            <ng-container *ngIf="!modelValue() || modelValue().length === 0">{{ placeholder() || defaultLabel || 'empty' }}</ng-container>
-                        </ng-container>
-                    </ng-container>
+                    @if (!selectedItemsTemplate) { @if (display === 'comma') {
+                    {{ label() || 'empty' }}
+                    } @if (display === 'chip') { @for (item of chipSelectedItems(); track item; let i = $index) {
+                    <div #token class="p-multiselect-token">
+                        <span class="p-multiselect-token-label">{{ getLabelByValue(item) }}</span>
+                        @if (!disabled) { @if (!removeTokenIconTemplate) {
+                        <TimesCircleIcon [styleClass]="'p-multiselect-token-icon'" (click)="removeOption(item, event)" [attr.data-pc-section]="'clearicon'" [attr.aria-hidden]="true" />
+                        } @if (removeTokenIconTemplate) {
+                        <span class="p-multiselect-token-icon" (click)="removeOption(item, event)" [attr.data-pc-section]="'clearicon'" [attr.aria-hidden]="true">
+                            <ng-container *ngTemplateOutlet="removeTokenIconTemplate"></ng-container>
+                        </span>
+                        } }
+                    </div>
+                    } @if (!modelValue() || modelValue().length === 0) {
+                    {{ placeholder() || defaultLabel || 'empty' }}
+                    } } }
                     <ng-container *ngTemplateOutlet="selectedItemsTemplate; context: { $implicit: selectedOptions, removeChip: removeOption.bind(this) }"></ng-container>
                 </div>
-                <ng-container *ngIf="isVisibleClearIcon">
-                    <TimesIcon *ngIf="!clearIconTemplate" [styleClass]="'p-multiselect-clear-icon'" (click)="clear($event)" [attr.data-pc-section]="'clearicon'" [attr.aria-hidden]="true" />
-                    <span *ngIf="clearIconTemplate" class="p-multiselect-clear-icon" (click)="clear($event)" [attr.data-pc-section]="'clearicon'" [attr.aria-hidden]="true">
-                        <ng-template *ngTemplateOutlet="clearIconTemplate"></ng-template>
-                    </span>
-                </ng-container>
+                @if (isVisibleClearIcon) { @if (!clearIconTemplate) {
+                <TimesIcon [styleClass]="'p-multiselect-clear-icon'" (click)="clear($event)" [attr.data-pc-section]="'clearicon'" [attr.aria-hidden]="true" />
+                } @if (clearIconTemplate) {
+                <span class="p-multiselect-clear-icon" (click)="clear($event)" [attr.data-pc-section]="'clearicon'" [attr.aria-hidden]="true">
+                    <ng-template *ngTemplateOutlet="clearIconTemplate"></ng-template>
+                </span>
+                } }
             </div>
             <div class="p-multiselect-trigger">
-                <ng-container *ngIf="loading; else elseBlock">
-                    <ng-container *ngIf="loadingIconTemplate">
-                        <ng-container *ngTemplateOutlet="loadingIconTemplate"></ng-container>
-                    </ng-container>
-                    <ng-container *ngIf="!loadingIconTemplate">
-                        <span *ngIf="loadingIcon" [ngClass]="'p-multiselect-trigger-icon pi-spin ' + loadingIcon" aria-hidden="true"></span>
-                        <span *ngIf="!loadingIcon" [class]="'p-multiselect-trigger-icon pi pi-spinner pi-spin'" aria-hidden="true"></span>
-                    </ng-container>
-                </ng-container>
-                <ng-template #elseBlock>
-                    <ng-container *ngIf="!dropdownIconTemplate">
-                        <span *ngIf="dropdownIcon" class="p-multiselect-trigger-icon" [ngClass]="dropdownIcon" [attr.data-pc-section]="'triggericon'" [attr.aria-hidden]="true"></span>
-                        <ChevronDownIcon *ngIf="!dropdownIcon" [styleClass]="'p-multiselect-trigger-icon'" [attr.data-pc-section]="'triggericon'" [attr.aria-hidden]="true" />
-                    </ng-container>
-                    <span *ngIf="dropdownIconTemplate" class="p-multiselect-trigger-icon" [attr.data-pc-section]="'triggericon'" [attr.aria-hidden]="true">
-                        <ng-template *ngTemplateOutlet="dropdownIconTemplate"></ng-template>
-                    </span>
-                </ng-template>
+                @if (loading) { @if (loadingIconTemplate) {
+                <ng-container *ngTemplateOutlet="loadingIconTemplate"></ng-container>
+                } @if (!loadingIconTemplate) { @if (loadingIcon) {
+                <span [ngClass]="'p-multiselect-trigger-icon pi-spin ' + loadingIcon" aria-hidden="true"></span>
+                } @if (!loadingIcon) {
+                <span [class]="'p-multiselect-trigger-icon pi pi-spinner pi-spin'" aria-hidden="true"></span>
+                } } } @else { @if (!dropdownIconTemplate) { @if (dropdownIcon) {
+                <span class="p-multiselect-trigger-icon" [ngClass]="dropdownIcon" [attr.data-pc-section]="'triggericon'" [attr.aria-hidden]="true"></span>
+                } @if (!dropdownIcon) {
+                <ChevronDownIcon [styleClass]="'p-multiselect-trigger-icon'" [attr.data-pc-section]="'triggericon'" [attr.aria-hidden]="true" />
+                } } @if (dropdownIconTemplate) {
+                <span class="p-multiselect-trigger-icon" [attr.data-pc-section]="'triggericon'" [attr.aria-hidden]="true">
+                    <ng-template *ngTemplateOutlet="dropdownIconTemplate"></ng-template>
+                </span>
+                } }
             </div>
             <p-overlay
                 #overlay
@@ -256,90 +258,96 @@ export class MultiSelectItem {
                             [attr.data-p-hidden-focusable]="true"
                         >
                         </span>
-                        <div class="p-multiselect-header" *ngIf="showHeader">
+                        @if (showHeader) {
+                        <div class="p-multiselect-header">
                             <ng-content select="p-header"></ng-content>
                             <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
-                            <ng-container *ngIf="filterTemplate; else builtInFilterElement">
-                                <ng-container *ngTemplateOutlet="filterTemplate; context: { options: filterOptions }"></ng-container>
-                            </ng-container>
-                            <ng-template #builtInFilterElement>
-                                <div
-                                    class="p-checkbox p-component"
-                                    *ngIf="showToggleAll && !selectionLimit"
-                                    [ngClass]="{ 'p-variant-filled': variant === 'filled' || config.inputStyle() === 'filled', 'p-checkbox-disabled': disabled || toggleAllDisabled }"
-                                    (click)="onToggleAll($event)"
-                                    (keydown)="onHeaderCheckboxKeyDown($event)"
-                                >
-                                    <div class="p-hidden-accessible" [attr.data-p-hidden-accessible]="true">
-                                        <input
-                                            #headerCheckbox
-                                            type="checkbox"
-                                            [readonly]="readonly"
-                                            [attr.checked]="allSelected()"
-                                            (focus)="onHeaderCheckboxFocus()"
-                                            (blur)="onHeaderCheckboxBlur()"
-                                            [disabled]="disabled || toggleAllDisabled"
-                                            [attr.aria-label]="toggleAllAriaLabel"
-                                        />
-                                    </div>
-                                    <div
-                                        class="p-checkbox-box"
-                                        role="checkbox"
-                                        [attr.aria-label]="toggleAllAriaLabel"
-                                        [attr.aria-checked]="allSelected()"
-                                        [ngClass]="{ 'p-highlight': allSelected(), 'p-focus': headerCheckboxFocus, 'p-disabled': disabled || toggleAllDisabled }"
-                                    >
-                                        <ng-container *ngIf="allSelected() || partialSelected()">
-                                            <ng-container *ngIf="!checkIconTemplate && !headerCheckboxIconTemplate">
-                                                <CheckIcon [styleClass]="'p-checkbox-icon'" *ngIf="allSelected()" [attr.aria-hidden]="true" />
-                                            </ng-container>
-
-                                            <span *ngIf="checkIconTemplate" class="p-checkbox-icon" [attr.aria-hidden]="true">
-                                                <ng-template *ngTemplateOutlet="checkIconTemplate; context: { $implicit: allSelected() }"></ng-template>
-                                            </span>
-                                            <span *ngIf="headerCheckboxIconTemplate" class="p-checkbox-icon" [attr.aria-hidden]="true">
-                                                <ng-template *ngTemplateOutlet="headerCheckboxIconTemplate; context: { $implicit: allSelected(), partialSelected: partialSelected() }"></ng-template>
-                                            </span>
-                                        </ng-container>
-                                    </div>
-                                </div>
-                                <div class="p-multiselect-filter-container" *ngIf="filter">
+                            @if (filterTemplate) {
+                            <ng-container *ngTemplateOutlet="filterTemplate; context: { options: filterOptions }"></ng-container>
+                            } @else { @if (showToggleAll && !selectionLimit) {
+                            <div
+                                class="p-checkbox p-component"
+                                [ngClass]="{ 'p-variant-filled': variant === 'filled' || config.inputStyle() === 'filled', 'p-checkbox-disabled': disabled || toggleAllDisabled }"
+                                (click)="onToggleAll($event)"
+                                (keydown)="onHeaderCheckboxKeyDown($event)"
+                            >
+                                <div class="p-hidden-accessible" [attr.data-p-hidden-accessible]="true">
                                     <input
-                                        #filterInput
-                                        type="text"
-                                        role="searchbox"
-                                        [attr.autocomplete]="autocomplete"
-                                        [attr.placeholder]="filterPlaceHolder"
-                                        role="searchbox"
-                                        [attr.aria-owns]="id + '_list'"
-                                        [attr.aria-activedescendant]="focusedOptionId"
-                                        [value]="_filterValue() || ''"
-                                        (input)="onFilterInputChange($event)"
-                                        (keydown)="onFilterKeyDown($event)"
-                                        (click)="onInputClick($event)"
-                                        (blur)="onFilterBlur($event)"
-                                        class="p-multiselect-filter p-inputtext p-component"
-                                        [disabled]="disabled"
-                                        [attr.placeholder]="filterPlaceHolder"
-                                        [attr.aria-label]="ariaFilterLabel"
+                                        #headerCheckbox
+                                        type="checkbox"
+                                        [readonly]="readonly"
+                                        [attr.checked]="allSelected()"
+                                        (focus)="onHeaderCheckboxFocus()"
+                                        (blur)="onHeaderCheckboxBlur()"
+                                        [disabled]="disabled || toggleAllDisabled"
+                                        [attr.aria-label]="toggleAllAriaLabel"
                                     />
-                                    <SearchIcon [styleClass]="'p-multiselect-filter-icon'" *ngIf="!filterIconTemplate" />
-                                    <span *ngIf="filterIconTemplate" class="p-multiselect-filter-icon">
-                                        <ng-template *ngTemplateOutlet="filterIconTemplate"></ng-template>
-                                    </span>
                                 </div>
-
-                                <button class="p-multiselect-close p-link p-button-icon-only" type="button" (click)="close($event)" pRipple [attr.aria-label]="closeAriaLabel">
-                                    <TimesIcon [styleClass]="'p-multiselect-close-icon'" *ngIf="!closeIconTemplate" />
-                                    <span *ngIf="closeIconTemplate" class="p-multiselect-close-icon">
-                                        <ng-template *ngTemplateOutlet="closeIconTemplate"></ng-template>
+                                <div
+                                    class="p-checkbox-box"
+                                    role="checkbox"
+                                    [attr.aria-label]="toggleAllAriaLabel"
+                                    [attr.aria-checked]="allSelected()"
+                                    [ngClass]="{ 'p-highlight': allSelected(), 'p-focus': headerCheckboxFocus, 'p-disabled': disabled || toggleAllDisabled }"
+                                >
+                                    @if (allSelected() || partialSelected()) { @if (!checkIconTemplate && !headerCheckboxIconTemplate) { @if (allSelected()) {
+                                    <CheckIcon [styleClass]="'p-checkbox-icon'" [attr.aria-hidden]="true" />
+                                    } } @if (checkIconTemplate) {
+                                    <span class="p-checkbox-icon" [attr.aria-hidden]="true">
+                                        <ng-template *ngTemplateOutlet="checkIconTemplate; context: { $implicit: allSelected() }"></ng-template>
                                     </span>
-                                </button>
-                            </ng-template>
+                                    } @if (headerCheckboxIconTemplate) {
+                                    <span class="p-checkbox-icon" [attr.aria-hidden]="true">
+                                        <ng-template *ngTemplateOutlet="headerCheckboxIconTemplate; context: { $implicit: allSelected(), partialSelected: partialSelected() }"></ng-template>
+                                    </span>
+                                    } }
+                                </div>
+                            </div>
+                            } @if (filter) {
+                            <div class="p-multiselect-filter-container">
+                                <input
+                                    #filterInput
+                                    type="text"
+                                    role="searchbox"
+                                    [attr.autocomplete]="autocomplete"
+                                    [attr.placeholder]="filterPlaceHolder"
+                                    role="searchbox"
+                                    [attr.aria-owns]="id + '_list'"
+                                    [attr.aria-activedescendant]="focusedOptionId"
+                                    [value]="_filterValue() || ''"
+                                    (input)="onFilterInputChange($event)"
+                                    (keydown)="onFilterKeyDown($event)"
+                                    (click)="onInputClick($event)"
+                                    (blur)="onFilterBlur($event)"
+                                    class="p-multiselect-filter p-inputtext p-component"
+                                    [disabled]="disabled"
+                                    [attr.placeholder]="filterPlaceHolder"
+                                    [attr.aria-label]="ariaFilterLabel"
+                                />
+                                @if (!filterIconTemplate) {
+                                <SearchIcon [styleClass]="'p-multiselect-filter-icon'" />
+                                } @if (filterIconTemplate) {
+                                <span class="p-multiselect-filter-icon">
+                                    <ng-template *ngTemplateOutlet="filterIconTemplate"></ng-template>
+                                </span>
+                                }
+                            </div>
+                            }
+                            <button class="p-multiselect-close p-link p-button-icon-only" type="button" (click)="close($event)" pRipple [attr.aria-label]="closeAriaLabel">
+                                @if (!closeIconTemplate) {
+                                <TimesIcon [styleClass]="'p-multiselect-close-icon'" />
+                                } @if (closeIconTemplate) {
+                                <span class="p-multiselect-close-icon">
+                                    <ng-template *ngTemplateOutlet="closeIconTemplate"></ng-template>
+                                </span>
+                                }
+                            </button>
+                            }
                         </div>
+                        }
                         <div class="p-multiselect-items-wrapper" [style.max-height]="virtualScroll ? 'auto' : scrollHeight || 'auto'">
+                            @if (virtualScroll) {
                             <p-scroller
-                                *ngIf="virtualScroll"
                                 #scroller
                                 [items]="visibleOptions()"
                                 [style]="{ height: scrollHeight }"
@@ -353,64 +361,70 @@ export class MultiSelectItem {
                                 <ng-template pTemplate="content" let-items let-scrollerOptions="options">
                                     <ng-container *ngTemplateOutlet="buildInItems; context: { $implicit: items, options: scrollerOptions }"></ng-container>
                                 </ng-template>
-                                <ng-container *ngIf="loaderTemplate">
-                                    <ng-template pTemplate="loader" let-scrollerOptions="options">
-                                        <ng-container *ngTemplateOutlet="loaderTemplate; context: { options: scrollerOptions }"></ng-container>
-                                    </ng-template>
-                                </ng-container>
+                                @if (loaderTemplate) {
+                                <ng-template pTemplate="loader" let-scrollerOptions="options">
+                                    <ng-container *ngTemplateOutlet="loaderTemplate; context: { options: scrollerOptions }"></ng-container>
+                                </ng-template>
+                                }
                             </p-scroller>
-                            <ng-container *ngIf="!virtualScroll">
-                                <ng-container *ngTemplateOutlet="buildInItems; context: { $implicit: visibleOptions(), options: {} }"></ng-container>
-                            </ng-container>
+                            } @if (!virtualScroll) {
+                            <ng-container *ngTemplateOutlet="buildInItems; context: { $implicit: visibleOptions(), options: {} }"></ng-container>
+                            }
 
                             <ng-template #buildInItems let-items let-scrollerOptions="options">
                                 <ul #items class="p-multiselect-items p-component" [ngClass]="scrollerOptions.contentStyleClass" [style]="scrollerOptions.contentStyle" role="listbox" aria-multiselectable="true" [attr.aria-label]="listLabel">
-                                    <ng-template ngFor let-option [ngForOf]="items" let-i="index">
-                                        <ng-container *ngIf="isOptionGroup(option)">
-                                            <li [attr.id]="id + '_' + getOptionIndex(i, scrollerOptions)" class="p-multiselect-item-group" [ngStyle]="{ height: scrollerOptions.itemSize + 'px' }" role="option">
-                                                <span *ngIf="!groupTemplate">{{ getOptionGroupLabel(option.optionGroup) }}</span>
-                                                <ng-container *ngTemplateOutlet="groupTemplate; context: { $implicit: option.optionGroup }"></ng-container>
-                                            </li>
-                                        </ng-container>
-                                        <ng-container *ngIf="!isOptionGroup(option)">
-                                            <p-multiSelectItem
-                                                [id]="id + '_' + getOptionIndex(i, scrollerOptions)"
-                                                [option]="option"
-                                                [selected]="isSelected(option)"
-                                                [label]="getOptionLabel(option)"
-                                                [disabled]="isOptionDisabled(option)"
-                                                [template]="itemTemplate"
-                                                [checkIconTemplate]="checkIconTemplate"
-                                                [itemCheckboxIconTemplate]="itemCheckboxIconTemplate"
-                                                [itemSize]="scrollerOptions.itemSize"
-                                                [focused]="focusedOptionIndex() === getOptionIndex(i, scrollerOptions)"
-                                                [ariaPosInset]="getAriaPosInset(getOptionIndex(i, scrollerOptions))"
-                                                [ariaSetSize]="ariaSetSize"
-                                                (onClick)="onOptionSelect($event, false, getOptionIndex(i, scrollerOptions))"
-                                                (onMouseEnter)="onOptionMouseEnter($event, getOptionIndex(i, scrollerOptions))"
-                                            ></p-multiSelectItem>
-                                        </ng-container>
-                                    </ng-template>
-
-                                    <li *ngIf="hasFilter() && isEmpty()" class="p-multiselect-empty-message" [ngStyle]="{ height: scrollerOptions.itemSize + 'px' }" role="option">
-                                        <ng-container *ngIf="!emptyFilterTemplate && !emptyTemplate; else emptyFilter">
-                                            {{ emptyFilterMessageLabel }}
-                                        </ng-container>
+                                    @for (option of items; track option; let i = $index) { @if (isOptionGroup(option)) {
+                                    <li [attr.id]="id + '_' + getOptionIndex(i, scrollerOptions)" class="p-multiselect-item-group" [ngStyle]="{ height: scrollerOptions.itemSize + 'px' }" role="option">
+                                        @if (!groupTemplate) {
+                                        <span>{{ getOptionGroupLabel(option.optionGroup) }}</span>
+                                        }
+                                        <ng-container *ngTemplateOutlet="groupTemplate; context: { $implicit: option.optionGroup }"></ng-container>
+                                    </li>
+                                    } @if (!isOptionGroup(option)) {
+                                    <p-multiSelectItem
+                                        [id]="id + '_' + getOptionIndex(i, scrollerOptions)"
+                                        [option]="option"
+                                        [selected]="isSelected(option)"
+                                        [label]="getOptionLabel(option)"
+                                        [disabled]="isOptionDisabled(option)"
+                                        [template]="itemTemplate"
+                                        [checkIconTemplate]="checkIconTemplate"
+                                        [itemCheckboxIconTemplate]="itemCheckboxIconTemplate"
+                                        [itemSize]="scrollerOptions.itemSize"
+                                        [focused]="focusedOptionIndex() === getOptionIndex(i, scrollerOptions)"
+                                        [ariaPosInset]="getAriaPosInset(getOptionIndex(i, scrollerOptions))"
+                                        [ariaSetSize]="ariaSetSize"
+                                        (onClick)="onOptionSelect($event, false, getOptionIndex(i, scrollerOptions))"
+                                        (onMouseEnter)="onOptionMouseEnter($event, getOptionIndex(i, scrollerOptions))"
+                                    ></p-multiSelectItem>
+                                    } } @if (hasFilter() && isEmpty()) {
+                                    <li class="p-multiselect-empty-message" [ngStyle]="{ height: scrollerOptions.itemSize + 'px' }" role="option">
+                                        @if (!emptyFilterTemplate && !emptyTemplate) {
+                                        {{ emptyFilterMessageLabel }}
+                                        } @else {
+                                        <ng-template [ngTemplateOutlet]="emptyFilter"></ng-template>
+                                        }
                                         <ng-container #emptyFilter *ngTemplateOutlet="emptyFilterTemplate || emptyTemplate"></ng-container>
                                     </li>
-                                    <li *ngIf="!hasFilter() && isEmpty()" class="p-multiselect-empty-message" [ngStyle]="{ height: scrollerOptions.itemSize + 'px' }" role="option">
-                                        <ng-container *ngIf="!emptyTemplate; else empty">
-                                            {{ emptyMessageLabel }}
-                                        </ng-container>
+                                    } @if (!hasFilter() && isEmpty()) {
+                                    <li class="p-multiselect-empty-message" [ngStyle]="{ height: scrollerOptions.itemSize + 'px' }" role="option">
+                                        @if (!emptyTemplate) {
+                                        {{ emptyMessageLabel }}
+                                        } @else {
+                                        <ng-template [ngTemplateOutlet]="empty"></ng-template>
+                                        }
                                         <ng-container #empty *ngTemplateOutlet="emptyTemplate"></ng-container>
                                     </li>
+                                    }
                                 </ul>
                             </ng-template>
                         </div>
-                        <div class="p-multiselect-footer" *ngIf="footerFacet || footerTemplate">
+                        @if (footerFacet || footerTemplate) {
+                        <div class="p-multiselect-footer">
                             <ng-content select="p-footer"></ng-content>
                             <ng-container *ngTemplateOutlet="footerTemplate"></ng-container>
                         </div>
+                        }
 
                         <span
                             #lastHiddenFocusableEl

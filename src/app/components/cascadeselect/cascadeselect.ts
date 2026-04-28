@@ -56,50 +56,53 @@ export const CASCADESELECT_VALUE_ACCESSOR: any = {
             [attr.data-pc-section]="level === 0 ? 'list' : 'sublist'"
             [attr.aria-label]="listLabel"
         >
-            <ng-template ngFor let-processedOption [ngForOf]="options" let-i="index">
-                <li
-                    [ngClass]="getItemClass(processedOption)"
-                    role="treeitem"
-                    [attr.aria-level]="level + 1"
-                    [attr.aria-setsize]="options.length"
-                    [attr.data-pc-section]="'item'"
-                    [id]="getOptionId(processedOption)"
-                    [attr.aria-label]="getOptionLabelToRender(processedOption)"
-                    [attr.aria-selected]="isOptionGroup(processedOption) ? undefined : isOptionSelected(processedOption)"
-                    [attr.aria-posinset]="i + 1"
+            @for (processedOption of options; track processedOption; let i = $index) {
+            <li
+                [ngClass]="getItemClass(processedOption)"
+                role="treeitem"
+                [attr.aria-level]="level + 1"
+                [attr.aria-setsize]="options.length"
+                [attr.data-pc-section]="'item'"
+                [id]="getOptionId(processedOption)"
+                [attr.aria-label]="getOptionLabelToRender(processedOption)"
+                [attr.aria-selected]="isOptionGroup(processedOption) ? undefined : isOptionSelected(processedOption)"
+                [attr.aria-posinset]="i + 1"
+            >
+                <div class="p-cascadeselect-item-content" (click)="onOptionClick($event, processedOption)" [attr.tabindex]="0" pRipple [attr.data-pc-section]="'content'">
+                    @if (optionTemplate) {
+                    <ng-container *ngTemplateOutlet="optionTemplate; context: { $implicit: processedOption.option }"></ng-container>
+                    } @else {
+                    <span class="p-cascadeselect-item-text" [attr.data-pc-section]="'text'">{{ getOptionLabelToRender(processedOption) }}</span>
+                    } @if (isOptionGroup(processedOption)) {
+                    <span class="p-cascadeselect-group-icon" [attr.data-pc-section]="'groupIcon'">
+                        @if (!groupIconTemplate) {
+                        <AngleRightIcon />
+                        }
+                        <ng-template *ngTemplateOutlet="groupIconTemplate"></ng-template>
+                    </span>
+                    }
+                </div>
+                @if (isOptionGroup(processedOption) && isOptionActive(processedOption)) {
+                <p-cascadeSelectSub
+                    [role]="'group'"
+                    class="p-cascadeselect-sublist"
+                    [selectId]="selectId"
+                    [focusedOptionId]="focusedOptionId"
+                    [activeOptionPath]="activeOptionPath"
+                    [options]="getOptionGroupChildren(processedOption)"
+                    [optionLabel]="optionLabel"
+                    [optionValue]="optionValue"
+                    [level]="level + 1"
+                    (onChange)="onOptionChange($event)"
+                    [optionGroupLabel]="optionGroupLabel"
+                    [optionGroupChildren]="optionGroupChildren"
+                    [dirty]="dirty"
+                    [optionTemplate]="optionTemplate"
                 >
-                    <div class="p-cascadeselect-item-content" (click)="onOptionClick($event, processedOption)" [attr.tabindex]="0" pRipple [attr.data-pc-section]="'content'">
-                        <ng-container *ngIf="optionTemplate; else defaultOptionTemplate">
-                            <ng-container *ngTemplateOutlet="optionTemplate; context: { $implicit: processedOption.option }"></ng-container>
-                        </ng-container>
-                        <ng-template #defaultOptionTemplate>
-                            <span class="p-cascadeselect-item-text" [attr.data-pc-section]="'text'">{{ getOptionLabelToRender(processedOption) }}</span>
-                        </ng-template>
-                        <span class="p-cascadeselect-group-icon" *ngIf="isOptionGroup(processedOption)" [attr.data-pc-section]="'groupIcon'">
-                            <AngleRightIcon *ngIf="!groupIconTemplate" />
-                            <ng-template *ngTemplateOutlet="groupIconTemplate"></ng-template>
-                        </span>
-                    </div>
-                    <p-cascadeSelectSub
-                        *ngIf="isOptionGroup(processedOption) && isOptionActive(processedOption)"
-                        [role]="'group'"
-                        class="p-cascadeselect-sublist"
-                        [selectId]="selectId"
-                        [focusedOptionId]="focusedOptionId"
-                        [activeOptionPath]="activeOptionPath"
-                        [options]="getOptionGroupChildren(processedOption)"
-                        [optionLabel]="optionLabel"
-                        [optionValue]="optionValue"
-                        [level]="level + 1"
-                        (onChange)="onOptionChange($event)"
-                        [optionGroupLabel]="optionGroupLabel"
-                        [optionGroupChildren]="optionGroupChildren"
-                        [dirty]="dirty"
-                        [optionTemplate]="optionTemplate"
-                    >
-                    </p-cascadeSelectSub>
-                </li>
-            </ng-template>
+                </p-cascadeSelectSub>
+                }
+            </li>
+            }
         </ul>
     `,
     encapsulation: ViewEncapsulation.None,
@@ -260,37 +263,35 @@ export class CascadeSelectSub implements OnInit {
             />
         </div>
         <span [ngClass]="labelClass" [attr.data-pc-section]="'label'">
-            <ng-container *ngIf="valueTemplate; else defaultValueTemplate">
-                <ng-container *ngTemplateOutlet="valueTemplate; context: { $implicit: value, placeholder: placeholder }"></ng-container>
-            </ng-container>
-            <ng-template #defaultValueTemplate>
-                {{ label() }}
-            </ng-template>
+            @if (valueTemplate) {
+            <ng-container *ngTemplateOutlet="valueTemplate; context: { $implicit: value, placeholder: placeholder }"></ng-container>
+            } @else {
+            {{ label() }}
+            }
         </span>
 
-        <ng-container *ngIf="filled && !disabled && showClear">
-            <TimesIcon *ngIf="!clearIconTemplate" [styleClass]="'p-cascadeselect-clear-icon'" (click)="clear($event)" [attr.data-pc-section]="'clearicon'" [attr.aria-hidden]="true" />
-            <span *ngIf="clearIconTemplate" class="p-cascadeselect-clear-icon" (click)="clear($event)" [attr.data-pc-section]="'clearicon'" [attr.aria-hidden]="true">
-                <ng-template *ngTemplateOutlet="clearIconTemplate"></ng-template>
-            </span>
-        </ng-container>
+        @if (filled && !disabled && showClear) { @if (!clearIconTemplate) {
+        <TimesIcon [styleClass]="'p-cascadeselect-clear-icon'" (click)="clear($event)" [attr.data-pc-section]="'clearicon'" [attr.aria-hidden]="true" />
+        } @if (clearIconTemplate) {
+        <span class="p-cascadeselect-clear-icon" (click)="clear($event)" [attr.data-pc-section]="'clearicon'" [attr.aria-hidden]="true">
+            <ng-template *ngTemplateOutlet="clearIconTemplate"></ng-template>
+        </span>
+        } }
 
         <div class="p-cascadeselect-trigger" role="button" aria-haspopup="listbox" [attr.aria-expanded]="overlayVisible ?? false" [attr.data-pc-section]="'dropdownIcon'" [attr.aria-hidden]="true">
-            <ng-container *ngIf="loading; else elseBlock">
-                <ng-container *ngIf="loadingIconTemplate">
-                    <ng-container *ngTemplateOutlet="loadingIconTemplate"></ng-container>
-                </ng-container>
-                <ng-container *ngIf="!loadingIconTemplate">
-                    <span *ngIf="loadingIcon" [ngClass]="'p-cascadeselect-trigger-icon pi-spin ' + loadingIcon" aria-hidden="true"></span>
-                    <span *ngIf="!loadingIcon" [class]="'p-cascadeselect-trigger-icon pi pi-spinner pi-spin'" aria-hidden="true"></span>
-                </ng-container>
-            </ng-container>
-            <ng-template #elseBlock>
-                <ChevronDownIcon *ngIf="!triggerIconTemplate" [styleClass]="'p-cascadeselect-trigger-icon'" />
-                <span *ngIf="triggerIconTemplate" class="p-cascadeselect-trigger-icon">
-                    <ng-template *ngTemplateOutlet="triggerIconTemplate"></ng-template>
-                </span>
-            </ng-template>
+            @if (loading) { @if (loadingIconTemplate) {
+            <ng-container *ngTemplateOutlet="loadingIconTemplate"></ng-container>
+            } @if (!loadingIconTemplate) { @if (loadingIcon) {
+            <span [ngClass]="'p-cascadeselect-trigger-icon pi-spin ' + loadingIcon" aria-hidden="true"></span>
+            } @if (!loadingIcon) {
+            <span [class]="'p-cascadeselect-trigger-icon pi pi-spinner pi-spin'" aria-hidden="true"></span>
+            } } } @else { @if (!triggerIconTemplate) {
+            <ChevronDownIcon [styleClass]="'p-cascadeselect-trigger-icon'" />
+            } @if (triggerIconTemplate) {
+            <span class="p-cascadeselect-trigger-icon">
+                <ng-template *ngTemplateOutlet="triggerIconTemplate"></ng-template>
+            </span>
+            } }
         </div>
         <span role="status" aria-live="polite" class="p-hidden-accessible">
             {{ searchResultMessageText }}

@@ -8,15 +8,13 @@ import { TemplateHeroRectangleModule } from './templateherorectangle';
     selector: 'template-hero',
     template: `
         <div class="template-hero">
-            <ng-container *ngIf="!!templateHeroData?.pattern">
-                <img class="template-hero-pattern" width="1344" [src]="templateHeroData.pattern" alt="Template Hero Pattern" priority />
-            </ng-container>
-            <ng-container *ngIf="!!templateHeroData?.light">
-                <template-hero-light></template-hero-light>
-            </ng-container>
-            <ng-container *ngIf="!!templateHeroData?.rectangle">
-                <template-hero-rectangle></template-hero-rectangle>
-            </ng-container>
+            @if (!!templateHeroData?.pattern) {
+            <img class="template-hero-pattern" width="1344" [src]="templateHeroData.pattern" alt="Template Hero Pattern" priority />
+            } @if (!!templateHeroData?.light) {
+            <template-hero-light></template-hero-light>
+            } @if (!!templateHeroData?.rectangle) {
+            <template-hero-rectangle></template-hero-rectangle>
+            }
             <div class="template-hero-card">
                 <div class="template-hero-card-logo"><ng-container *ngComponentOutlet="templateLogo"></ng-container></div>
                 <p>{{ templateHeroData?.description }}</p>
@@ -37,12 +35,11 @@ import { TemplateHeroRectangleModule } from './templateherorectangle';
                     </a>
                 </div>
             </div>
-            <ng-container *ngIf="!!templateHeroData?.dashboard1">
-                <img class="template-hero-dashboard1" eager [src]="templateHeroData?.dashboard1" alt="Template Dashboard Image 1" />
-            </ng-container>
-            <ng-container *ngIf="!!templateHeroData?.dashboard2">
-                <img class="template-hero-dashboard2" eager [src]="templateHeroData?.dashboard2" alt="Template Dashboard Image 2" />
-            </ng-container>
+            @if (!!templateHeroData?.dashboard1) {
+            <img class="template-hero-dashboard1" eager [src]="templateHeroData?.dashboard1" alt="Template Dashboard Image 1" />
+            } @if (!!templateHeroData?.dashboard2) {
+            <img class="template-hero-dashboard2" eager [src]="templateHeroData?.dashboard2" alt="Template Dashboard Image 2" />
+            }
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,

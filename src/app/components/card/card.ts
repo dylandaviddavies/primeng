@@ -10,27 +10,34 @@ import { ObjectUtils } from 'primeng/utils';
     selector: 'p-card',
     template: `
         <div [ngClass]="'p-card p-component'" [ngStyle]="_style()" [class]="styleClass" [attr.data-pc-name]="'card'">
-            <div class="p-card-header" *ngIf="headerFacet || headerTemplate">
+            @if (headerFacet || headerTemplate) {
+            <div class="p-card-header">
                 <ng-content select="p-header"></ng-content>
                 <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
             </div>
+            }
             <div class="p-card-body">
-                <div class="p-card-title" *ngIf="header || titleTemplate">
+                @if (header || titleTemplate) {
+                <div class="p-card-title">
                     {{ header }}
                     <ng-container *ngTemplateOutlet="titleTemplate"></ng-container>
                 </div>
-                <div class="p-card-subtitle" *ngIf="subheader || subtitleTemplate">
+                } @if (subheader || subtitleTemplate) {
+                <div class="p-card-subtitle">
                     {{ subheader }}
                     <ng-container *ngTemplateOutlet="subtitleTemplate"></ng-container>
                 </div>
+                }
                 <div class="p-card-content">
                     <ng-content></ng-content>
                     <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
                 </div>
-                <div class="p-card-footer" *ngIf="footerFacet || footerTemplate">
+                @if (footerFacet || footerTemplate) {
+                <div class="p-card-footer">
                     <ng-content select="p-footer"></ng-content>
                     <ng-container *ngTemplateOutlet="footerTemplate"></ng-container>
                 </div>
+                }
             </div>
         </div>
     `,

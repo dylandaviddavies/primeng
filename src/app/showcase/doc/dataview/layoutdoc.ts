@@ -21,7 +21,8 @@ import { ProductService } from '@service/productservice';
                 </ng-template>
                 <ng-template pTemplate="list" let-products>
                     <div class="grid grid-nogutter">
-                        <div class="col-12" *ngFor="let item of products; let first = first" class="col-12">
+                        @for (item of products; track item; let first = $first) {
+                        <div class="col-12" class="col-12">
                             <div class="flex flex-column sm:flex-row sm:align-items-center p-4 gap-3" [ngClass]="{ 'border-top-1 surface-border': !first }">
                                 <div class="md:w-10rem relative">
                                     <img class="block xl:block mx-auto border-round w-full" [src]="'https://primefaces.org/cdn/primeng/images/demo/product/' + item.image" [alt]="item.name" />
@@ -50,11 +51,13 @@ import { ProductService } from '@service/productservice';
                                 </div>
                             </div>
                         </div>
+                        }
                     </div>
                 </ng-template>
                 <ng-template let-product pTemplate="grid" let-products>
                     <div class="grid grid-nogutter">
-                        <div class="col-12 sm:col-6 md:col-4 xl:col-6 p-2" *ngFor="let product of products">
+                        @for (product of products; track product) {
+                        <div class="col-12 sm:col-6 md:col-4 xl:col-6 p-2">
                             <div class="p-4 border-1 surface-border surface-card border-round flex flex-column">
                                 <div class="surface-50 flex justify-content-center border-round p-3">
                                     <div class="relative mx-auto">
@@ -85,6 +88,7 @@ import { ProductService } from '@service/productservice';
                                 </div>
                             </div>
                         </div>
+                        }
                     </div>
                 </ng-template>
             </p-dataView>

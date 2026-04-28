@@ -1,24 +1,24 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  EventEmitter,
-  Inject,
-  Input,
-  NgModule,
-  NgZone,
-  OnDestroy,
-  Output,
-  PLATFORM_ID,
-  Renderer2,
-  ViewChild,
-  ViewEncapsulation,
-  booleanAttribute,
-  forwardRef,
-  numberAttribute,
-  DOCUMENT
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    EventEmitter,
+    Inject,
+    Input,
+    NgModule,
+    NgZone,
+    OnDestroy,
+    Output,
+    PLATFORM_ID,
+    Renderer2,
+    ViewChild,
+    ViewEncapsulation,
+    booleanAttribute,
+    forwardRef,
+    numberAttribute,
+    DOCUMENT
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { DomHandler } from 'primeng/dom';
@@ -46,22 +46,20 @@ export const SLIDER_VALUE_ACCESSOR: any = {
             [attr.data-pc-name]="'slider'"
             [attr.data-pc-section]="'root'"
         >
+            @if (range && orientation == 'horizontal') {
+            <span class="p-slider-range" [ngStyle]="{ left: offset !== null && offset !== undefined ? offset + '%' : handleValues[0] + '%', width: diff ? diff + '%' : handleValues[1] - handleValues[0] + '%' }" [attr.data-pc-section]="'range'"></span>
+            } @if (range && orientation == 'vertical') {
             <span
-                *ngIf="range && orientation == 'horizontal'"
-                class="p-slider-range"
-                [ngStyle]="{ left: offset !== null && offset !== undefined ? offset + '%' : handleValues[0] + '%', width: diff ? diff + '%' : handleValues[1] - handleValues[0] + '%' }"
-                [attr.data-pc-section]="'range'"
-            ></span>
-            <span
-                *ngIf="range && orientation == 'vertical'"
                 class="p-slider-range"
                 [ngStyle]="{ bottom: offset !== null && offset !== undefined ? offset + '%' : handleValues[0] + '%', height: diff ? diff + '%' : handleValues[1] - handleValues[0] + '%' }"
                 [attr.data-pc-section]="'range'"
             ></span>
-            <span *ngIf="!range && orientation == 'vertical'" class="p-slider-range" [attr.data-pc-section]="'range'" [ngStyle]="{ height: handleValue + '%' }"></span>
-            <span *ngIf="!range && orientation == 'horizontal'" class="p-slider-range" [attr.data-pc-section]="'range'" [ngStyle]="{ width: handleValue + '%' }"></span>
+            } @if (!range && orientation == 'vertical') {
+            <span class="p-slider-range" [attr.data-pc-section]="'range'" [ngStyle]="{ height: handleValue + '%' }"></span>
+            } @if (!range && orientation == 'horizontal') {
+            <span class="p-slider-range" [attr.data-pc-section]="'range'" [ngStyle]="{ width: handleValue + '%' }"></span>
+            } @if (!range) {
             <span
-                *ngIf="!range"
                 #sliderHandle
                 class="p-slider-handle"
                 [style.transition]="dragging ? 'none' : null"
@@ -83,8 +81,8 @@ export const SLIDER_VALUE_ACCESSOR: any = {
                 pAutoFocus
                 [autofocus]="autofocus"
             ></span>
+            } @if (range) {
             <span
-                *ngIf="range"
                 #sliderHandleStart
                 [style.transition]="dragging ? 'none' : null"
                 class="p-slider-handle"
@@ -107,8 +105,8 @@ export const SLIDER_VALUE_ACCESSOR: any = {
                 pAutoFocus
                 [autofocus]="autofocus"
             ></span>
+            } @if (range) {
             <span
-                *ngIf="range"
                 #sliderHandleEnd
                 [style.transition]="dragging ? 'none' : null"
                 class="p-slider-handle"
@@ -128,6 +126,7 @@ export const SLIDER_VALUE_ACCESSOR: any = {
                 [attr.aria-orientation]="orientation"
                 [attr.data-pc-section]="'endHandler'"
             ></span>
+            }
         </div>
     `,
     providers: [SLIDER_VALUE_ACCESSOR],

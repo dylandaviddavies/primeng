@@ -14,9 +14,11 @@ import { Code } from '@domain/code';
                 <p-inputOtp [(ngModel)]="value" [length]="6" style="gap: 0">
                     <ng-template pTemplate="input" let-token let-events="events" let-index="index">
                         <input pInputText type="text" [maxLength]="1" (input)="events.input($event)" (keydown)="events.keydown($event)" [attr.value]="token" class="custom-otp-input" />
-                        <div *ngIf="index === 3" class="px-3">
+                        @if (index === 3) {
+                        <div class="px-3">
                             <i class="pi pi-minus"></i>
                         </div>
+                        }
                     </ng-template>
                 </p-inputOtp>
                 <div class="flex justify-content-between mt-5 align-self-stretch">

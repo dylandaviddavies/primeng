@@ -25,23 +25,25 @@ import { Nullable } from 'primeng/ts-helpers';
             [attr.data-pc-name]="'timeline'"
             [attr.data-pc-section]="'root'"
         >
-            <div *ngFor="let event of value; let last = last" class="p-timeline-event" [attr.data-pc-section]="'event'">
+            @for (event of value; track event; let last = $last) {
+            <div class="p-timeline-event" [attr.data-pc-section]="'event'">
                 <div class="p-timeline-event-opposite" [attr.data-pc-section]="'opposite'">
                     <ng-container *ngTemplateOutlet="oppositeTemplate; context: { $implicit: event }"></ng-container>
                 </div>
                 <div class="p-timeline-event-separator" [attr.data-pc-section]="'separator'">
-                    <ng-container *ngIf="markerTemplate; else marker">
-                        <ng-container *ngTemplateOutlet="markerTemplate; context: { $implicit: event }"></ng-container>
-                    </ng-container>
-                    <ng-template #marker>
-                        <div class="p-timeline-event-marker" [attr.data-pc-section]="'marker'"></div>
-                    </ng-template>
-                    <div *ngIf="!last" class="p-timeline-event-connector"></div>
+                    @if (markerTemplate) {
+                    <ng-container *ngTemplateOutlet="markerTemplate; context: { $implicit: event }"></ng-container>
+                    } @else {
+                    <div class="p-timeline-event-marker" [attr.data-pc-section]="'marker'"></div>
+                    } @if (!last) {
+                    <div class="p-timeline-event-connector"></div>
+                    }
                 </div>
                 <div class="p-timeline-event-content" [attr.data-pc-section]="'content'">
                     <ng-container *ngTemplateOutlet="contentTemplate; context: { $implicit: event }"></ng-container>
                 </div>
             </div>
+            }
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,

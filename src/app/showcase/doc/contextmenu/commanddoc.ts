@@ -19,8 +19,8 @@ interface Users {
         <div class="card flex md:justify-content-center">
             <p-toast />
             <ul class="m-0 p-0 list-none border-1 surface-border border-round p-3 flex flex-column gap-2 w-full md:w-30rem">
+                @for (user of users; track user) {
                 <li
-                    *ngFor="let user of users"
                     [class]="[
                         'p-2',
                         'hover:surface-hover',
@@ -42,6 +42,7 @@ interface Users {
                     </div>
                     <p-tag [value]="user.role" [severity]="getBadge(user)" />
                 </li>
+                }
             </ul>
 
             <p-contextMenu #cm [model]="items" (onHide)="onHide()" />

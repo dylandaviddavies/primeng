@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { Component, ElementRef, OnDestroy, afterNextRender } from '@angular/core';
 import { NavigationEnd, Router, RouterModule } from '@angular/router';
 import { AutoCompleteModule } from 'primeng/autocomplete';
@@ -22,7 +21,9 @@ export interface MenuItem {
     template: ` <aside>
         <nav>
             <ol class="layout-menu">
-                <li *ngFor="let item of menu; let i = index" app-menuitem [item]="item" [root]="true"></li>
+                @for (item of menu; track item; let i = $index) {
+                <li app-menuitem [item]="item" [root]="true"></li>
+                }
             </ol>
         </nav>
     </aside>`,
@@ -30,7 +31,7 @@ export interface MenuItem {
         class: 'layout-sidebar',
         '[class.active]': 'isActive'
     },
-    imports: [CommonModule, StyleClassModule, RouterModule, AutoCompleteModule, AppMenuItemComponent]
+    imports: [StyleClassModule, RouterModule, AutoCompleteModule, AppMenuItemComponent]
 })
 export class AppMenuComponent implements OnDestroy {
     menu!: MenuItem[];

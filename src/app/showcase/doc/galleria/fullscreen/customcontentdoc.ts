@@ -9,11 +9,15 @@ import { PhotoService } from '@service/photoservice';
             <p>Using <i>activeIndex</i>, Galleria is displayed with a specific initial image.</p>
         </app-docsectiontext>
         <div class="card">
-            <div *ngIf="images" class="grid" style="max-width: 800px;">
-                <div *ngFor="let image of images; let index = index" class="col-3" key="index">
+            @if (images) {
+            <div class="grid" style="max-width: 800px;">
+                @for (image of images; track image; let index = $index) {
+                <div class="col-3" key="index">
                     <img [src]="image.thumbnailImageSrc" [alt]="image.alt" style="cursor: pointer" (click)="imageClick(index)" />
                 </div>
+                }
             </div>
+            }
             <p-galleria
                 [(value)]="images"
                 [(visible)]="displayCustom"

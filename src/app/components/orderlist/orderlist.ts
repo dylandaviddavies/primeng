@@ -1,27 +1,27 @@
 import { CdkDragDrop, DragDropModule, moveItemInArray } from '@angular/cdk/drag-drop';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
-  AfterContentInit,
-  AfterViewChecked,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ContentChildren,
-  ElementRef,
-  EventEmitter,
-  Inject,
-  Input,
-  NgModule,
-  Output,
-  PLATFORM_ID,
-  QueryList,
-  Renderer2,
-  TemplateRef,
-  ViewChild,
-  ViewEncapsulation,
-  booleanAttribute,
-  numberAttribute,
-  DOCUMENT
+    AfterContentInit,
+    AfterViewChecked,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ContentChildren,
+    ElementRef,
+    EventEmitter,
+    Inject,
+    Input,
+    NgModule,
+    Output,
+    PLATFORM_ID,
+    QueryList,
+    Renderer2,
+    TemplateRef,
+    ViewChild,
+    ViewEncapsulation,
+    booleanAttribute,
+    numberAttribute,
+    DOCUMENT
 } from '@angular/core';
 import { FilterService, PrimeNGConfig, PrimeTemplate, SharedModule } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -50,50 +50,65 @@ import { OrderListFilterEvent, OrderListFilterOptions, OrderListSelectionChangeE
         >
             <div class="p-orderlist-controls" [attr.data-pc-section]="'controls'">
                 <button type="button" [disabled]="moveDisabled()" pButton pRipple class="p-button-icon-only" (click)="moveUp()" [attr.aria-label]="moveUpAriaLabel" [attr.data-pc-section]="'moveUpButton'">
-                    <AngleUpIcon *ngIf="!moveUpIconTemplate" [attr.data-pc-section]="'moveupicon'" />
+                    @if (!moveUpIconTemplate) {
+                    <AngleUpIcon [attr.data-pc-section]="'moveupicon'" />
+                    }
                     <ng-template *ngTemplateOutlet="moveUpIconTemplate"></ng-template>
                 </button>
                 <button type="button" [disabled]="moveDisabled()" pButton pRipple class="p-button-icon-only" (click)="moveTop()" [attr.aria-label]="moveTopAriaLabel" [attr.data-pc-section]="'moveTopButton'">
-                    <AngleDoubleUpIcon *ngIf="!moveTopIconTemplate" [attr.data-pc-section]="'movetopicon'" />
+                    @if (!moveTopIconTemplate) {
+                    <AngleDoubleUpIcon [attr.data-pc-section]="'movetopicon'" />
+                    }
                     <ng-template *ngTemplateOutlet="moveTopIconTemplate"></ng-template>
                 </button>
                 <button type="button" [disabled]="moveDisabled()" pButton pRipple class="p-button-icon-only" (click)="moveDown()" [attr.aria-label]="moveDownAriaLabel" [attr.data-pc-section]="'moveDownButton'">
-                    <AngleDownIcon *ngIf="!moveDownIconTemplate" [attr.data-pc-section]="'movedownicon'" />
+                    @if (!moveDownIconTemplate) {
+                    <AngleDownIcon [attr.data-pc-section]="'movedownicon'" />
+                    }
                     <ng-template *ngTemplateOutlet="moveDownIconTemplate"></ng-template>
                 </button>
                 <button type="button" [disabled]="moveDisabled()" pButton pRipple class="p-button-icon-only" (click)="moveBottom()" [attr.aria-label]="moveBottomAriaLabel" [attr.data-pc-section]="'moveBottomButton'">
-                    <AngleDoubleDownIcon *ngIf="!moveBottomIconTemplate" [attr.data-pc-section]="'movebottomicon'" />
+                    @if (!moveBottomIconTemplate) {
+                    <AngleDoubleDownIcon [attr.data-pc-section]="'movebottomicon'" />
+                    }
                     <ng-template *ngTemplateOutlet="moveBottomIconTemplate"></ng-template>
                 </button>
             </div>
             <div class="p-orderlist-list-container" [attr.data-pc-section]="'container'">
-                <div class="p-orderlist-header" *ngIf="header || headerTemplate" [attr.data-pc-section]="'header'">
-                    <div class="p-orderlist-title" *ngIf="!headerTemplate">{{ header }}</div>
+                @if (header || headerTemplate) {
+                <div class="p-orderlist-header" [attr.data-pc-section]="'header'">
+                    @if (!headerTemplate) {
+                    <div class="p-orderlist-title">{{ header }}</div>
+                    }
                     <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
                 </div>
-                <div class="p-orderlist-filter-container" *ngIf="filterBy" [attr.data-pc-section]="'filterContainer'">
-                    <ng-container *ngIf="filterTemplate; else builtInFilterElement">
-                        <ng-container *ngTemplateOutlet="filterTemplate; context: { options: filterOptions }"></ng-container>
-                    </ng-container>
-                    <ng-template #builtInFilterElement>
-                        <div class="p-orderlist-filter" [attr.data-pc-section]="'filter'">
-                            <input
-                                #filter
-                                type="text"
-                                role="textbox"
-                                (keyup)="onFilterKeyup($event)"
-                                [disabled]="disabled"
-                                class="p-orderlist-filter-input p-inputtext p-component"
-                                [attr.placeholder]="filterPlaceholder"
-                                [attr.aria-label]="ariaFilterLabel"
-                            />
-                            <SearchIcon *ngIf="!filterIconTemplate" [styleClass]="'p-orderlist-filter-icon'" [attr.data-pc-section]="'filterIcon'" />
-                            <span class="p-orderlist-filter-icon" *ngIf="filterIconTemplate" [attr.data-pc-section]="'filterIcon'">
-                                <ng-template *ngTemplateOutlet="filterIconTemplate"></ng-template>
-                            </span>
-                        </div>
-                    </ng-template>
+                } @if (filterBy) {
+                <div class="p-orderlist-filter-container" [attr.data-pc-section]="'filterContainer'">
+                    @if (filterTemplate) {
+                    <ng-container *ngTemplateOutlet="filterTemplate; context: { options: filterOptions }"></ng-container>
+                    } @else {
+                    <div class="p-orderlist-filter" [attr.data-pc-section]="'filter'">
+                        <input
+                            #filter
+                            type="text"
+                            role="textbox"
+                            (keyup)="onFilterKeyup($event)"
+                            [disabled]="disabled"
+                            class="p-orderlist-filter-input p-inputtext p-component"
+                            [attr.placeholder]="filterPlaceholder"
+                            [attr.aria-label]="ariaFilterLabel"
+                        />
+                        @if (!filterIconTemplate) {
+                        <SearchIcon [styleClass]="'p-orderlist-filter-icon'" [attr.data-pc-section]="'filterIcon'" />
+                        } @if (filterIconTemplate) {
+                        <span class="p-orderlist-filter-icon" [attr.data-pc-section]="'filterIcon'">
+                            <ng-template *ngTemplateOutlet="filterIconTemplate"></ng-template>
+                        </span>
+                        }
+                    </div>
+                    }
                 </div>
+                }
                 <ul
                     #listelement
                     [id]="id + '_list'"
@@ -112,36 +127,35 @@ import { OrderListFilterEvent, OrderListFilterOptions, OrderListSelectionChangeE
                     (blur)="onListBlur($event)"
                     (keydown)="onItemKeydown($event)"
                 >
-                    <ng-template ngFor [ngForTrackBy]="trackBy" let-item [ngForOf]="value" let-i="index" let-l="last">
-                        <li
-                            [id]="id + '_' + i"
-                            pRipple
-                            cdkDrag
-                            role="option"
-                            class="p-orderlist-item"
-                            [ngClass]="{ 'p-highlight': isSelected(item), 'p-disabled': disabled, 'p-focus': id + '_' + i === focusedOptionId() }"
-                            [cdkDragData]="item"
-                            [cdkDragDisabled]="!dragdrop"
-                            (click)="onItemClick($event, item, i, id + '_' + i)"
-                            (touchend)="onItemTouchEnd()"
-                            (mousedown)="onOptionMouseDown(i)"
-                            *ngIf="isItemVisible(item)"
-                            [attr.aria-selected]="isSelected(item)"
-                            [attr.data-pc-section]="'item'"
-                            [attr.data-p-highlight]="isSelected(item)"
-                            [attr.data-p-focused]="id + '_' + i === focusedOptionId()"
-                        >
-                            <ng-container *ngTemplateOutlet="itemTemplate; context: { $implicit: item, index: i }"></ng-container>
-                        </li>
-                    </ng-template>
-                    <ng-container *ngIf="isEmpty() && (emptyMessageTemplate || emptyFilterMessageTemplate)">
-                        <li *ngIf="!filterValue || !emptyFilterMessageTemplate" class="p-orderlist-empty-message" [attr.data-pc-section]="'emptyMessage'">
-                            <ng-container *ngTemplateOutlet="emptyMessageTemplate"></ng-container>
-                        </li>
-                        <li *ngIf="filterValue" class="p-orderlist-empty-message" [attr.data-pc-section]="'emptyMessage'">
-                            <ng-container *ngTemplateOutlet="emptyFilterMessageTemplate"></ng-container>
-                        </li>
-                    </ng-container>
+                    @for (item of value; track trackBy(i, item); let i = $index; let l = $last) { @if (isItemVisible(item)) {
+                    <li
+                        [id]="id + '_' + i"
+                        pRipple
+                        cdkDrag
+                        role="option"
+                        class="p-orderlist-item"
+                        [ngClass]="{ 'p-highlight': isSelected(item), 'p-disabled': disabled, 'p-focus': id + '_' + i === focusedOptionId() }"
+                        [cdkDragData]="item"
+                        [cdkDragDisabled]="!dragdrop"
+                        (click)="onItemClick($event, item, i, id + '_' + i)"
+                        (touchend)="onItemTouchEnd()"
+                        (mousedown)="onOptionMouseDown(i)"
+                        [attr.aria-selected]="isSelected(item)"
+                        [attr.data-pc-section]="'item'"
+                        [attr.data-p-highlight]="isSelected(item)"
+                        [attr.data-p-focused]="id + '_' + i === focusedOptionId()"
+                    >
+                        <ng-container *ngTemplateOutlet="itemTemplate; context: { $implicit: item, index: i }"></ng-container>
+                    </li>
+                    } } @if (isEmpty() && (emptyMessageTemplate || emptyFilterMessageTemplate)) { @if (!filterValue || !emptyFilterMessageTemplate) {
+                    <li class="p-orderlist-empty-message" [attr.data-pc-section]="'emptyMessage'">
+                        <ng-container *ngTemplateOutlet="emptyMessageTemplate"></ng-container>
+                    </li>
+                    } @if (filterValue) {
+                    <li class="p-orderlist-empty-message" [attr.data-pc-section]="'emptyMessage'">
+                        <ng-container *ngTemplateOutlet="emptyFilterMessageTemplate"></ng-container>
+                    </li>
+                    } }
                 </ul>
             </div>
         </div>

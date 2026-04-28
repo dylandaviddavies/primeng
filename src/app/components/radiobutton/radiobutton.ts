@@ -90,15 +90,16 @@ export class RadioControlRegistry {
                 <span class="p-radiobutton-icon" [attr.data-pc-section]="'icon'"></span>
             </div>
         </div>
+        @if (label) {
         <label
             (click)="select($event)"
             [class]="labelStyleClass"
             [ngClass]="{ 'p-radiobutton-label': true, 'p-radiobutton-label-active': input.checked, 'p-disabled': disabled, 'p-radiobutton-label-focus': focused }"
-            *ngIf="label"
             [attr.for]="inputId"
             [attr.data-pc-section]="'label'"
             >{{ label }}</label
         >
+        }
     `,
     providers: [RADIO_VALUE_ACCESSOR],
     changeDetection: ChangeDetectionStrategy.OnPush,

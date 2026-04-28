@@ -52,22 +52,25 @@ import { UniqueComponentId } from 'primeng/utils';
                     [attr.aria-disabled]="disabled"
                     [attr.data-pc-section]="'headeraction'"
                 >
-                    <ng-container *ngIf="!iconTemplate">
-                        <ng-container *ngIf="selected">
-                            <span *ngIf="accordion.collapseIcon" [class]="accordion.collapseIcon" [ngClass]="iconClass" [attr.aria-hidden]="true"></span>
-                            <ChevronDownIcon *ngIf="!accordion.collapseIcon" [ngClass]="iconClass" [attr.aria-hidden]="true" />
-                        </ng-container>
-                        <ng-container *ngIf="!selected">
-                            <span *ngIf="accordion.expandIcon" [class]="accordion.expandIcon" [ngClass]="iconClass" [attr.aria-hidden]="true"></span>
-                            <ChevronRightIcon *ngIf="!accordion.expandIcon" [ngClass]="iconClass" [attr.aria-hidden]="true" />
-                        </ng-container>
-                    </ng-container>
+                    @if (!iconTemplate) { @if (selected) { @if (accordion.collapseIcon) {
+                    <span [class]="accordion.collapseIcon" [ngClass]="iconClass" [attr.aria-hidden]="true"></span>
+                    } @if (!accordion.collapseIcon) {
+                    <ChevronDownIcon [ngClass]="iconClass" [attr.aria-hidden]="true" />
+                    } } @if (!selected) { @if (accordion.expandIcon) {
+                    <span [class]="accordion.expandIcon" [ngClass]="iconClass" [attr.aria-hidden]="true"></span>
+                    } @if (!accordion.expandIcon) {
+                    <ChevronRightIcon [ngClass]="iconClass" [attr.aria-hidden]="true" />
+                    } } }
                     <ng-template *ngTemplateOutlet="iconTemplate; context: { $implicit: selected }"></ng-template>
-                    <span class="p-accordion-header-text" *ngIf="!hasHeaderFacet">
+                    @if (!hasHeaderFacet) {
+                    <span class="p-accordion-header-text">
                         {{ header }}
                     </span>
+                    }
                     <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
-                    <ng-content select="p-header" *ngIf="hasHeaderFacet"></ng-content>
+                    @if (hasHeaderFacet) {
+                    <ng-content select="p-header"></ng-content>
+                    }
                 </a>
             </div>
             <div
@@ -81,23 +84,29 @@ import { UniqueComponentId } from 'primeng/utils';
             >
                 <div class="p-accordion-content" [ngClass]="contentStyleClass" [ngStyle]="contentStyle">
                     <ng-content></ng-content>
-                    <ng-container *ngIf="contentTemplate && (cache ? loaded : selected)">
-                        <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
-                    </ng-container>
+                    @if (contentTemplate && (cache ? loaded : selected)) {
+                    <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
+                    }
                 </div>
             </div>
         </div>
     `,
     animations: [
         trigger('tabContent', [
-            state('hidden', style({
-                height: '0',
-                visibility: 'hidden'
-            })),
-            state('visible', style({
-                height: '*',
-                visibility: 'visible'
-            })),
+            state(
+                'hidden',
+                style({
+                    height: '0',
+                    visibility: 'hidden'
+                })
+            ),
+            state(
+                'visible',
+                style({
+                    height: '*',
+                    visibility: 'visible'
+                })
+            ),
             transition('visible <=> hidden', [animate('{{transitionParams}}')]),
             transition('void => *', animate(0))
         ])

@@ -12,16 +12,23 @@ import { TimesCircleIcon } from 'primeng/icons/timescircle';
     selector: 'p-message',
     template: `
         <div aria-live="polite" class="p-inline-message p-component p-inline-message" [ngStyle]="style" [class]="styleClass" [ngClass]="containerClass">
-            <CheckIcon *ngIf="icon === 'success'" [styleClass]="'p-inline-message-icon'" />
-            <InfoCircleIcon *ngIf="icon === 'info'" [styleClass]="'p-inline-message-icon'" />
-            <TimesCircleIcon *ngIf="icon === 'error'" [styleClass]="'p-inline-message-icon'" />
-            <ExclamationTriangleIcon *ngIf="icon === 'warn'" [styleClass]="'p-inline-message-icon'" />
-            <div *ngIf="!escape; else escapeOut">
-                <span *ngIf="!escape" class="p-inline-message-text" [innerHTML]="text"></span>
+            @if (icon === 'success') {
+            <CheckIcon [styleClass]="'p-inline-message-icon'" />
+            } @if (icon === 'info') {
+            <InfoCircleIcon [styleClass]="'p-inline-message-icon'" />
+            } @if (icon === 'error') {
+            <TimesCircleIcon [styleClass]="'p-inline-message-icon'" />
+            } @if (icon === 'warn') {
+            <ExclamationTriangleIcon [styleClass]="'p-inline-message-icon'" />
+            } @if (!escape) {
+            <div>
+                @if (!escape) {
+                <span class="p-inline-message-text" [innerHTML]="text"></span>
+                }
             </div>
-            <ng-template #escapeOut>
-                <span *ngIf="escape" class="p-inline-message-text">{{ text }}</span>
-            </ng-template>
+            } @else { @if (escape) {
+            <span class="p-inline-message-text">{{ text }}</span>
+            } }
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,

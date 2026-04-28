@@ -206,7 +206,10 @@ export class BadgeDirective implements OnChanges, AfterViewInit {
  */
 @Component({
     selector: 'p-badge',
-    template: ` <span *ngIf="!badgeDisabled" [ngClass]="containerClass()" [class]="styleClass" [ngStyle]="style">{{ value }}</span> `,
+    template: `
+        @if (!badgeDisabled) {<span [ngClass]="containerClass()" [class]="styleClass" [ngStyle]="style">{{ value }}</span
+        >}
+    `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     styleUrls: ['./badge.css'],

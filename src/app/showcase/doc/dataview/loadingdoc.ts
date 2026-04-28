@@ -18,7 +18,8 @@ import { ProductService } from '@service/productservice';
                 </ng-template>
                 <ng-template pTemplate="list" let-products>
                     <div class="grid grid-nogutter">
-                        <div class="col-12" *ngFor="let i of counterArray(6); let first = first" class="col-12">
+                        @for (i of counterArray(6); track i; let first = $first) {
+                        <div class="col-12" class="col-12">
                             <div class="flex flex-column xl:flex-row xl:align-items-start p-4 gap-4" [ngClass]="{ 'border-top-1 surface-border': !first }">
                                 <p-skeleton styleClass="w-9 sm:w-16rem xl:w-10rem h-6rem block xl:block mx-auto border-round" />
                                 <div class="flex flex-column sm:flex-row justify-content-between align-items-center xl:align-items-start flex-1 gap-4">
@@ -37,11 +38,13 @@ import { ProductService } from '@service/productservice';
                                 </div>
                             </div>
                         </div>
+                        }
                     </div>
                 </ng-template>
                 <ng-template let-product pTemplate="grid" let-products>
                     <div class="grid grid-nogutter">
-                        <div class="col-12 sm:col-6 md:col-4 xl:col-6 p-2" *ngFor="let i of counterArray(6)">
+                        @for (i of counterArray(6); track i) {
+                        <div class="col-12 sm:col-6 md:col-4 xl:col-6 p-2">
                             <div class="p-4 border-1 surface-border surface-card border-round">
                                 <div class="flex flex-wrap align-items-center justify-content-between gap-2">
                                     <p-skeleton styleClass="w-6rem border-round h-2rem" />
@@ -58,6 +61,7 @@ import { ProductService } from '@service/productservice';
                                 </div>
                             </div>
                         </div>
+                        }
                     </div>
                 </ng-template>
             </p-dataView>

@@ -1,5 +1,23 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChildren, ElementRef, EventEmitter, Inject, Input, NgModule, Output, PLATFORM_ID, QueryList, Renderer2, ViewChild, ViewEncapsulation, numberAttribute, DOCUMENT } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ContentChildren,
+    ElementRef,
+    EventEmitter,
+    Inject,
+    Input,
+    NgModule,
+    Output,
+    PLATFORM_ID,
+    QueryList,
+    Renderer2,
+    ViewChild,
+    ViewEncapsulation,
+    numberAttribute,
+    DOCUMENT
+} from '@angular/core';
 import { PrimeTemplate, SharedModule } from 'primeng/api';
 import { DomHandler } from 'primeng/dom';
 import { Nullable, VoidListener } from 'primeng/ts-helpers';
@@ -12,34 +30,34 @@ import { SplitterResizeEndEvent, SplitterResizeStartEvent } from './splitter.int
     selector: 'p-splitter',
     template: `
         <div #container [ngClass]="containerClass()" [class]="styleClass" [ngStyle]="style" [attr.data-pc-name]="'splitter'" [attr.data-p-gutter-resizing]="false" [attr.data-pc-section]="'root'">
-            <ng-template ngFor let-panel [ngForOf]="panels" let-i="index">
-                <div [ngClass]="panelContainerClass()" [class]="panelStyleClass" [ngStyle]="panelStyle" tabindex="-1" [attr.data-pc-name]="'splitter'" [attr.data-pc-section]="'root'">
-                    <ng-container *ngTemplateOutlet="panel"></ng-container>
-                </div>
+            @for (panel of panels; track panel; let i = $index) {
+            <div [ngClass]="panelContainerClass()" [class]="panelStyleClass" [ngStyle]="panelStyle" tabindex="-1" [attr.data-pc-name]="'splitter'" [attr.data-pc-section]="'root'">
+                <ng-container *ngTemplateOutlet="panel"></ng-container>
+            </div>
+            @if (i !== panels.length - 1) {
+            <div
+                class="p-splitter-gutter"
+                role="separator"
+                tabindex="-1"
+                (mousedown)="onGutterMouseDown($event, i)"
+                (touchstart)="onGutterTouchStart($event, i)"
+                (touchmove)="onGutterTouchMove($event)"
+                (touchend)="onGutterTouchEnd($event, i)"
+                [attr.data-p-gutter-resizing]="false"
+                [attr.data-pc-section]="'gutter'"
+            >
                 <div
-                    *ngIf="i !== panels.length - 1"
-                    class="p-splitter-gutter"
-                    role="separator"
-                    tabindex="-1"
-                    (mousedown)="onGutterMouseDown($event, i)"
-                    (touchstart)="onGutterTouchStart($event, i)"
-                    (touchmove)="onGutterTouchMove($event)"
-                    (touchend)="onGutterTouchEnd($event, i)"
-                    [attr.data-p-gutter-resizing]="false"
-                    [attr.data-pc-section]="'gutter'"
-                >
-                    <div
-                        class="p-splitter-gutter-handle"
-                        tabindex="0"
-                        [ngStyle]="gutterStyle()"
-                        [attr.aria-orientation]="layout"
-                        [attr.aria-valuenow]="prevSize"
-                        [attr.data-pc-section]="'gutterhandle'"
-                        (keyup)="onGutterKeyUp($event)"
-                        (keydown)="onGutterKeyDown($event, i)"
-                    ></div>
-                </div>
-            </ng-template>
+                    class="p-splitter-gutter-handle"
+                    tabindex="0"
+                    [ngStyle]="gutterStyle()"
+                    [attr.aria-orientation]="layout"
+                    [attr.aria-valuenow]="prevSize"
+                    [attr.data-pc-section]="'gutterhandle'"
+                    (keyup)="onGutterKeyUp($event)"
+                    (keydown)="onGutterKeyDown($event, i)"
+                ></div>
+            </div>
+            } }
         </div>
     `,
     encapsulation: ViewEncapsulation.None,

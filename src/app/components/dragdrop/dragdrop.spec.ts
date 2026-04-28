@@ -6,16 +6,20 @@ import { Component } from '@angular/core';
 @Component({
     template: `
         <ul style="margin:0;padding:0">
-            <li *ngFor="let car of availableCars" pDraggable="cars" (onDragStart)="dragStart($event, car)" (onDrag)="onDrag()" (onDragEnd)="dragEnd($event)">
+            @for (car of availableCars; track car) {
+            <li pDraggable="cars" (onDragStart)="dragStart($event, car)" (onDrag)="onDrag()" (onDragEnd)="dragEnd($event)">
                 <h3>{{ car.vin }} - {{ car.year }}</h3>
             </li>
+            }
         </ul>
         <div pDroppable="cars" style="height: 250px;" (onDrop)="drop($event)" [ngClass]="{ 'ui-highlight-car': draggedCar }">
-            <div *ngFor="let car of selectedCars">
+            @for (car of selectedCars; track car) {
+            <div>
                 <h4>
                     {{ car.brand }}
                 </h4>
             </div>
+            }
         </div>
     `,
     standalone: false

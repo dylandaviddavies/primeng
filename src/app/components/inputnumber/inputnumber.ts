@@ -1,28 +1,28 @@
 import { CommonModule } from '@angular/common';
 import {
-  AfterContentInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ContentChildren,
-  ElementRef,
-  EventEmitter,
-  Inject,
-  Injector,
-  Input,
-  NgModule,
-  OnChanges,
-  OnInit,
-  Output,
-  QueryList,
-  SimpleChanges,
-  TemplateRef,
-  ViewChild,
-  ViewEncapsulation,
-  booleanAttribute,
-  forwardRef,
-  numberAttribute,
-  DOCUMENT
+    AfterContentInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ContentChildren,
+    ElementRef,
+    EventEmitter,
+    Inject,
+    Injector,
+    Input,
+    NgModule,
+    OnChanges,
+    OnInit,
+    Output,
+    QueryList,
+    SimpleChanges,
+    TemplateRef,
+    ViewChild,
+    ViewEncapsulation,
+    booleanAttribute,
+    forwardRef,
+    numberAttribute,
+    DOCUMENT
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR, NgControl } from '@angular/forms';
 import { PrimeTemplate, SharedModule } from 'primeng/api';
@@ -100,13 +100,14 @@ export const INPUTNUMBER_VALUE_ACCESSOR: any = {
                 pAutoFocus
                 [autofocus]="autofocus"
             />
-            <ng-container *ngIf="buttonLayout != 'vertical' && showClear && value">
-                <TimesIcon *ngIf="!clearIconTemplate" [ngClass]="'p-inputnumber-clear-icon'" (click)="clear()" [attr.data-pc-section]="'clearIcon'" />
-                <span *ngIf="clearIconTemplate" (click)="clear()" class="p-inputnumber-clear-icon" [attr.data-pc-section]="'clearIcon'">
-                    <ng-template *ngTemplateOutlet="clearIconTemplate"></ng-template>
-                </span>
-            </ng-container>
-            <span class="p-inputnumber-button-group" *ngIf="showButtons && buttonLayout === 'stacked'" [attr.data-pc-section]="'buttonGroup'">
+            @if (buttonLayout != 'vertical' && showClear && value) { @if (!clearIconTemplate) {
+            <TimesIcon [ngClass]="'p-inputnumber-clear-icon'" (click)="clear()" [attr.data-pc-section]="'clearIcon'" />
+            } @if (clearIconTemplate) {
+            <span (click)="clear()" class="p-inputnumber-clear-icon" [attr.data-pc-section]="'clearIcon'">
+                <ng-template *ngTemplateOutlet="clearIconTemplate"></ng-template>
+            </span>
+            } } @if (showButtons && buttonLayout === 'stacked') {
+            <span class="p-inputnumber-button-group" [attr.data-pc-section]="'buttonGroup'">
                 <button
                     type="button"
                     pButton
@@ -123,11 +124,13 @@ export const INPUTNUMBER_VALUE_ACCESSOR: any = {
                     [attr.aria-hidden]="true"
                     [attr.data-pc-section]="'incrementbutton'"
                 >
-                    <span *ngIf="incrementButtonIcon" [ngClass]="incrementButtonIcon" [attr.data-pc-section]="'incrementbuttonicon'"></span>
-                    <ng-container *ngIf="!incrementButtonIcon">
-                        <AngleUpIcon *ngIf="!incrementButtonIconTemplate" [attr.data-pc-section]="'incrementbuttonicon'" />
-                        <ng-template *ngTemplateOutlet="incrementButtonIconTemplate"></ng-template>
-                    </ng-container>
+                    @if (incrementButtonIcon) {
+                    <span [ngClass]="incrementButtonIcon" [attr.data-pc-section]="'incrementbuttonicon'"></span>
+                    } @if (!incrementButtonIcon) { @if (!incrementButtonIconTemplate) {
+                    <AngleUpIcon [attr.data-pc-section]="'incrementbuttonicon'" />
+                    }
+                    <ng-template *ngTemplateOutlet="incrementButtonIconTemplate"></ng-template>
+                    }
                 </button>
                 <button
                     type="button"
@@ -145,15 +148,17 @@ export const INPUTNUMBER_VALUE_ACCESSOR: any = {
                     (keyup)="onDownButtonKeyUp()"
                     [attr.data-pc-section]="decrementbutton"
                 >
-                    <span *ngIf="decrementButtonIcon" [ngClass]="decrementButtonIcon" [attr.data-pc-section]="'decrementbuttonicon'"></span>
-                    <ng-container *ngIf="!decrementButtonIcon">
-                        <AngleDownIcon *ngIf="!decrementButtonIconTemplate" [attr.data-pc-section]="'decrementbuttonicon'" />
-                        <ng-template *ngTemplateOutlet="decrementButtonIconTemplate"></ng-template>
-                    </ng-container>
+                    @if (decrementButtonIcon) {
+                    <span [ngClass]="decrementButtonIcon" [attr.data-pc-section]="'decrementbuttonicon'"></span>
+                    } @if (!decrementButtonIcon) { @if (!decrementButtonIconTemplate) {
+                    <AngleDownIcon [attr.data-pc-section]="'decrementbuttonicon'" />
+                    }
+                    <ng-template *ngTemplateOutlet="decrementButtonIconTemplate"></ng-template>
+                    }
                 </button>
             </span>
+            } @if (showButtons && buttonLayout !== 'stacked') {
             <button
-                *ngIf="showButtons && buttonLayout !== 'stacked'"
                 type="button"
                 pButton
                 [ngClass]="{ 'p-inputnumber-button p-inputnumber-button-up': true }"
@@ -169,14 +174,16 @@ export const INPUTNUMBER_VALUE_ACCESSOR: any = {
                 (keyup)="onUpButtonKeyUp()"
                 [attr.data-pc-section]="'incrementbutton'"
             >
-                <span *ngIf="incrementButtonIcon" [ngClass]="incrementButtonIcon" [attr.data-pc-section]="'incrementbuttonicon'"></span>
-                <ng-container *ngIf="!incrementButtonIcon">
-                    <AngleUpIcon *ngIf="!incrementButtonIconTemplate" [attr.data-pc-section]="'incrementbuttonicon'" />
-                    <ng-template *ngTemplateOutlet="incrementButtonIconTemplate"></ng-template>
-                </ng-container>
+                @if (incrementButtonIcon) {
+                <span [ngClass]="incrementButtonIcon" [attr.data-pc-section]="'incrementbuttonicon'"></span>
+                } @if (!incrementButtonIcon) { @if (!incrementButtonIconTemplate) {
+                <AngleUpIcon [attr.data-pc-section]="'incrementbuttonicon'" />
+                }
+                <ng-template *ngTemplateOutlet="incrementButtonIconTemplate"></ng-template>
+                }
             </button>
+            } @if (showButtons && buttonLayout !== 'stacked') {
             <button
-                *ngIf="showButtons && buttonLayout !== 'stacked'"
                 type="button"
                 pButton
                 [ngClass]="{ 'p-inputnumber-button p-inputnumber-button-down': true }"
@@ -192,12 +199,15 @@ export const INPUTNUMBER_VALUE_ACCESSOR: any = {
                 (keyup)="onDownButtonKeyUp()"
                 [attr.data-pc-section]="'decrementbutton'"
             >
-                <span *ngIf="decrementButtonIcon" [ngClass]="decrementButtonIcon" [attr.data-pc-section]="'decrementbuttonicon'"></span>
-                <ng-container *ngIf="!decrementButtonIcon">
-                    <AngleDownIcon *ngIf="!decrementButtonIconTemplate" [attr.data-pc-section]="'decrementbuttonicon'" />
-                    <ng-template *ngTemplateOutlet="decrementButtonIconTemplate"></ng-template>
-                </ng-container>
+                @if (decrementButtonIcon) {
+                <span [ngClass]="decrementButtonIcon" [attr.data-pc-section]="'decrementbuttonicon'"></span>
+                } @if (!decrementButtonIcon) { @if (!decrementButtonIconTemplate) {
+                <AngleDownIcon [attr.data-pc-section]="'decrementbuttonicon'" />
+                }
+                <ng-template *ngTemplateOutlet="decrementButtonIconTemplate"></ng-template>
+                }
             </button>
+            }
         </span>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,

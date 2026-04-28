@@ -1,10 +1,9 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { RouterModule } from '@angular/router';
 
 @Component({
     selector: 'footer-section',
-    imports: [CommonModule, RouterModule],
+    imports: [RouterModule],
     template: `
         <section class="landing-footer pt-8 px-5 lg:px-8">
             <div class="landing-footer-container">

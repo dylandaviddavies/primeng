@@ -7,15 +7,15 @@ import { TemplateFeaturesAnimationInlineModule } from './templatefeaturesanimati
     selector: 'template-features-animation',
     template: `
         <div class="template-features-animation-wrapper">
-            <ng-container *ngIf="!!title">
-                <div class="template-features-animation-title">
-                    <h2>{{ title }}</h2>
-                </div>
-            </ng-container>
+            @if (!!title) {
+            <div class="template-features-animation-title">
+                <h2>{{ title }}</h2>
+            </div>
+            }
             <div class="template-features-animation">
                 <div class="template-features-animation-left">
+                    @for (data of featuresData; track data; let i = $index) {
                     <div
-                        *ngFor="let data of featuresData; let i = index"
                         (mouseenter)="enterCardArea(data.id)"
                         (mouseleave)="leaveCardArea(data.id)"
                         [ngClass]="{
@@ -34,20 +34,20 @@ import { TemplateFeaturesAnimationInlineModule } from './templatefeaturesanimati
                             <p>{{ data.description }}</p>
                         </div>
                     </div>
+                    }
                 </div>
                 <div class="template-features-animation-right">
-                    <ng-container *ngIf="featuresData[selectedID - 1]?.type === 'inline-animation'; else featureImage">
-                        <template-features-animation-inline
-                            [inlineFeaturesData]="featuresData[selectedID - 1]?.inlineFeaturesData"
-                            [parentHandleClick]="handleClick"
-                            [parentHandleHover]="handleHover"
-                            [parentID]="selectedID"
-                            [inlineSeconds]="animationSeconds / featuresData[selectedID - 1]?.inlineFeaturesData.length"
-                        ></template-features-animation-inline>
-                    </ng-container>
-                    <ng-template #featureImage>
-                        <img [src]="featuresData[selectedID - 1]?.src" alt="Animation Feature Image" />
-                    </ng-template>
+                    @if (featuresData[selectedID - 1]?.type === 'inline-animation') {
+                    <template-features-animation-inline
+                        [inlineFeaturesData]="featuresData[selectedID - 1]?.inlineFeaturesData"
+                        [parentHandleClick]="handleClick"
+                        [parentHandleHover]="handleHover"
+                        [parentID]="selectedID"
+                        [inlineSeconds]="animationSeconds / featuresData[selectedID - 1]?.inlineFeaturesData.length"
+                    ></template-features-animation-inline>
+                    } @else {
+                    <img [src]="featuresData[selectedID - 1]?.src" alt="Animation Feature Image" />
+                    }
                 </div>
             </div>
         </div>

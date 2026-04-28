@@ -13,7 +13,9 @@ import { Code } from '@domain/code';
         </app-docsectiontext>
         <div class="card">
             <div class="flex flex-wrap gap-3 mb-5">
-                <p-radioButton *ngFor="let option of positionOptions" [name]="option.label" [value]="option.value" [label]="option.label" [(ngModel)]="position" [inputId]="label" />
+                @for (option of positionOptions; track option) {
+                <p-radioButton [name]="option.label" [value]="option.value" [label]="option.label" [(ngModel)]="position" [inputId]="label" />
+                }
             </div>
             <div class="dock-window">
                 <p-dock [model]="items" [position]="position">

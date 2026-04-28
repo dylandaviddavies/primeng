@@ -25,23 +25,28 @@ import { FieldsetAfterToggleEvent, FieldsetBeforeToggleEvent } from './fieldset.
             [attr.data-pc-section]="'root'"
         >
             <legend class="p-fieldset-legend" [attr.data-pc-section]="'legend'">
-                <ng-container *ngIf="toggleable; else legendContent">
-                    <a [attr.id]="id + '_header'" pRipple tabindex="0" role="button" [attr.aria-controls]="id + '_content'" [attr.aria-expanded]="!collapsed" [attr.aria-label]="buttonAriaLabel" (click)="toggle($event)" (keydown)="onKeyDown($event)">
-                        <ng-container *ngIf="collapsed">
-                            <PlusIcon *ngIf="!expandIconTemplate" [styleClass]="'p-fieldset-toggler'" [attr.data-pc-section]="'togglericon'" />
-                            <span *ngIf="expandIconTemplate" class="p-fieldset-toggler" [attr.data-pc-section]="'togglericon'">
-                                <ng-container *ngTemplateOutlet="expandIconTemplate"></ng-container>
-                            </span>
-                        </ng-container>
-                        <ng-container *ngIf="!collapsed">
-                            <MinusIcon *ngIf="!collapseIconTemplate" [styleClass]="'p-fieldset-toggler'" [attr.aria-hidden]="true" [attr.data-pc-section]="'togglericon'" />
-                            <span *ngIf="collapseIconTemplate" class="p-fieldset-toggler" [attr.data-pc-section]="'togglericon'">
-                                <ng-container *ngTemplateOutlet="collapseIconTemplate"></ng-container>
-                            </span>
-                        </ng-container>
-                        <ng-container *ngTemplateOutlet="legendContent"></ng-container>
-                    </a>
-                </ng-container>
+                @if (toggleable) {
+                <a [attr.id]="id + '_header'" pRipple tabindex="0" role="button" [attr.aria-controls]="id + '_content'" [attr.aria-expanded]="!collapsed" [attr.aria-label]="buttonAriaLabel" (click)="toggle($event)" (keydown)="onKeyDown($event)">
+                    @if (collapsed) { @if (!expandIconTemplate) {
+                    <PlusIcon [styleClass]="'p-fieldset-toggler'" [attr.data-pc-section]="'togglericon'" />
+                    } @if (expandIconTemplate) {
+                    <span class="p-fieldset-toggler" [attr.data-pc-section]="'togglericon'">
+                        <ng-container *ngTemplateOutlet="expandIconTemplate"></ng-container>
+                    </span>
+                    } } @if (!collapsed) { @if (!collapseIconTemplate) {
+                    <MinusIcon [styleClass]="'p-fieldset-toggler'" [attr.aria-hidden]="true" [attr.data-pc-section]="'togglericon'" />
+                    } @if (collapseIconTemplate) {
+                    <span class="p-fieldset-toggler" [attr.data-pc-section]="'togglericon'">
+                        <ng-container *ngTemplateOutlet="collapseIconTemplate"></ng-container>
+                    </span>
+                    } }
+                    <ng-container *ngTemplateOutlet="legendContent"></ng-container>
+                </a>
+                } @else {
+                <span class="p-fieldset-legend-text" [attr.data-pc-section]="'legendtitle'">{{ legend }}</span>
+                <ng-content select="p-header"></ng-content>
+                <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
+                }
                 <ng-template #legendContent>
                     <span class="p-fieldset-legend-text" [attr.data-pc-section]="'legendtitle'">{{ legend }}</span>
                     <ng-content select="p-header"></ng-content>
@@ -67,12 +72,18 @@ import { FieldsetAfterToggleEvent, FieldsetBeforeToggleEvent } from './fieldset.
     `,
     animations: [
         trigger('fieldsetContent', [
-            state('hidden', style({
-                height: '0'
-            })),
-            state('visible', style({
-                height: '*'
-            })),
+            state(
+                'hidden',
+                style({
+                    height: '0'
+                })
+            ),
+            state(
+                'visible',
+                style({
+                    height: '*'
+                })
+            ),
             transition('visible <=> hidden', [animate('{{transitionParams}}')]),
             transition('void => *', animate(0))
         ])

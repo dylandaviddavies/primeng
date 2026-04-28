@@ -1,25 +1,25 @@
 import { AnimationEvent, animate, state, style, transition, trigger } from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import {
-  AfterContentInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ContentChildren,
-  ElementRef,
-  EventEmitter,
-  HostListener,
-  Inject,
-  Input,
-  NgModule,
-  OnDestroy,
-  QueryList,
-  Renderer2,
-  TemplateRef,
-  ViewEncapsulation,
-  booleanAttribute,
-  numberAttribute,
-  DOCUMENT
+    AfterContentInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ContentChildren,
+    ElementRef,
+    EventEmitter,
+    HostListener,
+    Inject,
+    Input,
+    NgModule,
+    OnDestroy,
+    QueryList,
+    Renderer2,
+    TemplateRef,
+    ViewEncapsulation,
+    booleanAttribute,
+    numberAttribute,
+    DOCUMENT
 } from '@angular/core';
 import { Confirmation, ConfirmationService, OverlayService, PrimeNGConfig, PrimeTemplate, SharedModule, TranslationKeys } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -34,8 +34,8 @@ import { Subscription } from 'rxjs';
 @Component({
     selector: 'p-confirmPopup',
     template: `
+        @if (visible) {
         <div
-            *ngIf="visible"
             [ngClass]="'p-confirm-popup p-component'"
             [ngStyle]="style"
             [class]="styleClass"
@@ -45,60 +45,57 @@ import { Subscription } from 'rxjs';
             (@animation.start)="onAnimationStart($event)"
             (@animation.done)="onAnimationEnd($event)"
         >
-            <ng-container *ngIf="headlessTemplate; else notHeadless">
-                <ng-container *ngTemplateOutlet="headlessTemplate; context: { $implicit: confirmation }"></ng-container>
-            </ng-container>
-            <ng-template #notHeadless>
-                <div #content class="p-confirm-popup-content">
-                    <ng-container *ngIf="contentTemplate; else withoutContentTemplate">
-                        <ng-container *ngTemplateOutlet="contentTemplate; context: { $implicit: confirmation }"></ng-container>
-                    </ng-container>
-                    <ng-template #withoutContentTemplate>
-                        <i [ngClass]="'p-confirm-popup-icon'" [class]="confirmation?.icon" *ngIf="confirmation?.icon"></i>
-                        <span class="p-confirm-popup-message">{{ confirmation?.message }}</span>
-                    </ng-template>
-                </div>
-                <div class="p-confirm-popup-footer">
-                    <button
-                        type="button"
-                        pButton
-                        [label]="rejectButtonLabel"
-                        (click)="reject()"
-                        [ngClass]="'p-confirm-popup-reject p-button-sm'"
-                        [class]="confirmation?.rejectButtonStyleClass || 'p-button-text'"
-                        *ngIf="confirmation?.rejectVisible !== false"
-                        [attr.aria-label]="rejectButtonLabel"
-                    >
-                        <i [class]="confirmation?.rejectIcon" *ngIf="confirmation?.rejectIcon; else rejecticon"></i>
-                        <ng-template #rejecticon *ngTemplateOutlet="rejectIconTemplate"></ng-template>
-                    </button>
-                    <button
-                        type="button"
-                        pButton
-                        [label]="acceptButtonLabel"
-                        (click)="accept()"
-                        [ngClass]="'p-confirm-popup-accept p-button-sm'"
-                        [class]="confirmation?.acceptButtonStyleClass"
-                        *ngIf="confirmation?.acceptVisible !== false"
-                        [attr.aria-label]="acceptButtonLabel"
-                    >
-                        <i [class]="confirmation?.acceptIcon" *ngIf="confirmation?.acceptIcon; else accepticon"></i>
-                        <ng-template #accepticon *ngTemplateOutlet="acceptIconTemplate"></ng-template>
-                    </button>
-                </div>
-            </ng-template>
+            @if (headlessTemplate) {
+            <ng-container *ngTemplateOutlet="headlessTemplate; context: { $implicit: confirmation }"></ng-container>
+            } @else {
+            <div #content class="p-confirm-popup-content">
+                @if (contentTemplate) {
+                <ng-container *ngTemplateOutlet="contentTemplate; context: { $implicit: confirmation }"></ng-container>
+                } @else { @if (confirmation?.icon) {
+                <i [ngClass]="'p-confirm-popup-icon'" [class]="confirmation?.icon"></i>
+                }
+                <span class="p-confirm-popup-message">{{ confirmation?.message }}</span>
+                }
+            </div>
+            <div class="p-confirm-popup-footer">
+                @if (confirmation?.rejectVisible !== false) {
+                <button type="button" pButton [label]="rejectButtonLabel" (click)="reject()" [ngClass]="'p-confirm-popup-reject p-button-sm'" [class]="confirmation?.rejectButtonStyleClass || 'p-button-text'" [attr.aria-label]="rejectButtonLabel">
+                    @if (confirmation?.rejectIcon) {
+                    <i [class]="confirmation?.rejectIcon"></i>
+                    } @else {
+                    <ng-container *ngTemplateOutlet="rejectIconTemplate"></ng-container>
+                    }
+                </button>
+                } @if (confirmation?.acceptVisible !== false) {
+                <button type="button" pButton [label]="acceptButtonLabel" (click)="accept()" [ngClass]="'p-confirm-popup-accept p-button-sm'" [class]="confirmation?.acceptButtonStyleClass" [attr.aria-label]="acceptButtonLabel">
+                    @if (confirmation?.acceptIcon) {
+                    <i [class]="confirmation?.acceptIcon"></i>
+                    } @else {
+                    <ng-container *ngTemplateOutlet="acceptIconTemplate"></ng-container>
+                    }
+                </button>
+                }
+            </div>
+            }
         </div>
+        }
     `,
     animations: [
         trigger('animation', [
-            state('void', style({
-                transform: 'scaleY(0.8)',
-                opacity: 0
-            })),
-            state('open', style({
-                transform: 'translateY(0)',
-                opacity: 1
-            })),
+            state(
+                'void',
+                style({
+                    transform: 'scaleY(0.8)',
+                    opacity: 0
+                })
+            ),
+            state(
+                'open',
+                style({
+                    transform: 'translateY(0)',
+                    opacity: 1
+                })
+            ),
             transition('void => open', animate('{{showTransitionParams}}')),
             transition('open => void', animate('{{hideTransitionParams}}'))
         ])

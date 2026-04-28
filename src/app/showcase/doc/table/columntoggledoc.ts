@@ -21,17 +21,21 @@ interface Column {
                     <ng-template pTemplate="header" let-columns>
                         <tr>
                             <th>Code</th>
-                            <th *ngFor="let col of columns">
+                            @for (col of columns; track col) {
+                            <th>
                                 {{ col.header }}
                             </th>
+                            }
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-product let-columns="columns">
                         <tr>
                             <td>{{ product.code }}</td>
-                            <td *ngFor="let col of columns">
+                            @for (col of columns; track col) {
+                            <td>
                                 {{ product[col.field] }}
                             </td>
+                            }
                         </tr>
                     </ng-template>
                 </p-table>

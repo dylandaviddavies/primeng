@@ -17,16 +17,20 @@ interface Column {
                 <p-table [columns]="cols" [value]="products" [tableStyle]="{ 'min-width': '50rem' }">
                     <ng-template pTemplate="header" let-columns>
                         <tr>
-                            <th *ngFor="let col of columns">
+                            @for (col of columns; track col) {
+                            <th>
                                 {{ col.header }}
                             </th>
+                            }
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-rowData let-columns="columns">
                         <tr>
-                            <td *ngFor="let col of columns">
+                            @for (col of columns; track col) {
+                            <td>
                                 {{ rowData[col.field] }}
                             </td>
+                            }
                         </tr>
                     </ng-template>
                 </p-table>

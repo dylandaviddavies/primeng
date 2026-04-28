@@ -11,19 +11,19 @@ import { Code } from '@domain/code';
             <p-meterGroup [value]="value" labelPosition="start">
                 <ng-template pTemplate="label">
                     <div class="flex flex-wrap gap-3">
-                        <ng-container *ngFor="let meterItem of value; let index = index">
-                            <p-card class="flex-1">
-                                <div class="flex justify-content-between gap-5">
-                                    <div class="flex flex-column gap-1">
-                                        <span class="text-secondary text-sm">{{ meterItem.label }}</span>
-                                        <span class="font-bold text-lg">{{ meterItem.value }}%</span>
-                                    </div>
-                                    <span class="w-2rem h-2rem border-circle inline-flex justify-content-center align-items-center text-center" [style]="{ 'background-color': meterItem.color1, color: '#ffffff' }">
-                                        <i [class]="meterItem.icon"></i>
-                                    </span>
+                        @for (meterItem of value; track meterItem; let index = $index) {
+                        <p-card class="flex-1">
+                            <div class="flex justify-content-between gap-5">
+                                <div class="flex flex-column gap-1">
+                                    <span class="text-secondary text-sm">{{ meterItem.label }}</span>
+                                    <span class="font-bold text-lg">{{ meterItem.value }}%</span>
                                 </div>
-                            </p-card>
-                        </ng-container>
+                                <span class="w-2rem h-2rem border-circle inline-flex justify-content-center align-items-center text-center" [style]="{ 'background-color': meterItem.color1, color: '#ffffff' }">
+                                    <i [class]="meterItem.icon"></i>
+                                </span>
+                            </div>
+                        </p-card>
+                        }
                     </div>
                 </ng-template>
                 <ng-template pTemplate="meter" let-value let-class="class" let-width="size">

@@ -4,17 +4,21 @@ import { Component, ElementRef, Input, numberAttribute } from '@angular/core';
 @Component({
     selector: 'app-docsectiontext',
     template: `
-        <h2 class="doc-section-label" *ngIf="level === 2">
+        @if (level === 2) {
+        <h2 class="doc-section-label">
             {{ title }}
             <a (click)="navigate($event)" class="cursor-pointer" [id]="id">#</a>
         </h2>
-        <div class="doc-section-description" *ngIf="description">
+        } @if (description) {
+        <div class="doc-section-description">
             <p class="mt-3">{{ description || null }}</p>
         </div>
-        <h3 class="doc-section-label mt-4" *ngIf="level === 3">
+        } @if (level === 3) {
+        <h3 class="doc-section-label mt-4">
             {{ title }}
             <a (click)="navigate($event)" class="cursor-pointer" [id]="id">#</a>
         </h3>
+        }
         <div class="doc-section-description">
             <ng-content></ng-content>
         </div>

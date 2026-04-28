@@ -1,28 +1,28 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
-  AfterContentInit,
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ContentChildren,
-  ElementRef,
-  EventEmitter,
-  Inject,
-  Input,
-  NgModule,
-  OnDestroy,
-  Output,
-  PLATFORM_ID,
-  QueryList,
-  Renderer2,
-  TemplateRef,
-  ViewChild,
-  ViewEncapsulation,
-  booleanAttribute,
-  numberAttribute,
-  signal,
-  DOCUMENT
+    AfterContentInit,
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ContentChildren,
+    ElementRef,
+    EventEmitter,
+    Inject,
+    Input,
+    NgModule,
+    OnDestroy,
+    Output,
+    PLATFORM_ID,
+    QueryList,
+    Renderer2,
+    TemplateRef,
+    ViewChild,
+    ViewEncapsulation,
+    booleanAttribute,
+    numberAttribute,
+    signal,
+    DOCUMENT
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MenuItem, PrimeTemplate, SharedModule } from 'primeng/api';
@@ -59,10 +59,11 @@ import { asapScheduler } from 'rxjs';
                 (keydown)="onTogglerKeydown($event)"
                 [attr.data-pc-name]="'button'"
             >
-                <PlusIcon *ngIf="!showIcon && !buttonTemplate" />
-                <ng-container *ngIf="buttonTemplate">
-                    <ng-container *ngTemplateOutlet="buttonTemplate"></ng-container>
-                </ng-container>
+                @if (!showIcon && !buttonTemplate) {
+                <PlusIcon />
+                } @if (buttonTemplate) {
+                <ng-container *ngTemplateOutlet="buttonTemplate"></ng-container>
+                }
             </button>
             <ul
                 #list
@@ -76,8 +77,8 @@ import { asapScheduler } from 'rxjs';
                 [tabindex]="-1"
                 [attr.data-pc-section]="'menu'"
             >
+                @for (item of model; track item; let i = $index) {
                 <li
-                    *ngFor="let item of model; let i = index"
                     [ngStyle]="getItemStyle(i)"
                     class="p-speeddial-item"
                     pTooltip
@@ -88,56 +89,60 @@ import { asapScheduler } from 'rxjs';
                     role="menuitem"
                     [attr.data-pc-section]="'menuitem'"
                 >
-                    <ng-container *ngIf="itemTemplate">
-                        <ng-container *ngTemplateOutlet="itemTemplate; context: { $implicit: item, index: i }"></ng-container>
-                    </ng-container>
-                    <ng-container *ngIf="!itemTemplate">
-                        <a
-                            *ngIf="isClickableRouterLink(item); else elseBlock"
-                            pRipple
-                            [routerLink]="item.routerLink"
-                            [queryParams]="item.queryParams"
-                            class="p-speeddial-action"
-                            [ngClass]="{ 'p-disabled': item.disabled }"
-                            role="menuitem"
-                            [routerLinkActiveOptions]="item.routerLinkActiveOptions || { exact: false }"
-                            (click)="onItemClick($event, item)"
-                            (keydown.enter)="onItemClick($event, item, i)"
-                            [attr.target]="item.target"
-                            [attr.tabindex]="item.disabled || readonly || !visible ? null : item.tabindex ? item.tabindex : '0'"
-                            [fragment]="item.fragment"
-                            [queryParamsHandling]="item.queryParamsHandling"
-                            [preserveFragment]="item.preserveFragment"
-                            [skipLocationChange]="item.skipLocationChange"
-                            [replaceUrl]="item.replaceUrl"
-                            [state]="item.state"
-                            [attr.aria-label]="item.label"
-                            [attr.data-pc-section]="'action'"
-                        >
-                            <span class="p-speeddial-action-icon" *ngIf="item.icon" [ngClass]="item.icon"></span>
-                        </a>
-                        <ng-template #elseBlock>
-                            <a
-                                [attr.href]="item.url || null"
-                                class="p-speeddial-action"
-                                role="menuitem"
-                                pRipple
-                                (click)="onItemClick($event, item)"
-                                [ngClass]="{ 'p-disabled': item.disabled }"
-                                (keydown.enter)="onItemClick($event, item, i)"
-                                [attr.target]="item.target"
-                                [attr.data-pc-section]="'action'"
-                                [attr.aria-label]="item.label"
-                                [attr.tabindex]="item.disabled || (i !== activeIndex && readonly) || !visible ? null : item.tabindex ? item.tabindex : '0'"
-                            >
-                                <span class="p-speeddial-action-icon" *ngIf="item.icon" [ngClass]="item.icon"></span>
-                            </a>
-                        </ng-template>
-                    </ng-container>
+                    @if (itemTemplate) {
+                    <ng-container *ngTemplateOutlet="itemTemplate; context: { $implicit: item, index: i }"></ng-container>
+                    } @if (!itemTemplate) { @if (isClickableRouterLink(item)) {
+                    <a
+                        pRipple
+                        [routerLink]="item.routerLink"
+                        [queryParams]="item.queryParams"
+                        class="p-speeddial-action"
+                        [ngClass]="{ 'p-disabled': item.disabled }"
+                        role="menuitem"
+                        [routerLinkActiveOptions]="item.routerLinkActiveOptions || { exact: false }"
+                        (click)="onItemClick($event, item)"
+                        (keydown.enter)="onItemClick($event, item, i)"
+                        [attr.target]="item.target"
+                        [attr.tabindex]="item.disabled || readonly || !visible ? null : item.tabindex ? item.tabindex : '0'"
+                        [fragment]="item.fragment"
+                        [queryParamsHandling]="item.queryParamsHandling"
+                        [preserveFragment]="item.preserveFragment"
+                        [skipLocationChange]="item.skipLocationChange"
+                        [replaceUrl]="item.replaceUrl"
+                        [state]="item.state"
+                        [attr.aria-label]="item.label"
+                        [attr.data-pc-section]="'action'"
+                    >
+                        @if (item.icon) {
+                        <span class="p-speeddial-action-icon" [ngClass]="item.icon"></span>
+                        }
+                    </a>
+                    } @else {
+                    <a
+                        [attr.href]="item.url || null"
+                        class="p-speeddial-action"
+                        role="menuitem"
+                        pRipple
+                        (click)="onItemClick($event, item)"
+                        [ngClass]="{ 'p-disabled': item.disabled }"
+                        (keydown.enter)="onItemClick($event, item, i)"
+                        [attr.target]="item.target"
+                        [attr.data-pc-section]="'action'"
+                        [attr.aria-label]="item.label"
+                        [attr.tabindex]="item.disabled || (i !== activeIndex && readonly) || !visible ? null : item.tabindex ? item.tabindex : '0'"
+                    >
+                        @if (item.icon) {
+                        <span class="p-speeddial-action-icon" [ngClass]="item.icon"></span>
+                        }
+                    </a>
+                    } }
                 </li>
+                }
             </ul>
         </div>
-        <div *ngIf="mask && visible" [ngClass]="{ 'p-speeddial-mask': true, 'p-speeddial-mask-visible': visible }" [class]="maskClassName" [ngStyle]="maskStyle"></div>
+        @if (mask && visible) {
+        <div [ngClass]="{ 'p-speeddial-mask': true, 'p-speeddial-mask-visible': visible }" [class]="maskClassName" [ngStyle]="maskStyle"></div>
+        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,

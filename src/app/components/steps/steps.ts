@@ -15,8 +15,8 @@ import { Subscription } from 'rxjs';
     template: `
         <nav [ngClass]="{ 'p-steps p-component': true, 'p-readonly': readonly }" [ngStyle]="style" [class]="styleClass" [attr.data-pc-name]="'steps'">
             <ul #list [attr.data-pc-section]="'menu'">
+                @for (item of model; track item; let i = $index) {
                 <li
-                    *ngFor="let item of model; let i = index"
                     class="p-steps-item"
                     #menuitem
                     [ngStyle]="item.style"
@@ -28,9 +28,9 @@ import { Subscription } from 'rxjs';
                     [ngClass]="{ 'p-highlight p-steps-current': isActive(item, i), 'p-disabled': item.disabled || (readonly && !isActive(item, i)) }"
                     [attr.data-pc-section]="'menuitem'"
                 >
+                    @if (isClickableRouterLink(item)) {
                     <a
                         role="link"
-                        *ngIf="isClickableRouterLink(item); else elseBlock"
                         [routerLink]="item.routerLink"
                         [queryParams]="item.queryParams"
                         [routerLinkActive]="'p-menuitem-link-active'"
@@ -51,28 +51,35 @@ import { Subscription } from 'rxjs';
                         [attr.ariaCurrentWhenActive]="exact ? 'step' : undefined"
                     >
                         <span class="p-steps-number">{{ i + 1 }}</span>
-                        <span class="p-steps-title" *ngIf="item.escape !== false; else htmlLabel">{{ item.label }}</span>
-                        <ng-template #htmlLabel><span class="p-steps-title" [innerHTML]="item.label"></span></ng-template>
+                        @if (item.escape !== false) {
+                        <span class="p-steps-title">{{ item.label }}</span>
+                        } @else {
+                        <span class="p-steps-title" [innerHTML]="item.label"></span>
+                        }
                     </a>
-                    <ng-template #elseBlock>
-                        <a
-                            role="link"
-                            [attr.href]="item.url"
-                            class="p-menuitem-link"
-                            (click)="onItemClick($event, item, i)"
-                            (keydown)="onItemKeydown($event, item, i)"
-                            [target]="item.target"
-                            [attr.tabindex]="getItemTabIndex(item, i)"
-                            [attr.aria-expanded]="i === activeIndex"
-                            [attr.aria-disabled]="item.disabled || (readonly && i !== activeIndex)"
-                            [attr.ariaCurrentWhenActive]="exact && (!item.disabled || readonly) ? 'step' : undefined"
-                        >
-                            <span class="p-steps-number">{{ i + 1 }}</span>
-                            <span class="p-steps-title" *ngIf="item.escape !== false; else htmlRouteLabel">{{ item.label }}</span>
-                            <ng-template #htmlRouteLabel><span class="p-steps-title" [innerHTML]="item.label"></span></ng-template>
-                        </a>
-                    </ng-template>
+                    } @else {
+                    <a
+                        role="link"
+                        [attr.href]="item.url"
+                        class="p-menuitem-link"
+                        (click)="onItemClick($event, item, i)"
+                        (keydown)="onItemKeydown($event, item, i)"
+                        [target]="item.target"
+                        [attr.tabindex]="getItemTabIndex(item, i)"
+                        [attr.aria-expanded]="i === activeIndex"
+                        [attr.aria-disabled]="item.disabled || (readonly && i !== activeIndex)"
+                        [attr.ariaCurrentWhenActive]="exact && (!item.disabled || readonly) ? 'step' : undefined"
+                    >
+                        <span class="p-steps-number">{{ i + 1 }}</span>
+                        @if (item.escape !== false) {
+                        <span class="p-steps-title">{{ item.label }}</span>
+                        } @else {
+                        <span class="p-steps-title" [innerHTML]="item.label"></span>
+                        }
+                    </a>
+                    }
                 </li>
+                }
             </ul>
         </nav>
     `,

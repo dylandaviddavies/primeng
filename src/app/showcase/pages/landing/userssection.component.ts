@@ -1,10 +1,9 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { AppConfigService } from '@service/appconfigservice';
 
 @Component({
     selector: 'users-section',
-    imports: [CommonModule],
+    imports: [],
     template: `
         <section class="landing-users py-8 px-3 lg:px-8">
             <div class="section-header">Who Uses</div>
@@ -16,19 +15,25 @@ import { AppConfigService } from '@service/appconfigservice';
                 <div class="fade-left h-6rem w-6rem block absolute top-0 left-0 z-2" style="background: linear-gradient(to right, var(--home-bg), transparent)"></div>
                 <div class="marquee-wrapper overflow-hidden flex">
                     <div class="marquee">
-                        <div class="w-full" *ngFor="let user of usersData.slice(0, 6)">
+                        @for (user of usersData.slice(0, 6); track user) {
+                        <div class="w-full">
                             <img src="https://primefaces.org/cdn/primeng/images/landing/whouses/{{ user.name }}-{{ isDarkMode ? 'light' : 'dark' }}.svg" [width]="user.width" [height]="user.height" [alt]="user.name" />
                         </div>
+                        }
                     </div>
                     <div class="marquee">
-                        <div class="w-full" *ngFor="let user of usersData.slice(0, 6)">
+                        @for (user of usersData.slice(0, 6); track user) {
+                        <div class="w-full">
                             <img src="https://primefaces.org/cdn/primeng/images/landing/whouses/{{ user.name }}-{{ isDarkMode ? 'light' : 'dark' }}.svg" [width]="user.width" [height]="user.height" [alt]="user.name" />
                         </div>
+                        }
                     </div>
                     <div class="marquee">
-                        <div class="w-full" *ngFor="let user of usersData.slice(0, 6)">
+                        @for (user of usersData.slice(0, 6); track user) {
+                        <div class="w-full">
                             <img src="https://primefaces.org/cdn/primeng/images/landing/whouses/{{ user.name }}-{{ isDarkMode ? 'light' : 'dark' }}.svg" [width]="user.width" [height]="user.height" [alt]="user.name" />
                         </div>
+                        }
                     </div>
                 </div>
                 <div class="fade-right h-6rem w-6rem block absolute top-0 right-0 z-2" style="background: linear-gradient(to left, var(--home-bg), transparent)"></div>
@@ -37,19 +42,25 @@ import { AppConfigService } from '@service/appconfigservice';
                 <div class="fade-left h-6rem w-6rem block absolute top-0 left-0 z-2" style="background: linear-gradient(to right, var(--home-bg), transparent)"></div>
                 <div class="marquee-wrapper overflow-hidden flex">
                     <div class="marquee marquee-reverse">
-                        <div class="w-full" *ngFor="let user of usersData.slice(6)">
+                        @for (user of usersData.slice(6); track user) {
+                        <div class="w-full">
                             <img src="https://primefaces.org/cdn/primeng/images/landing/whouses/{{ user.name }}-{{ isDarkMode ? 'light' : 'dark' }}.svg" [width]="user.width" [height]="user.height" [alt]="user.name" />
                         </div>
+                        }
                     </div>
                     <div class="marquee marquee-reverse">
-                        <div class="w-full" *ngFor="let user of usersData.slice(6)">
+                        @for (user of usersData.slice(6); track user) {
+                        <div class="w-full">
                             <img src="https://primefaces.org/cdn/primeng/images/landing/whouses/{{ user.name }}-{{ isDarkMode ? 'light' : 'dark' }}.svg" [width]="user.width" [height]="user.height" [alt]="user.name" />
                         </div>
+                        }
                     </div>
                     <div class="marquee marquee-reverse">
-                        <div class="w-full" *ngFor="let user of usersData.slice(6)">
+                        @for (user of usersData.slice(6); track user) {
+                        <div class="w-full">
                             <img src="https://primefaces.org/cdn/primeng/images/landing/whouses/{{ user.name }}-{{ isDarkMode ? 'light' : 'dark' }}.svg" [width]="user.width" [height]="user.height" [alt]="user.name" />
                         </div>
+                        }
                     </div>
                 </div>
                 <div class="fade-right h-6rem w-6rem block absolute top-0 right-0 z-2" style="background: linear-gradient(to left, var(--home-bg), transparent)"></div>

@@ -20,21 +20,27 @@ interface Column {
                     <ng-template pTemplate="caption"><div class="text-xl font-bold">File Viewer</div> </ng-template>
                     <ng-template pTemplate="header" let-columns>
                         <tr>
-                            <th *ngFor="let col of columns">
+                            @for (col of columns; track col) {
+                            <th>
                                 {{ col.header }}
                             </th>
+                            }
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
                         <tr [ttRow]="rowNode">
-                            <td *ngFor="let col of columns; let i = index; let last = last">
-                                <p-treeTableToggler [rowNode]="rowNode" *ngIf="i === 0" />
+                            @for (col of columns; track col; let i = $index; let last = $last) {
+                            <td>
+                                @if (i === 0) {
+                                <p-treeTableToggler [rowNode]="rowNode" />
+                                }
                                 {{ rowData[col.field] }}
-                                <ng-container *ngIf="last">
-                                    <p-button icon="pi pi-search" rounded="true" [style]="{ 'margin-right': '.5em' }" />
-                                    <p-button icon="pi pi-pencil" rounded="true" severity="success" />
-                                </ng-container>
+                                @if (last) {
+                                <p-button icon="pi pi-search" rounded="true" [style]="{ 'margin-right': '.5em' }" />
+                                <p-button icon="pi pi-pencil" rounded="true" severity="success" />
+                                }
                             </td>
+                            }
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="summary">

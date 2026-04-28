@@ -1,26 +1,26 @@
 import { animate, animation, style, transition, trigger, useAnimation } from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import {
-  AfterContentInit,
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ContentChildren,
-  ElementRef,
-  EventEmitter,
-  Inject,
-  Input,
-  NgModule,
-  OnDestroy,
-  Output,
-  QueryList,
-  Renderer2,
-  TemplateRef,
-  ViewEncapsulation,
-  booleanAttribute,
-  numberAttribute,
-  DOCUMENT
+    AfterContentInit,
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ContentChildren,
+    ElementRef,
+    EventEmitter,
+    Inject,
+    Input,
+    NgModule,
+    OnDestroy,
+    Output,
+    QueryList,
+    Renderer2,
+    TemplateRef,
+    ViewEncapsulation,
+    booleanAttribute,
+    numberAttribute,
+    DOCUMENT
 } from '@angular/core';
 import { PrimeNGConfig, PrimeTemplate, SharedModule } from 'primeng/api';
 import { DomHandler } from 'primeng/dom';
@@ -39,6 +39,7 @@ const hideAnimation = animation([animate('{{transition}}', style({ transform: '{
 @Component({
     selector: 'p-sidebar',
     template: `
+        @if (visible) {
         <div
             #container
             [ngClass]="{
@@ -50,7 +51,6 @@ const hideAnimation = animation([animate('{{transition}}', style({ transform: '{
                 'p-sidebar-bottom': position === 'bottom' && !fullScreen,
                 'p-sidebar-full': fullScreen
             }"
-            *ngIf="visible"
             [@panelState]="{ value: 'visible', params: { transform: transformOptions, transition: transitionOptions } }"
             (@panelState.start)="onAnimationStart($event)"
             (@panelState.done)="onAnimationEnd($event)"
@@ -61,40 +61,43 @@ const hideAnimation = animation([animate('{{transition}}', style({ transform: '{
             [attr.data-pc-section]="'root'"
             (keydown)="onKeyDown($event)"
         >
-            <ng-container *ngIf="headlessTemplate; else notHeadless">
-                <ng-container *ngTemplateOutlet="headlessTemplate"></ng-container>
-            </ng-container>
-            <ng-template #notHeadless>
-                <div class="p-sidebar-header" [attr.data-pc-section]="'header'">
-                    <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
-                    <button
-                        type="button"
-                        class="p-sidebar-close p-sidebar-icon p-link"
-                        (click)="close($event)"
-                        (keydown.enter)="close($event)"
-                        [attr.aria-label]="ariaCloseLabel"
-                        *ngIf="showCloseIcon"
-                        pRipple
-                        [attr.data-pc-section]="'closebutton'"
-                        [attr.data-pc-group-section]="'iconcontainer'"
-                    >
-                        <TimesIcon *ngIf="!closeIconTemplate" [styleClass]="'p-sidebar-close-icon'" [attr.data-pc-section]="'closeicon'" />
-                        <span *ngIf="closeIconTemplate" class="p-sidebar-close-icon" [attr.data-pc-section]="'closeicon'">
-                            <ng-template *ngTemplateOutlet="closeIconTemplate"></ng-template>
-                        </span>
-                    </button>
-                </div>
-                <div class="p-sidebar-content" [attr.data-pc-section]="'content'">
-                    <ng-content></ng-content>
-                    <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
-                </div>
-                <ng-container *ngIf="footerTemplate">
-                    <div class="p-sidebar-footer" [attr.data-pc-section]="'footer'">
-                        <ng-container *ngTemplateOutlet="footerTemplate"></ng-container>
-                    </div>
-                </ng-container>
-            </ng-template>
+            @if (headlessTemplate) {
+            <ng-container *ngTemplateOutlet="headlessTemplate"></ng-container>
+            } @else {
+            <div class="p-sidebar-header" [attr.data-pc-section]="'header'">
+                <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
+                @if (showCloseIcon) {
+                <button
+                    type="button"
+                    class="p-sidebar-close p-sidebar-icon p-link"
+                    (click)="close($event)"
+                    (keydown.enter)="close($event)"
+                    [attr.aria-label]="ariaCloseLabel"
+                    pRipple
+                    [attr.data-pc-section]="'closebutton'"
+                    [attr.data-pc-group-section]="'iconcontainer'"
+                >
+                    @if (!closeIconTemplate) {
+                    <TimesIcon [styleClass]="'p-sidebar-close-icon'" [attr.data-pc-section]="'closeicon'" />
+                    } @if (closeIconTemplate) {
+                    <span class="p-sidebar-close-icon" [attr.data-pc-section]="'closeicon'">
+                        <ng-template *ngTemplateOutlet="closeIconTemplate"></ng-template>
+                    </span>
+                    }
+                </button>
+                }
+            </div>
+            <div class="p-sidebar-content" [attr.data-pc-section]="'content'">
+                <ng-content></ng-content>
+                <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
+            </div>
+            @if (footerTemplate) {
+            <div class="p-sidebar-footer" [attr.data-pc-section]="'footer'">
+                <ng-container *ngTemplateOutlet="footerTemplate"></ng-container>
+            </div>
+            } }
         </div>
+        }
     `,
     animations: [trigger('panelState', [transition('void => visible', [useAnimation(showAnimation)]), transition('visible => void', [useAnimation(hideAnimation)])])],
     changeDetection: ChangeDetectionStrategy.OnPush,

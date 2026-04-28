@@ -9,11 +9,13 @@ import { Code } from '@domain/code';
         </app-docsectiontext>
         <div class="card">
             <p-accordion [activeIndex]="0">
-                <p-accordionTab [header]="tab.title" *ngFor="let tab of tabs">
+                @for (tab of tabs; track tab) {
+                <p-accordionTab [header]="tab.title">
                     <p class="m-0">
                         {{ tab.content }}
                     </p>
                 </p-accordionTab>
+                }
             </p-accordion>
         </div>
         <app-code [code]="code" selector="accordion-dynamic-demo"></app-code>

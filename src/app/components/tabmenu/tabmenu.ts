@@ -42,15 +42,19 @@ import { ObjectUtils } from 'primeng/utils';
     template: `
         <div [ngClass]="{ 'p-tabmenu p-component': true, 'p-tabmenu-scrollable': scrollable }" [ngStyle]="style" [class]="styleClass">
             <div class="p-tabmenu-nav-container">
-                <button *ngIf="scrollable && !backwardIsDisabled" #prevBtn class="p-tabmenu-nav-prev p-tabmenu-nav-btn p-link" (click)="navBackward()" type="button" role="navigation" pRipple>
-                    <ChevronLeftIcon *ngIf="!previousIconTemplate" [attr.aria-hidden]="true" />
+                @if (scrollable && !backwardIsDisabled) {
+                <button #prevBtn class="p-tabmenu-nav-prev p-tabmenu-nav-btn p-link" (click)="navBackward()" type="button" role="navigation" pRipple>
+                    @if (!previousIconTemplate) {
+                    <ChevronLeftIcon [attr.aria-hidden]="true" />
+                    }
                     <ng-template *ngTemplateOutlet="previousIconTemplate"></ng-template>
                 </button>
+                }
                 <div #content class="p-tabmenu-nav-content" (scroll)="onScroll($event)">
                     <ul #navbar class="p-tabmenu-nav p-reset" role="menubar" [attr.aria-labelledby]="ariaLabelledBy" [attr.aria-label]="ariaLabel">
+                        @for (item of focusableItems; track item; let i = $index) {
                         <li
                             #tab
-                            *ngFor="let item of focusableItems; let i = index"
                             role="presentation"
                             [ngStyle]="item.style"
                             [class]="item.styleClass"
@@ -63,9 +67,9 @@ import { ObjectUtils } from 'primeng/utils';
                             pTooltip
                             [tooltipOptions]="item.tooltipOptions"
                         >
+                            @if (!item.routerLink && !itemTemplate) {
                             <a
                                 #tabLink
-                                *ngIf="!item.routerLink && !itemTemplate"
                                 class="p-menuitem-link"
                                 role="menuitem"
                                 [attr.href]="getItemProp(item, 'url')"
@@ -77,15 +81,20 @@ import { ObjectUtils } from 'primeng/utils';
                                 pRipple
                             >
                                 <ng-container>
-                                    <span class="p-menuitem-icon" [ngClass]="item.icon" *ngIf="item.icon" [ngStyle]="item.iconStyle"></span>
-                                    <span class="p-menuitem-text" *ngIf="item.escape !== false; else htmlLabel">{{ getItemProp(item, 'label') }}</span>
-                                    <ng-template #htmlLabel><span class="p-menuitem-text" [innerHTML]="getItemProp(item, 'label')"></span></ng-template>
-                                    <span class="p-menuitem-badge" *ngIf="item.badge" [ngClass]="item.badgeStyleClass">{{ getItemProp(item, 'badge') }}</span>
+                                    @if (item.icon) {
+                                    <span class="p-menuitem-icon" [ngClass]="item.icon" [ngStyle]="item.iconStyle"></span>
+                                    } @if (item.escape !== false) {
+                                    <span class="p-menuitem-text">{{ getItemProp(item, 'label') }}</span>
+                                    } @else {
+                                    <span class="p-menuitem-text" [innerHTML]="getItemProp(item, 'label')"></span>
+                                    } @if (item.badge) {
+                                    <span class="p-menuitem-badge" [ngClass]="item.badgeStyleClass">{{ getItemProp(item, 'badge') }}</span>
+                                    }
                                 </ng-container>
                             </a>
+                            } @if (item.routerLink && !itemTemplate) {
                             <a
                                 #tabLink
-                                *ngIf="item.routerLink && !itemTemplate"
                                 [routerLink]="item.routerLink"
                                 [queryParams]="item.queryParams"
                                 [routerLinkActive]="'p-menuitem-link-active'"
@@ -106,21 +115,32 @@ import { ObjectUtils } from 'primeng/utils';
                                 pRipple
                             >
                                 <ng-container>
-                                    <span class="p-menuitem-icon" [attr.aria-hidden]="true" [ngClass]="item.icon" *ngIf="item.icon" [ngStyle]="item.iconStyle"></span>
-                                    <span class="p-menuitem-text" *ngIf="item.escape !== false; else htmlRouteLabel">{{ getItemProp(item, 'label') }}</span>
-                                    <ng-template #htmlRouteLabel><span class="p-menuitem-text" [innerHTML]="getItemProp(item, 'label')"></span></ng-template>
-                                    <span class="p-menuitem-badge" *ngIf="item.badge" [ngClass]="item.badgeStyleClass">{{ getItemProp(item, 'badge') }}</span>
+                                    @if (item.icon) {
+                                    <span class="p-menuitem-icon" [attr.aria-hidden]="true" [ngClass]="item.icon" [ngStyle]="item.iconStyle"></span>
+                                    } @if (item.escape !== false) {
+                                    <span class="p-menuitem-text">{{ getItemProp(item, 'label') }}</span>
+                                    } @else {
+                                    <span class="p-menuitem-text" [innerHTML]="getItemProp(item, 'label')"></span>
+                                    } @if (item.badge) {
+                                    <span class="p-menuitem-badge" [ngClass]="item.badgeStyleClass">{{ getItemProp(item, 'badge') }}</span>
+                                    }
                                 </ng-container>
                             </a>
+                            }
                             <ng-container *ngTemplateOutlet="itemTemplate; context: { $implicit: item, index: i }"></ng-container>
                         </li>
+                        }
                         <li #inkbar class="p-tabmenu-ink-bar" role="none"></li>
                     </ul>
                 </div>
-                <button *ngIf="scrollable && !forwardIsDisabled" #nextBtn class="p-tabmenu-nav-next p-tabmenu-nav-btn p-link" (click)="navForward()" type="button" role="navigation" pRipple>
-                    <ChevronRightIcon *ngIf="!previousIconTemplate" [attr.aria-hidden]="true" />
+                @if (scrollable && !forwardIsDisabled) {
+                <button #nextBtn class="p-tabmenu-nav-next p-tabmenu-nav-btn p-link" (click)="navForward()" type="button" role="navigation" pRipple>
+                    @if (!previousIconTemplate) {
+                    <ChevronRightIcon [attr.aria-hidden]="true" />
+                    }
                     <ng-template *ngTemplateOutlet="nextIconTemplate"></ng-template>
                 </button>
+                }
             </div>
         </div>
     `,

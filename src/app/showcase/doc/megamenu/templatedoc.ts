@@ -42,11 +42,13 @@ import { Code } from '@domain/code';
                     </svg>
                 </ng-template>
                 <ng-template pTemplate="item" let-item>
-                    <a *ngIf="item.root" pRipple class="flex align-items-center cursor-pointer px-3 py-2 overflow-hidden relative font-semibold text-lg uppercase" style="border-radius: 2rem">
+                    @if (item.root) {
+                    <a pRipple class="flex align-items-center cursor-pointer px-3 py-2 overflow-hidden relative font-semibold text-lg uppercase" style="border-radius: 2rem">
                         <i [ngClass]="item.icon"></i>
                         <span class="ml-2">{{ item.label }}</span>
                     </a>
-                    <a *ngIf="!item.root && !item.image" class="flex align-items-center p-3 cursor-pointer mb-2 gap-2">
+                    } @if (!item.root && !item.image) {
+                    <a class="flex align-items-center p-3 cursor-pointer mb-2 gap-2">
                         <span class="inline-flex align-items-center justify-content-center border-circle bg-primary w-3rem h-3rem">
                             <i [ngClass]="item.icon + ' text-lg'"></i>
                         </span>
@@ -55,11 +57,13 @@ import { Code } from '@domain/code';
                             <span class="white-space-nowrap">{{ item.subtext }}</span>
                         </span>
                     </a>
-                    <div *ngIf="item.image" class="flex flex-column align-items-start gap-3">
+                    } @if (item.image) {
+                    <div class="flex flex-column align-items-start gap-3">
                         <img [src]="item.image" alt="megamenu-demo" class="w-full" />
                         <span>{{ item.subtext }}</span>
                         <p-button [label]="item.label" [outlined]="true"></p-button>
                     </div>
+                    }
                 </ng-template>
                 <ng-template pTemplate="end">
                     <p-avatar image="https://primefaces.org/cdn/primeng/images/demo/avatar/amyelsner.png" shape="circle" />

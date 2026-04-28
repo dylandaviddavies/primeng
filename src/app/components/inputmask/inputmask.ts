@@ -27,26 +27,26 @@
 */
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ContentChildren,
-  ElementRef,
-  EventEmitter,
-  Inject,
-  Input,
-  NgModule,
-  OnInit,
-  Output,
-  PLATFORM_ID,
-  QueryList,
-  TemplateRef,
-  ViewChild,
-  ViewEncapsulation,
-  booleanAttribute,
-  forwardRef,
-  numberAttribute,
-  DOCUMENT
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ContentChildren,
+    ElementRef,
+    EventEmitter,
+    Inject,
+    Input,
+    NgModule,
+    OnInit,
+    Output,
+    PLATFORM_ID,
+    QueryList,
+    TemplateRef,
+    ViewChild,
+    ViewEncapsulation,
+    booleanAttribute,
+    forwardRef,
+    numberAttribute,
+    DOCUMENT
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { PrimeNGConfig, PrimeTemplate, SharedModule } from 'primeng/api';
@@ -102,12 +102,13 @@ export const INPUTMASK_VALUE_ACCESSOR: any = {
             [attr.data-pc-name]="'inputmask'"
             [attr.data-pc-section]="'root'"
         />
-        <ng-container *ngIf="value != null && filled && showClear && !disabled">
-            <TimesIcon *ngIf="!clearIconTemplate" [styleClass]="'p-inputmask-clear-icon'" (click)="clear()" [attr.data-pc-section]="'clearIcon'" />
-            <span *ngIf="clearIconTemplate" class="p-inputmask-clear-icon" (click)="clear()" [attr.data-pc-section]="'clearIcon'">
-                <ng-template *ngTemplateOutlet="clearIconTemplate"></ng-template>
-            </span>
-        </ng-container>
+        @if (value != null && filled && showClear && !disabled) { @if (!clearIconTemplate) {
+        <TimesIcon [styleClass]="'p-inputmask-clear-icon'" (click)="clear()" [attr.data-pc-section]="'clearIcon'" />
+        } @if (clearIconTemplate) {
+        <span class="p-inputmask-clear-icon" (click)="clear()" [attr.data-pc-section]="'clearIcon'">
+            <ng-template *ngTemplateOutlet="clearIconTemplate"></ng-template>
+        </span>
+        } }
     `,
     host: {
         class: 'p-element',

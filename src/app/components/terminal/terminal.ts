@@ -12,13 +12,17 @@ import { Subscription } from 'rxjs';
     selector: 'p-terminal',
     template: `
         <div [ngClass]="'p-terminal p-component'" [ngStyle]="style" [class]="styleClass" (click)="focus(in)">
-            <div *ngIf="welcomeMessage">{{ welcomeMessage }}</div>
+            @if (welcomeMessage) {
+            <div>{{ welcomeMessage }}</div>
+            }
             <div class="p-terminal-content">
-                <div *ngFor="let command of commands">
+                @for (command of commands; track command) {
+                <div>
                     <span class="p-terminal-prompt">{{ prompt }}</span>
                     <span class="p-terminal-command">{{ command.text }}</span>
                     <div class="p-terminal-response" [attr.aria-live]="'polite'">{{ command.response }}</div>
                 </div>
+                }
             </div>
             <div class="p-terminal-prompt-container">
                 <span class="p-terminal-content-prompt">{{ prompt }}</span>

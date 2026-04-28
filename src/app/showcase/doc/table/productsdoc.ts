@@ -86,11 +86,15 @@ import { ProductService } from '@service/productservice';
 
                 <p-dialog [(visible)]="productDialog" [style]="{ width: '450px' }" header="Product Details" [modal]="true" styleClass="p-fluid">
                     <ng-template pTemplate="content">
-                        <img [src]="'https://primefaces.org/cdn/primeng/images/demo/product/' + product.image" [alt]="product.image" class="block m-auto pb-3" *ngIf="product.image" />
+                        @if (product.image) {
+                        <img [src]="'https://primefaces.org/cdn/primeng/images/demo/product/' + product.image" [alt]="product.image" class="block m-auto pb-3" />
+                        }
                         <div class="field">
                             <label for="name">Name</label>
                             <input type="text" pInputText id="name" [(ngModel)]="product.name" required autofocus />
-                            <small class="p-error" *ngIf="submitted && !product.name">Name is required.</small>
+                            @if (submitted && !product.name) {
+                            <small class="p-error">Name is required.</small>
+                            }
                         </div>
                         <div class="field">
                             <label for="description">Description</label>

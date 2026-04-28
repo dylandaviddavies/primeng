@@ -11,7 +11,8 @@ import { ContextMenu } from 'primeng/contextmenu';
         </app-docsectiontext>
         <div class="card flex md:justify-content-center">
             <ul class="m-0 p-0 list-none border-1 surface-border border-round p-3 flex flex-column gap-2 w-full md:w-30rem">
-                <li *ngFor="let product of data" class="p-2 hover:surface-hover border-round border-1 border-transparent transition-all transition-duration-200" (contextmenu)="onContextMenu($event)">
+                @for (product of data; track product) {
+                <li class="p-2 hover:surface-hover border-round border-1 border-transparent transition-all transition-duration-200" (contextmenu)="onContextMenu($event)">
                     <div class="flex flex-wrap p-2 align-items-center gap-3">
                         <img class="w-4rem flex-shrink-0 border-round" src="https://primefaces.org/cdn/primeng/images/{{ product.image }}" alt="product.name" />
                         <div class="flex-1 flex flex-column gap-1">
@@ -24,6 +25,7 @@ import { ContextMenu } from 'primeng/contextmenu';
                         <span class="font-bold text-900 ml-5">&#36;{{ product.price }}</span>
                     </div>
                 </li>
+                }
             </ul>
 
             <p-contextMenu #cm [model]="items" (onHide)="onHide()">
@@ -31,9 +33,13 @@ import { ContextMenu } from 'primeng/contextmenu';
                     <a pRipple class="flex align-items-center p-menuitem-link">
                         <span class="item.icon"></span>
                         <span class="ml-2">{{ item.label }}</span>
-                        <p-badge *ngIf="item.badge" class="ml-auto" [value]="item.badge" />
-                        <span *ngIf="item.shortcut" class="ml-auto border-1 surface-border border-round surface-100 text-xs p-1">{{ item.shortcut }}</span>
-                        <i *ngIf="item.items" class="pi pi-angle-right ml-auto"></i>
+                        @if (item.badge) {
+                        <p-badge class="ml-auto" [value]="item.badge" />
+                        } @if (item.shortcut) {
+                        <span class="ml-auto border-1 surface-border border-round surface-100 text-xs p-1">{{ item.shortcut }}</span>
+                        } @if (item.items) {
+                        <i class="pi pi-angle-right ml-auto"></i>
+                        }
                     </a>
                 </ng-template>
             </p-contextMenu>

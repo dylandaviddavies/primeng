@@ -1,33 +1,33 @@
 import { AnimationEvent, animate, style, transition, trigger } from '@angular/animations';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
-  AfterContentInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ContentChildren,
-  ElementRef,
-  EventEmitter,
-  Inject,
-  Input,
-  NgModule,
-  OnDestroy,
-  OnInit,
-  Output,
-  PLATFORM_ID,
-  QueryList,
-  Renderer2,
-  TemplateRef,
-  ViewChild,
-  ViewEncapsulation,
-  ViewRef,
-  booleanAttribute,
-  effect,
-  forwardRef,
-  input,
-  numberAttribute,
-  signal,
-  DOCUMENT
+    AfterContentInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ContentChildren,
+    ElementRef,
+    EventEmitter,
+    Inject,
+    Input,
+    NgModule,
+    OnDestroy,
+    OnInit,
+    Output,
+    PLATFORM_ID,
+    QueryList,
+    Renderer2,
+    TemplateRef,
+    ViewChild,
+    ViewEncapsulation,
+    ViewRef,
+    booleanAttribute,
+    effect,
+    forwardRef,
+    input,
+    numberAttribute,
+    signal,
+    DOCUMENT
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MenuItem, OverlayService, PrimeNGConfig, PrimeTemplate, SharedModule } from 'primeng/api';
@@ -351,6 +351,7 @@ export class TieredMenuSub {
 @Component({
     selector: 'p-tieredMenu',
     template: `
+        @if (!popup || visible) {
         <div
             #container
             [attr.data-pc-section]="'root'"
@@ -364,7 +365,6 @@ export class TieredMenuSub {
             [@.disabled]="popup !== true"
             (@overlayAnimation.start)="onOverlayAnimationStart($event)"
             (@overlayAnimation.done)="onOverlayAnimationEnd($event)"
-            *ngIf="!popup || visible"
         >
             <p-tieredMenuSub
                 #rootmenu
@@ -388,6 +388,7 @@ export class TieredMenuSub {
                 (itemMouseEnter)="onItemMouseEnter($event)"
             ></p-tieredMenuSub>
         </div>
+        }
     `,
     animations: [trigger('overlayAnimation', [transition(':enter', [style({ opacity: 0, transform: 'scaleY(0.8)' }), animate('{{showTransitionParams}}')]), transition(':leave', [animate('{{hideTransitionParams}}', style({ opacity: 0 }))])])],
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -24,18 +24,25 @@ interface Column {
                 <p-treeTable [value]="files" [columns]="cols" selectionMode="checkbox" [(selectionKeys)]="selectionKeys" dataKey="key" [scrollable]="true" [tableStyle]="{ 'min-width': '50rem' }">
                     <ng-template pTemplate="header" let-columns>
                         <tr>
-                            <th *ngFor="let col of columns">
+                            @for (col of columns; track col) {
+                            <th>
                                 {{ col.header }}
                             </th>
+                            }
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
                         <tr [ttRow]="rowNode" [ttSelectableRow]="rowNode">
-                            <td *ngFor="let col of columns; let i = index">
-                                <p-treeTableToggler [rowNode]="rowNode" *ngIf="i === 0" />
-                                <p-treeTableCheckbox [value]="rowNode" *ngIf="i === 0" />
+                            @for (col of columns; track col; let i = $index) {
+                            <td>
+                                @if (i === 0) {
+                                <p-treeTableToggler [rowNode]="rowNode" />
+                                } @if (i === 0) {
+                                <p-treeTableCheckbox [value]="rowNode" />
+                                }
                                 {{ rowData[col.field] }}
                             </td>
+                            }
                         </tr>
                     </ng-template>
                 </p-treeTable>

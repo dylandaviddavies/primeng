@@ -21,7 +21,8 @@ interface TableRowSelectEvent {
         <div class="card flex flex-column align-items-center gap-3">
             <p-toast />
             <p-button (click)="op.toggle($event)" icon="pi pi-search" [label]="selectedProduct ? selectedProduct.name : 'Select a Product'" />
-            <div *ngIf="selectedProduct" class="p-5 surface-card shadow-2 border-round">
+            @if (selectedProduct) {
+            <div class="p-5 surface-card shadow-2 border-round">
                 <div class="relative">
                     <img src="https://primefaces.org/cdn/primeng/images/demo/product/{{ selectedProduct.image }}" [alt]="selectedProduct.name" />
                 </div>
@@ -31,6 +32,7 @@ interface TableRowSelectEvent {
                 </div>
                 <span class="text-600">{{ selectedProduct.category }}</span>
             </div>
+            }
             <p-overlayPanel #op [style]="{ width: '450px' }" [showCloseIcon]="true">
                 <ng-template pTemplate="content">
                     <p-table [value]="products" selectionMode="single" [(selection)]="selectedProduct" (onRowSelect)="onRowSelect($event, op)" [paginator]="true" [rows]="5" responsiveLayout="scroll">

@@ -28,10 +28,12 @@ import { MessageService, PrimeNGConfig } from 'primeng/api';
                     </div>
                 </ng-template>
                 <ng-template pTemplate="content" let-files let-uploadedFiles="uploadedFiles" let-removeFileCallback="removeFileCallback" let-removeUploadedFileCallback="removeUploadedFileCallback">
-                    <div *ngIf="files?.length > 0">
+                    @if (files?.length > 0) {
+                    <div>
                         <h5>Pending</h5>
                         <div class="flex flex-wrap p-0 sm:p-5 gap-5">
-                            <div *ngFor="let file of files; let i = index" class="card m-0 px-6 flex flex-column border-1 surface-border align-items-center gap-3">
+                            @for (file of files; track file; let i = $index) {
+                            <div class="card m-0 px-6 flex flex-column border-1 surface-border align-items-center gap-3">
                                 <div>
                                     <img role="presentation" [alt]="file.name" [src]="file.objectURL" width="100" height="50" />
                                 </div>
@@ -40,12 +42,15 @@ import { MessageService, PrimeNGConfig } from 'primeng/api';
                                 <p-badge value="Pending" severity="warning" />
                                 <p-button icon="pi pi-times" (click)="onRemoveTemplatingFile($event, file, removeFileCallback, index)" [outlined]="true" [rounded]="true" severity="danger" />
                             </div>
+                            }
                         </div>
                     </div>
-                    <div *ngIf="uploadedFiles?.length > 0">
+                    } @if (uploadedFiles?.length > 0) {
+                    <div>
                         <h5>Completed</h5>
                         <div class="flex flex-wrap p-0 sm:p-5 gap-5">
-                            <div *ngFor="let file of uploadedFiles; let i = index" class="card m-0 px-6 flex flex-column border-1 surface-border align-items-center gap-3">
+                            @for (file of uploadedFiles; track file; let i = $index) {
+                            <div class="card m-0 px-6 flex flex-column border-1 surface-border align-items-center gap-3">
                                 <div>
                                     <img role="presentation" [alt]="file.name" [src]="file.objectURL" width="100" height="50" />
                                 </div>
@@ -54,8 +59,10 @@ import { MessageService, PrimeNGConfig } from 'primeng/api';
                                 <p-badge value="Completed" class="mt-3" severity="success" />
                                 <p-button icon="pi pi-times" (onClick)="removeUploadedFileCallback(index)" [outlined]="true" [rounded]="true" severity="danger" />
                             </div>
+                            }
                         </div>
                     </div>
+                    }
                 </ng-template>
                 <ng-template pTemplate="file"> </ng-template>
                 <ng-template pTemplate="empty">

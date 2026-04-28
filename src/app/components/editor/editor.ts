@@ -37,11 +37,13 @@ export const EDITOR_VALUE_ACCESSOR: any = {
     selector: 'p-editor',
     template: `
         <div [ngClass]="'p-editor-container'" [class]="styleClass">
-            <div class="p-editor-toolbar" *ngIf="toolbar || headerTemplate">
+            @if (toolbar || headerTemplate) {
+            <div class="p-editor-toolbar">
                 <ng-content select="p-header"></ng-content>
                 <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
             </div>
-            <div class="p-editor-toolbar" *ngIf="!toolbar && !headerTemplate">
+            } @if (!toolbar && !headerTemplate) {
+            <div class="p-editor-toolbar">
                 <span class="ql-formats">
                     <select class="ql-header">
                         <option value="1">Heading</option>
@@ -82,6 +84,7 @@ export const EDITOR_VALUE_ACCESSOR: any = {
                     <button class="ql-clean" aria-label="Remove Styles" type="button"></button>
                 </span>
             </div>
+            }
             <div class="p-editor-content" [ngStyle]="style"></div>
         </div>
     `,

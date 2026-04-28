@@ -9,31 +9,26 @@ import { TimesCircleIcon } from 'primeng/icons/timescircle';
 @Component({
     selector: 'p-chip',
     template: `
-        <div [ngClass]="containerClass()" [class]="styleClass" [ngStyle]="style" *ngIf="visible" [attr.data-pc-name]="'chip'" [attr.aria-label]="label" [attr.data-pc-section]="'root'">
+        @if (visible) {
+        <div [ngClass]="containerClass()" [class]="styleClass" [ngStyle]="style" [attr.data-pc-name]="'chip'" [attr.aria-label]="label" [attr.data-pc-section]="'root'">
             <ng-content></ng-content>
-            <img [src]="image" *ngIf="image; else iconTemplate" (error)="imageError($event)" [alt]="alt" />
-            <ng-template #iconTemplate><span *ngIf="icon" [class]="icon" [ngClass]="'p-chip-icon'" [attr.data-pc-section]="'icon'"></span></ng-template>
-            <div class="p-chip-text" *ngIf="label" [attr.data-pc-section]="'label'">{{ label }}</div>
-            <ng-container *ngIf="removable">
-                <ng-container *ngIf="!removeIconTemplate">
-                    <span
-                        tabindex="0"
-                        *ngIf="removeIcon"
-                        [class]="removeIcon"
-                        [ngClass]="'pi-chip-remove-icon'"
-                        [attr.data-pc-section]="'removeicon'"
-                        (click)="close($event)"
-                        (keydown)="onKeydown($event)"
-                        [attr.aria-label]="removeAriaLabel"
-                        role="button"
-                    ></span>
-                    <TimesCircleIcon tabindex="0" *ngIf="!removeIcon" [class]="'pi-chip-remove-icon'" [attr.data-pc-section]="'removeicon'" (click)="close($event)" (keydown)="onKeydown($event)" [attr.aria-label]="removeAriaLabel" role="button" />
-                </ng-container>
-                <span *ngIf="removeIconTemplate" tabindex="0" [attr.data-pc-section]="'removeicon'" class="pi-chip-remove-icon" (click)="close($event)" (keydown)="onKeydown($event)" [attr.aria-label]="removeAriaLabel" role="button">
-                    <ng-template *ngTemplateOutlet="removeIconTemplate"></ng-template>
-                </span>
-            </ng-container>
+            @if (image) {
+            <img [src]="image" (error)="imageError($event)" [alt]="alt" />
+            } @else { @if (icon) {
+            <span [class]="icon" [ngClass]="'p-chip-icon'" [attr.data-pc-section]="'icon'"></span>
+            } } @if (label) {
+            <div class="p-chip-text" [attr.data-pc-section]="'label'">{{ label }}</div>
+            } @if (removable) { @if (!removeIconTemplate) { @if (removeIcon) {
+            <span tabindex="0" [class]="removeIcon" [ngClass]="'pi-chip-remove-icon'" [attr.data-pc-section]="'removeicon'" (click)="close($event)" (keydown)="onKeydown($event)" [attr.aria-label]="removeAriaLabel" role="button"></span>
+            } @if (!removeIcon) {
+            <TimesCircleIcon tabindex="0" [class]="'pi-chip-remove-icon'" [attr.data-pc-section]="'removeicon'" (click)="close($event)" (keydown)="onKeydown($event)" [attr.aria-label]="removeAriaLabel" role="button" />
+            } } @if (removeIconTemplate) {
+            <span tabindex="0" [attr.data-pc-section]="'removeicon'" class="pi-chip-remove-icon" (click)="close($event)" (keydown)="onKeydown($event)" [attr.aria-label]="removeAriaLabel" role="button">
+                <ng-template *ngTemplateOutlet="removeIconTemplate"></ng-template>
+            </span>
+            } }
         </div>
+        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,

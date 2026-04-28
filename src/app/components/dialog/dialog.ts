@@ -1,32 +1,32 @@
 import { AnimationEvent, animate, animation, style, transition, trigger, useAnimation } from '@angular/animations';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
-  AfterContentInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ContentChild,
-  ContentChildren,
-  ElementRef,
-  EventEmitter,
-  Inject,
-  Input,
-  NgModule,
-  NgZone,
-  OnDestroy,
-  OnInit,
-  Output,
-  PLATFORM_ID,
-  QueryList,
-  Renderer2,
-  SimpleChanges,
-  TemplateRef,
-  ViewChild,
-  ViewEncapsulation,
-  ViewRef,
-  booleanAttribute,
-  numberAttribute,
-  DOCUMENT
+    AfterContentInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ContentChild,
+    ContentChildren,
+    ElementRef,
+    EventEmitter,
+    Inject,
+    Input,
+    NgModule,
+    NgZone,
+    OnDestroy,
+    OnInit,
+    Output,
+    PLATFORM_ID,
+    QueryList,
+    Renderer2,
+    SimpleChanges,
+    TemplateRef,
+    ViewChild,
+    ViewEncapsulation,
+    ViewRef,
+    booleanAttribute,
+    numberAttribute,
+    DOCUMENT
 } from '@angular/core';
 import { Footer, Header, PrimeNGConfig, PrimeTemplate, SharedModule, TranslationKeys } from 'primeng/api';
 import { DomHandler } from 'primeng/dom';
@@ -49,8 +49,8 @@ const hideAnimation = animation([animate('{{transition}}', style({ transform: '{
 @Component({
     selector: 'p-dialog',
     template: `
+        @if (maskVisible) {
         <div
-            *ngIf="maskVisible"
             [class]="maskStyleClass"
             [style]="maskStyle"
             [ngClass]="{
@@ -67,12 +67,12 @@ const hideAnimation = animation([animate('{{transition}}', style({ transform: '{
                 'p-dialog-bottom-right': position === 'bottomright' || position === 'bottom-right'
             }"
         >
+            @if (visible) {
             <div
                 #container
                 [ngClass]="{ 'p-dialog p-component': true, 'p-dialog-rtl': rtl, 'p-dialog-draggable': draggable, 'p-dialog-resizable': resizable, 'p-dialog-maximized': maximized }"
                 [ngStyle]="style"
                 [class]="styleClass"
-                *ngIf="visible"
                 pFocusTrap
                 [pFocusTrapDisabled]="focusTrap === false"
                 [@animation]="{ value: 'visible', params: { transform: transformOptions, transition: transitionOptions } }"
@@ -82,75 +82,84 @@ const hideAnimation = animation([animate('{{transition}}', style({ transform: '{
                 [attr.aria-labelledby]="ariaLabelledBy"
                 [attr.aria-modal]="true"
             >
-                <ng-container *ngIf="headlessTemplate; else notHeadless">
-                    <ng-container *ngTemplateOutlet="headlessTemplate"></ng-container>
-                </ng-container>
-
-                <ng-template #notHeadless>
-                    <div *ngIf="resizable" class="p-resizable-handle" style="z-index: 90;" (mousedown)="initResize($event)"></div>
-                    <div #titlebar class="p-dialog-header" (mousedown)="initDrag($event)" *ngIf="showHeader">
-                        <span [id]="ariaLabelledBy" class="p-dialog-title" *ngIf="!headerFacet && !headerTemplate">{{ header }}</span>
-                        <span [id]="ariaLabelledBy" class="p-dialog-title" *ngIf="headerFacet">
-                            <ng-content select="p-header"></ng-content>
-                        </span>
-                        <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
-                        <div class="p-dialog-header-icons">
-                            <button
-                                *ngIf="maximizable"
-                                role="button"
-                                type="button"
-                                [ngClass]="{ 'p-dialog-header-icon p-dialog-header-maximize p-link': true }"
-                                (click)="maximize()"
-                                (keydown.enter)="maximize()"
-                                [attr.tabindex]="maximizable ? '0' : '-1'"
-                                [attr.aria-label]="maximizeLabel"
-                                pRipple
-                                pButton
-                            >
-                                <span *ngIf="maximizeIcon && !maximizeIconTemplate && !minimizeIconTemplate" class="p-dialog-header-maximize-icon" [ngClass]="maximized ? minimizeIcon : maximizeIcon"></span>
-                                <ng-container *ngIf="!maximizeIcon">
-                                    <WindowMaximizeIcon *ngIf="!maximized && !maximizeIconTemplate" [styleClass]="'p-dialog-header-maximize-icon'" />
-                                    <WindowMinimizeIcon *ngIf="maximized && !minimizeIconTemplate" [styleClass]="'p-dialog-header-maximize-icon'" />
-                                </ng-container>
-                                <ng-container *ngIf="!maximized">
-                                    <ng-template *ngTemplateOutlet="maximizeIconTemplate"></ng-template>
-                                </ng-container>
-                                <ng-container *ngIf="maximized">
-                                    <ng-template *ngTemplateOutlet="minimizeIconTemplate"></ng-template>
-                                </ng-container>
-                            </button>
-                            <button
-                                *ngIf="closable"
-                                type="button"
-                                [ngClass]="{ 'p-dialog-header-icon p-dialog-header-close p-link': true }"
-                                [attr.aria-label]="closeAriaLabel"
-                                (click)="close($event)"
-                                (keydown.enter)="close($event)"
-                                pRipple
-                                pButton
-                                [attr.tabindex]="closeTabindex"
-                            >
-                                <ng-container *ngIf="!closeIconTemplate">
-                                    <span *ngIf="closeIcon" class="p-dialog-header-close-icon" [ngClass]="closeIcon"></span>
-                                    <TimesIcon *ngIf="!closeIcon" [styleClass]="'p-dialog-header-close-icon'" />
-                                </ng-container>
-                                <span *ngIf="closeIconTemplate">
-                                    <ng-template *ngTemplateOutlet="closeIconTemplate"></ng-template>
-                                </span>
-                            </button>
-                        </div>
+                @if (headlessTemplate) {
+                <ng-container *ngTemplateOutlet="headlessTemplate"></ng-container>
+                } @else { @if (resizable) {
+                <div class="p-resizable-handle" style="z-index: 90;" (mousedown)="initResize($event)"></div>
+                } @if (showHeader) {
+                <div #titlebar class="p-dialog-header" (mousedown)="initDrag($event)">
+                    @if (!headerFacet && !headerTemplate) {
+                    <span [id]="ariaLabelledBy" class="p-dialog-title">{{ header }}</span>
+                    } @if (headerFacet) {
+                    <span [id]="ariaLabelledBy" class="p-dialog-title">
+                        <ng-content select="p-header"></ng-content>
+                    </span>
+                    }
+                    <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
+                    <div class="p-dialog-header-icons">
+                        @if (maximizable) {
+                        <button
+                            role="button"
+                            type="button"
+                            [ngClass]="{ 'p-dialog-header-icon p-dialog-header-maximize p-link': true }"
+                            (click)="maximize()"
+                            (keydown.enter)="maximize()"
+                            [attr.tabindex]="maximizable ? '0' : '-1'"
+                            [attr.aria-label]="maximizeLabel"
+                            pRipple
+                            pButton
+                        >
+                            @if (maximizeIcon && !maximizeIconTemplate && !minimizeIconTemplate) {
+                            <span class="p-dialog-header-maximize-icon" [ngClass]="maximized ? minimizeIcon : maximizeIcon"></span>
+                            } @if (!maximizeIcon) { @if (!maximized && !maximizeIconTemplate) {
+                            <WindowMaximizeIcon [styleClass]="'p-dialog-header-maximize-icon'" />
+                            } @if (maximized && !minimizeIconTemplate) {
+                            <WindowMinimizeIcon [styleClass]="'p-dialog-header-maximize-icon'" />
+                            } } @if (!maximized) {
+                            <ng-template *ngTemplateOutlet="maximizeIconTemplate"></ng-template>
+                            } @if (maximized) {
+                            <ng-template *ngTemplateOutlet="minimizeIconTemplate"></ng-template>
+                            }
+                        </button>
+                        } @if (closable) {
+                        <button
+                            type="button"
+                            [ngClass]="{ 'p-dialog-header-icon p-dialog-header-close p-link': true }"
+                            [attr.aria-label]="closeAriaLabel"
+                            (click)="close($event)"
+                            (keydown.enter)="close($event)"
+                            pRipple
+                            pButton
+                            [attr.tabindex]="closeTabindex"
+                        >
+                            @if (!closeIconTemplate) { @if (closeIcon) {
+                            <span class="p-dialog-header-close-icon" [ngClass]="closeIcon"></span>
+                            } @if (!closeIcon) {
+                            <TimesIcon [styleClass]="'p-dialog-header-close-icon'" />
+                            } } @if (closeIconTemplate) {
+                            <span>
+                                <ng-template *ngTemplateOutlet="closeIconTemplate"></ng-template>
+                            </span>
+                            }
+                        </button>
+                        }
                     </div>
-                    <div #content [ngClass]="'p-dialog-content'" [ngStyle]="contentStyle" [class]="contentStyleClass">
-                        <ng-content></ng-content>
-                        <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
-                    </div>
-                    <div #footer class="p-dialog-footer" *ngIf="footerFacet || footerTemplate">
-                        <ng-content select="p-footer"></ng-content>
-                        <ng-container *ngTemplateOutlet="footerTemplate"></ng-container>
-                    </div>
-                </ng-template>
+                </div>
+                }
+                <div #content [ngClass]="'p-dialog-content'" [ngStyle]="contentStyle" [class]="contentStyleClass">
+                    <ng-content></ng-content>
+                    <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
+                </div>
+                @if (footerFacet || footerTemplate) {
+                <div #footer class="p-dialog-footer">
+                    <ng-content select="p-footer"></ng-content>
+                    <ng-container *ngTemplateOutlet="footerTemplate"></ng-container>
+                </div>
+                } }
             </div>
+            }
         </div>
+        }
     `,
     animations: [trigger('animation', [transition('void => visible', [useAnimation(showAnimation)]), transition('visible => void', [useAnimation(hideAnimation)])])],
     changeDetection: ChangeDetectionStrategy.OnPush,

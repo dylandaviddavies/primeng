@@ -9,9 +9,11 @@ import { Code } from '@domain/code';
         </app-docsectiontext>
         <div class="card flex justify-content-center">
             <div class="flex flex-column gap-2">
-                <div *ngFor="let category of categories" class="field-checkbox">
+                @for (category of categories; track category) {
+                <div class="field-checkbox">
                     <p-checkbox [label]="category.name" name="group" [value]="category" [(ngModel)]="selectedCategories" />
                 </div>
+                }
             </div>
         </div>
         <app-code [code]="code" selector="checkbox-dynamic-demo"></app-code>

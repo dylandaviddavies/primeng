@@ -11,7 +11,8 @@ import { ProductService } from '@service/productservice';
         </app-docsectiontext>
         <div class="card grid grid-nogutter">
             <div class="col-12 md:col-6 drag-column">
-                <div *ngFor="let product of availableProducts">
+                @for (product of availableProducts; track product) {
+                <div>
                     <div class="product-item" pDraggable="products" (onDragStart)="dragStart(product)" (onDragEnd)="dragEnd()">
                         <div class="image-container">
                             <img src="https://primefaces.org/cdn/primeng/images/demo/product/{{ product.image }}" [alt]="product.name" class="product-image" />
@@ -27,6 +28,7 @@ import { ProductService } from '@service/productservice';
                         </div>
                     </div>
                 </div>
+                }
             </div>
             <div class="col-12 md:col-6 drop-column" pDroppable="products" (onDrop)="drop()">
                 <p-table [value]="selectedProducts">

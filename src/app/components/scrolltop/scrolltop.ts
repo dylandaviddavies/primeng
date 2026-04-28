@@ -1,6 +1,24 @@
 import { AnimationEvent, animate, state, style, transition, trigger } from '@angular/animations';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
-import { ChangeDetectionStrategy, ChangeDetectorRef, Component, ContentChildren, ElementRef, Inject, Input, NgModule, OnDestroy, OnInit, PLATFORM_ID, QueryList, Renderer2, TemplateRef, ViewEncapsulation, numberAttribute, DOCUMENT } from '@angular/core';
+import {
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ContentChildren,
+    ElementRef,
+    Inject,
+    Input,
+    NgModule,
+    OnDestroy,
+    OnInit,
+    PLATFORM_ID,
+    QueryList,
+    Renderer2,
+    TemplateRef,
+    ViewEncapsulation,
+    numberAttribute,
+    DOCUMENT
+} from '@angular/core';
 import { PrimeNGConfig, PrimeTemplate, SharedModule } from 'primeng/api';
 import { DomHandler } from 'primeng/dom';
 import { ChevronUpIcon } from 'primeng/icons/chevronup';
@@ -12,8 +30,8 @@ import { ZIndexUtils } from 'primeng/utils';
 @Component({
     selector: 'p-scrollTop',
     template: `
+        @if (visible) {
         <button
-            *ngIf="visible"
             [@animation]="{ value: 'open', params: { showTransitionParams: showTransitionOptions, hideTransitionParams: hideTransitionOptions } }"
             (@animation.start)="onEnter($event)"
             (@animation.done)="onLeave($event)"
@@ -24,24 +42,33 @@ import { ZIndexUtils } from 'primeng/utils';
             [ngStyle]="style"
             type="button"
         >
-            <ng-container *ngIf="!iconTemplate">
-                <span *ngIf="icon" [class]="icon" [ngClass]="'p-scrolltop-icon'"></span>
-                <ChevronUpIcon *ngIf="!icon" [styleClass]="'p-scrolltop-icon'" [ngStyle]="{ 'font-size': '1rem', scale: '1.5' }" />
-            </ng-container>
-            <ng-template [ngIf]="!icon" *ngTemplateOutlet="iconTemplate; context: { styleClass: 'p-scrolltop-icon' }"></ng-template>
+            @if (!iconTemplate) { @if (icon) {
+            <span [class]="icon" [ngClass]="'p-scrolltop-icon'"></span>
+            } @if (!icon) {
+            <ChevronUpIcon [styleClass]="'p-scrolltop-icon'" [ngStyle]="{ 'font-size': '1rem', scale: '1.5' }" />
+            } } @if (!icon) {
+            <ng-template *ngTemplateOutlet="iconTemplate; context: { styleClass: 'p-scrolltop-icon' }"></ng-template>
+            }
         </button>
+        }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,
     styleUrls: ['./scrolltop.css'],
     animations: [
         trigger('animation', [
-            state('void', style({
-                opacity: 0
-            })),
-            state('open', style({
-                opacity: 1
-            })),
+            state(
+                'void',
+                style({
+                    opacity: 0
+                })
+            ),
+            state(
+                'open',
+                style({
+                    opacity: 1
+                })
+            ),
             transition('void => open', animate('{{showTransitionParams}}')),
             transition('open => void', animate('{{hideTransitionParams}}'))
         ])

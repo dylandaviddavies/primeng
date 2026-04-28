@@ -11,17 +11,16 @@ import { Code } from '@domain/code';
         <div class="card flex justify-content-center">
             <p-breadcrumb class="max-w-full" [model]="items">
                 <ng-template pTemplate="item" let-item>
-                    <ng-container *ngIf="item.route; else elseBlock">
-                        <a [routerLink]="item.route" class="p-menuitem-link">
-                            <span [ngClass]="[item.icon ? item.icon : '', 'text-color']"></span>
-                            <span class="text-primary font-semibold">{{ item.label }}</span>
-                        </a>
-                    </ng-container>
-                    <ng-template #elseBlock>
-                        <a [href]="item.url">
-                            <span class="text-color">{{ item.label }}</span>
-                        </a>
-                    </ng-template>
+                    @if (item.route) {
+                    <a [routerLink]="item.route" class="p-menuitem-link">
+                        <span [ngClass]="[item.icon ? item.icon : '', 'text-color']"></span>
+                        <span class="text-primary font-semibold">{{ item.label }}</span>
+                    </a>
+                    } @else {
+                    <a [href]="item.url">
+                        <span class="text-color">{{ item.label }}</span>
+                    </a>
+                    }
                 </ng-template>
             </p-breadcrumb>
         </div>

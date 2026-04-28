@@ -1,33 +1,33 @@
 import { AnimationEvent, animate, style, transition, trigger } from '@angular/animations';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ContentChildren,
-  ElementRef,
-  EventEmitter,
-  Inject,
-  Input,
-  NgModule,
-  OnDestroy,
-  Output,
-  PLATFORM_ID,
-  Pipe,
-  PipeTransform,
-  QueryList,
-  Renderer2,
-  TemplateRef,
-  ViewChild,
-  ViewEncapsulation,
-  ViewRef,
-  booleanAttribute,
-  computed,
-  effect,
-  forwardRef,
-  numberAttribute,
-  signal,
-  DOCUMENT
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ContentChildren,
+    ElementRef,
+    EventEmitter,
+    Inject,
+    Input,
+    NgModule,
+    OnDestroy,
+    Output,
+    PLATFORM_ID,
+    Pipe,
+    PipeTransform,
+    QueryList,
+    Renderer2,
+    TemplateRef,
+    ViewChild,
+    ViewEncapsulation,
+    ViewRef,
+    booleanAttribute,
+    computed,
+    effect,
+    forwardRef,
+    numberAttribute,
+    signal,
+    DOCUMENT
 } from '@angular/core';
 import { DomSanitizer, SafeHtml } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
@@ -58,57 +58,59 @@ export class SafeHtmlPipe implements PipeTransform {
     selector: '[pMenuItemContent]',
     template: `
         <div [attr.data-pc-section]="'content'" class="p-menuitem-content" (click)="onItemClick($event, item)">
-            <ng-container *ngIf="!itemTemplate">
-                <a
-                    *ngIf="!item?.routerLink"
-                    [attr.title]="item.title"
-                    [attr.href]="item.url || null"
-                    [attr.data-automationid]="item.automationId"
-                    [attr.tabindex]="-1"
-                    [attr.data-pc-section]="'action'"
-                    [attr.aria-hidden]="true"
-                    class="p-menuitem-link"
-                    [target]="item.target"
-                    [ngClass]="{ 'p-disabled': item.disabled }"
-                    pRipple
-                >
-                    <ng-container *ngTemplateOutlet="itemContent; context: { $implicit: item }"></ng-container>
-                </a>
-                <a
-                    *ngIf="item?.routerLink"
-                    [routerLink]="item.routerLink"
-                    [attr.data-automationid]="item.automationId"
-                    [attr.tabindex]="-1"
-                    [attr.data-pc-section]="'action'"
-                    [attr.aria-hidden]="true"
-                    [attr.title]="item.title"
-                    [queryParams]="item.queryParams"
-                    routerLinkActive="p-menuitem-link-active"
-                    [routerLinkActiveOptions]="item.routerLinkActiveOptions || { exact: false }"
-                    class="p-menuitem-link"
-                    [target]="item.target"
-                    [ngClass]="{ 'p-disabled': item.disabled }"
-                    [fragment]="item.fragment"
-                    [queryParamsHandling]="item.queryParamsHandling"
-                    [preserveFragment]="item.preserveFragment"
-                    [skipLocationChange]="item.skipLocationChange"
-                    [replaceUrl]="item.replaceUrl"
-                    [state]="item.state"
-                    pRipple
-                >
-                    <ng-container *ngTemplateOutlet="itemContent; context: { $implicit: item }"></ng-container>
-                </a>
-            </ng-container>
-
-            <ng-container *ngIf="itemTemplate">
-                <ng-template *ngTemplateOutlet="itemTemplate; context: { $implicit: item }"></ng-template>
-            </ng-container>
+            @if (!itemTemplate) { @if (!item?.routerLink) {
+            <a
+                [attr.title]="item.title"
+                [attr.href]="item.url || null"
+                [attr.data-automationid]="item.automationId"
+                [attr.tabindex]="-1"
+                [attr.data-pc-section]="'action'"
+                [attr.aria-hidden]="true"
+                class="p-menuitem-link"
+                [target]="item.target"
+                [ngClass]="{ 'p-disabled': item.disabled }"
+                pRipple
+            >
+                <ng-container *ngTemplateOutlet="itemContent; context: { $implicit: item }"></ng-container>
+            </a>
+            } @if (item?.routerLink) {
+            <a
+                [routerLink]="item.routerLink"
+                [attr.data-automationid]="item.automationId"
+                [attr.tabindex]="-1"
+                [attr.data-pc-section]="'action'"
+                [attr.aria-hidden]="true"
+                [attr.title]="item.title"
+                [queryParams]="item.queryParams"
+                routerLinkActive="p-menuitem-link-active"
+                [routerLinkActiveOptions]="item.routerLinkActiveOptions || { exact: false }"
+                class="p-menuitem-link"
+                [target]="item.target"
+                [ngClass]="{ 'p-disabled': item.disabled }"
+                [fragment]="item.fragment"
+                [queryParamsHandling]="item.queryParamsHandling"
+                [preserveFragment]="item.preserveFragment"
+                [skipLocationChange]="item.skipLocationChange"
+                [replaceUrl]="item.replaceUrl"
+                [state]="item.state"
+                pRipple
+            >
+                <ng-container *ngTemplateOutlet="itemContent; context: { $implicit: item }"></ng-container>
+            </a>
+            } } @if (itemTemplate) {
+            <ng-template *ngTemplateOutlet="itemTemplate; context: { $implicit: item }"></ng-template>
+            }
 
             <ng-template #itemContent>
-                <span class="p-menuitem-icon" *ngIf="item.icon" [ngClass]="item.icon" [class]="item.iconClass" [ngStyle]="item.iconStyle"></span>
-                <span class="p-menuitem-text" *ngIf="item.escape !== false; else htmlLabel">{{ item.label }}</span>
-                <ng-template #htmlLabel><span class="p-menuitem-text" [innerHTML]="item.label | safeHtml"></span></ng-template>
-                <span class="p-menuitem-badge" *ngIf="item.badge" [ngClass]="item.badgeStyleClass">{{ item.badge }}</span>
+                @if (item.icon) {
+                <span class="p-menuitem-icon" [ngClass]="item.icon" [class]="item.iconClass" [ngStyle]="item.iconStyle"></span>
+                } @if (item.escape !== false) {
+                <span class="p-menuitem-text">{{ item.label }}</span>
+                } @else {
+                <span class="p-menuitem-text" [innerHTML]="item.label | safeHtml"></span>
+                } @if (item.badge) {
+                <span class="p-menuitem-badge" [ngClass]="item.badgeStyleClass">{{ item.badge }}</span>
+                }
             </ng-template>
         </div>
     `,
@@ -142,12 +144,12 @@ export class MenuItemContent {
 @Component({
     selector: 'p-menu',
     template: `
+        @if (!popup || visible) {
         <div
             #container
             [ngClass]="{ 'p-menu p-component': true, 'p-menu-overlay': popup }"
             [class]="styleClass"
             [ngStyle]="style"
-            *ngIf="!popup || visible"
             (click)="onOverlayClick($event)"
             [@overlayAnimation]="{ value: 'visible', params: { showTransitionParams: showTransitionOptions, hideTransitionParams: hideTransitionOptions } }"
             [@.disabled]="popup !== true"
@@ -156,9 +158,11 @@ export class MenuItemContent {
             [attr.data-pc-name]="'menu'"
             [attr.id]="id"
         >
-            <div *ngIf="startTemplate" class="p-menu-start" [attr.data-pc-section]="'start'">
+            @if (startTemplate) {
+            <div class="p-menu-start" [attr.data-pc-section]="'start'">
                 <ng-container *ngTemplateOutlet="startTemplate"></ng-container>
             </div>
+            }
             <ul
                 #list
                 class="p-menu-list p-reset"
@@ -173,52 +177,57 @@ export class MenuItemContent {
                 (blur)="onListBlur($event)"
                 (keydown)="onListKeyDown($event)"
             >
-                <ng-template ngFor let-submenu let-i="index" [ngForOf]="model" *ngIf="hasSubMenu()">
-                    <li class="p-menuitem-separator" *ngIf="submenu.separator" [ngClass]="{ 'p-hidden': submenu.visible === false }" role="separator"></li>
+                @for (submenu of model; track submenu; let i = $index) {
+                <ng-template let-submenu let-i="index" [ngForOf]="model" *ngIf="hasSubMenu()">
+                    @if (submenu.separator) {
+                    <li class="p-menuitem-separator" [ngClass]="{ 'p-hidden': submenu.visible === false }" role="separator"></li>
+                    } @if (!submenu.separator) {
                     <li
                         class="p-submenu-header"
                         [attr.data-automationid]="submenu.automationId"
-                        *ngIf="!submenu.separator"
                         [ngClass]="{ 'p-hidden': submenu.visible === false, flex: submenu.visible }"
                         pTooltip
                         [tooltipOptions]="submenu.tooltipOptions"
                         role="none"
                         [attr.id]="menuitemId(submenu, id, i)"
                     >
-                        <ng-container *ngIf="!submenuHeaderTemplate">
-                            <span *ngIf="submenu.escape !== false; else htmlSubmenuLabel">{{ submenu.label }}</span>
-                            <ng-template #htmlSubmenuLabel><span [innerHTML]="submenu.label | safeHtml"></span></ng-template>
-                        </ng-container>
+                        @if (!submenuHeaderTemplate) { @if (submenu.escape !== false) {
+                        <span>{{ submenu.label }}</span>
+                        } @else {
+                        <span [innerHTML]="submenu.label | safeHtml"></span>
+                        } }
                         <ng-container *ngTemplateOutlet="submenuHeaderTemplate; context: { $implicit: submenu }"></ng-container>
                     </li>
-                    <ng-template ngFor let-item let-j="index" [ngForOf]="submenu.items">
-                        <li class="p-menuitem-separator" *ngIf="item.separator" [ngClass]="{ 'p-hidden': item.visible === false || submenu.visible === false }" role="separator"></li>
-                        <li
-                            class="p-menuitem"
-                            *ngIf="!item.separator"
-                            [pMenuItemContent]="item"
-                            [itemTemplate]="itemTemplate"
-                            [ngClass]="{ 'p-hidden': item.visible === false || submenu.visible === false, 'p-focus': focusedOptionId() && menuitemId(item, id, i, j) === focusedOptionId(), 'p-disabled': disabled(item.disabled) }"
-                            [ngStyle]="item.style"
-                            [class]="item.styleClass"
-                            (onMenuItemClick)="itemClick($event, menuitemId(item, id, i, j))"
-                            pTooltip
-                            [tooltipOptions]="item.tooltipOptions"
-                            role="menuitem"
-                            [attr.data-pc-section]="'menuitem'"
-                            [attr.aria-label]="label(item.label)"
-                            [attr.data-p-focused]="isItemFocused(menuitemId(item, id, i, j))"
-                            [attr.data-p-disabled]="disabled(item.disabled)"
-                            [attr.aria-disabled]="disabled(item.disabled)"
-                            [attr.id]="menuitemId(item, id, i, j)"
-                        ></li>
-                    </ng-template>
-                </ng-template>
-                <ng-template ngFor let-item let-i="index" [ngForOf]="model" *ngIf="!hasSubMenu()">
-                    <li class="p-menuitem-separator" *ngIf="item.separator" [ngClass]="{ 'p-hidden': item.visible === false }" role="separator"></li>
+                    } @for (item of submenu.items; track item; let j = $index) { @if (item.separator) {
+                    <li class="p-menuitem-separator" [ngClass]="{ 'p-hidden': item.visible === false || submenu.visible === false }" role="separator"></li>
+                    } @if (!item.separator) {
                     <li
                         class="p-menuitem"
-                        *ngIf="!item.separator"
+                        [pMenuItemContent]="item"
+                        [itemTemplate]="itemTemplate"
+                        [ngClass]="{ 'p-hidden': item.visible === false || submenu.visible === false, 'p-focus': focusedOptionId() && menuitemId(item, id, i, j) === focusedOptionId(), 'p-disabled': disabled(item.disabled) }"
+                        [ngStyle]="item.style"
+                        [class]="item.styleClass"
+                        (onMenuItemClick)="itemClick($event, menuitemId(item, id, i, j))"
+                        pTooltip
+                        [tooltipOptions]="item.tooltipOptions"
+                        role="menuitem"
+                        [attr.data-pc-section]="'menuitem'"
+                        [attr.aria-label]="label(item.label)"
+                        [attr.data-p-focused]="isItemFocused(menuitemId(item, id, i, j))"
+                        [attr.data-p-disabled]="disabled(item.disabled)"
+                        [attr.aria-disabled]="disabled(item.disabled)"
+                        [attr.id]="menuitemId(item, id, i, j)"
+                    ></li>
+                    } }
+                </ng-template>
+                } @for (item of model; track item; let i = $index) {
+                <ng-template let-item let-i="index" [ngForOf]="model" *ngIf="!hasSubMenu()">
+                    @if (item.separator) {
+                    <li class="p-menuitem-separator" [ngClass]="{ 'p-hidden': item.visible === false }" role="separator"></li>
+                    } @if (!item.separator) {
+                    <li
+                        class="p-menuitem"
                         [pMenuItemContent]="item"
                         [itemTemplate]="itemTemplate"
                         [ngClass]="{ 'p-hidden': item.visible === false, 'p-focus': focusedOptionId() && menuitemId(item, id, i, j) === focusedOptionId(), 'p-disabled': disabled(item.disabled) }"
@@ -235,12 +244,17 @@ export class MenuItemContent {
                         [attr.aria-disabled]="disabled(item.disabled)"
                         [attr.id]="menuitemId(item, id, i)"
                     ></li>
+                    }
                 </ng-template>
+                }
             </ul>
-            <div *ngIf="endTemplate" class="p-menu-end" [attr.data-pc-section]="'end'">
+            @if (endTemplate) {
+            <div class="p-menu-end" [attr.data-pc-section]="'end'">
                 <ng-container *ngTemplateOutlet="endTemplate"></ng-container>
             </div>
+            }
         </div>
+        }
     `,
     animations: [trigger('overlayAnimation', [transition(':enter', [style({ opacity: 0, transform: 'scaleY(0.8)' }), animate('{{showTransitionParams}}')]), transition(':leave', [animate('{{hideTransitionParams}}', style({ opacity: 0 }))])])],
     changeDetection: ChangeDetectionStrategy.OnPush,

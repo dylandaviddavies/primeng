@@ -6,14 +6,18 @@ import { Title, Meta } from '@angular/platform-browser';
 @Component({
     selector: 'app-doc',
     template: ` <div class="doc-component">
-        <ul class="doc-tabmenu" *ngIf="docs && apiDocs">
+        @if (docs && apiDocs) {
+        <ul class="doc-tabmenu">
             <li [ngClass]="{ 'doc-tabmenu-active': activeTab === 0 }">
                 <button type="button" (click)="activateTab(0)">FEATURES</button>
             </li>
-            <li *ngIf="apiDocs" [ngClass]="{ 'doc-tabmenu-active': activeTab === 1 }">
+            @if (apiDocs) {
+            <li [ngClass]="{ 'doc-tabmenu-active': activeTab === 1 }">
                 <button type="button" (click)="activateTab(1)">API</button>
             </li>
+            }
         </ul>
+        }
         <div class="doc-tabpanels">
             <div [ngClass]="{ hidden: activeTab === 1 }" class="doc-tabpanel">
                 <div class="doc-main">

@@ -1,33 +1,33 @@
 import { AnimationEvent, animate, style, transition, trigger } from '@angular/animations';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
-  AfterContentInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ContentChildren,
-  ElementRef,
-  EventEmitter,
-  Inject,
-  Input,
-  NgModule,
-  OnDestroy,
-  OnInit,
-  Output,
-  PLATFORM_ID,
-  QueryList,
-  Renderer2,
-  TemplateRef,
-  ViewChild,
-  ViewContainerRef,
-  ViewEncapsulation,
-  ViewRef,
-  booleanAttribute,
-  effect,
-  forwardRef,
-  numberAttribute,
-  signal,
-  DOCUMENT
+    AfterContentInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ContentChildren,
+    ElementRef,
+    EventEmitter,
+    Inject,
+    Input,
+    NgModule,
+    OnDestroy,
+    OnInit,
+    Output,
+    PLATFORM_ID,
+    QueryList,
+    Renderer2,
+    TemplateRef,
+    ViewChild,
+    ViewContainerRef,
+    ViewEncapsulation,
+    ViewRef,
+    booleanAttribute,
+    effect,
+    forwardRef,
+    numberAttribute,
+    signal,
+    DOCUMENT
 } from '@angular/core';
 import { RouterModule } from '@angular/router';
 import { MenuItem, OverlayService, PrimeNGConfig, PrimeTemplate, SharedModule } from 'primeng/api';
@@ -345,6 +345,7 @@ export class ContextMenuSub {
 @Component({
     selector: 'p-contextMenu',
     template: `
+        @if (visible()) {
         <div
             #container
             [attr.data-pc-section]="'root'"
@@ -356,7 +357,6 @@ export class ContextMenuSub {
             [@overlayAnimation]="{ value: 'visible' }"
             (@overlayAnimation.start)="onOverlayAnimationStart($event)"
             (@overlayAnimation.done)="onOverlayAnimationEnd($event)"
-            *ngIf="visible()"
         >
             <p-contextMenuSub
                 #rootmenu
@@ -379,6 +379,7 @@ export class ContextMenuSub {
                 (itemMouseEnter)="onItemMouseEnter($event)"
             ></p-contextMenuSub>
         </div>
+        }
     `,
     animations: [trigger('overlayAnimation', [transition(':enter', [style({ opacity: 0 }), animate('250ms')]), transition(':leave', [animate('.1s linear', style({ opacity: 0 }))])])],
     changeDetection: ChangeDetectionStrategy.OnPush,

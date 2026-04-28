@@ -35,44 +35,47 @@ import { Subscription, timer } from 'rxjs';
     selector: 'p-messages',
     template: `
         <div class="p-messages p-component" role="alert" [ngStyle]="style" [class]="styleClass" [attr.aria-atomic]="true" [attr.aria-live]="'assertive'" [attr.data-pc-name]="'message'">
-            <ng-container *ngIf="!contentTemplate; else staticMessage">
-                <div
-                    *ngFor="let msg of messages; let i = index"
-                    [class]="'p-message p-message-' + msg.severity"
-                    role="alert"
-                    [@messageAnimation]="{ value: 'visible', params: { showTransitionParams: showTransitionOptions, hideTransitionParams: hideTransitionOptions } }"
-                >
-                    <div class="p-message-wrapper" [attr.data-pc-section]="'wrapper'" [attr.id]="msg.id || null">
-                        <span *ngIf="msg.icon" [class]="'p-message-icon pi ' + msg.icon" [attr.data-pc-section]="'icon'"> </span>
-                        <span class="p-message-icon" *ngIf="!msg.icon">
-                            <ng-container>
-                                <CheckIcon *ngIf="msg.severity === 'success'" [attr.data-pc-section]="'icon'" />
-                                <InfoCircleIcon *ngIf="msg.severity === 'info'" [attr.data-pc-section]="'icon'" />
-                                <TimesCircleIcon *ngIf="msg.severity === 'error'" [attr.data-pc-section]="'icon'" />
-                                <ExclamationTriangleIcon *ngIf="msg.severity === 'warn'" [attr.data-pc-section]="'icon'" />
-                            </ng-container>
-                        </span>
-                        <ng-container *ngIf="!escape; else escapeOut">
-                            <span *ngIf="msg.summary" class="p-message-summary" [innerHTML]="msg.summary" [attr.data-pc-section]="'summary'"></span>
-                            <span *ngIf="msg.detail" class="p-message-detail" [innerHTML]="msg.detail" [attr.data-pc-section]="'detail'"></span>
+            @if (!contentTemplate) { @for (msg of messages; track msg; let i = $index) {
+            <div [class]="'p-message p-message-' + msg.severity" role="alert" [@messageAnimation]="{ value: 'visible', params: { showTransitionParams: showTransitionOptions, hideTransitionParams: hideTransitionOptions } }">
+                <div class="p-message-wrapper" [attr.data-pc-section]="'wrapper'" [attr.id]="msg.id || null">
+                    @if (msg.icon) {
+                    <span [class]="'p-message-icon pi ' + msg.icon" [attr.data-pc-section]="'icon'"> </span>
+                    } @if (!msg.icon) {
+                    <span class="p-message-icon">
+                        <ng-container>
+                            @if (msg.severity === 'success') {
+                            <CheckIcon [attr.data-pc-section]="'icon'" />
+                            } @if (msg.severity === 'info') {
+                            <InfoCircleIcon [attr.data-pc-section]="'icon'" />
+                            } @if (msg.severity === 'error') {
+                            <TimesCircleIcon [attr.data-pc-section]="'icon'" />
+                            } @if (msg.severity === 'warn') {
+                            <ExclamationTriangleIcon [attr.data-pc-section]="'icon'" />
+                            }
                         </ng-container>
-                        <ng-template #escapeOut>
-                            <span *ngIf="msg.summary" class="p-message-summary" [attr.data-pc-section]="'summary'">{{ msg.summary }}</span>
-                            <span *ngIf="msg.detail" class="p-message-detail" [attr.data-pc-section]="'detail'">{{ msg.detail }}</span>
-                        </ng-template>
-                        <button class="p-message-close p-link" (click)="removeMessage(i)" *ngIf="closable && (msg.closable ?? true)" type="button" pRipple [attr.aria-label]="closeAriaLabel" [attr.data-pc-section]="'closebutton'">
-                            <TimesIcon [styleClass]="'p-message-close-icon'" [attr.data-pc-section]="'closeicon'" />
-                        </button>
-                    </div>
+                    </span>
+                    } @if (!escape) { @if (msg.summary) {
+                    <span class="p-message-summary" [innerHTML]="msg.summary" [attr.data-pc-section]="'summary'"></span>
+                    } @if (msg.detail) {
+                    <span class="p-message-detail" [innerHTML]="msg.detail" [attr.data-pc-section]="'detail'"></span>
+                    } } @else { @if (msg.summary) {
+                    <span class="p-message-summary" [attr.data-pc-section]="'summary'">{{ msg.summary }}</span>
+                    } @if (msg.detail) {
+                    <span class="p-message-detail" [attr.data-pc-section]="'detail'">{{ msg.detail }}</span>
+                    } } @if (closable && (msg.closable ?? true)) {
+                    <button class="p-message-close p-link" (click)="removeMessage(i)" type="button" pRipple [attr.aria-label]="closeAriaLabel" [attr.data-pc-section]="'closebutton'">
+                        <TimesIcon [styleClass]="'p-message-close-icon'" [attr.data-pc-section]="'closeicon'" />
+                    </button>
+                    }
                 </div>
-            </ng-container>
-            <ng-template #staticMessage>
-                <div [ngClass]="'p-message p-message-' + severity" role="alert">
-                    <div class="p-message-wrapper">
-                        <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
-                    </div>
+            </div>
+            } } @else {
+            <div [ngClass]="'p-message p-message-' + severity" role="alert">
+                <div class="p-message-wrapper">
+                    <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
                 </div>
-            </ng-template>
+            </div>
+            }
         </div>
     `,
     animations: [

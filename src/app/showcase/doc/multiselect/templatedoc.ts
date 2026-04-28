@@ -15,11 +15,14 @@ interface Country {
         <div class="card flex justify-content-center">
             <p-multiSelect [options]="countries" [(ngModel)]="selectedCountries" placeholder="Select Countries" optionLabel="name">
                 <ng-template let-value pTemplate="selectedItems">
-                    <div class="inline-flex align-items-center gap-2 px-1" *ngFor="let option of value">
+                    @for (option of value; track option) {
+                    <div class="inline-flex align-items-center gap-2 px-1">
                         <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png" [class]="'flag flag-' + option.code.toLowerCase()" style="width: 18px" />
                         <div>{{ option.name }},</div>
                     </div>
-                    <div *ngIf="!value || value.length === 0">Select Countries</div>
+                    } @if (!value || value.length === 0) {
+                    <div>Select Countries</div>
+                    }
                 </ng-template>
                 <ng-template let-country pTemplate="item">
                     <div class="flex align-items-center gap-2">

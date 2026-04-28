@@ -17,14 +17,17 @@ import { PanelAfterToggleEvent, PanelBeforeToggleEvent } from './panel.interface
     selector: 'p-panel',
     template: `
         <div [attr.id]="id" [attr.data-pc-name]="'panel'" [ngClass]="{ 'p-panel p-component': true, 'p-panel-toggleable': toggleable, 'p-panel-expanded': !collapsed && toggleable }" [ngStyle]="style" [class]="styleClass">
-            <div class="p-panel-header" *ngIf="showHeader" (click)="onHeaderClick($event)" [attr.id]="id + '-titlebar'">
-                <span class="p-panel-title" *ngIf="header" [attr.id]="id + '_header'">{{ header }}</span>
+            @if (showHeader) {
+            <div class="p-panel-header" (click)="onHeaderClick($event)" [attr.id]="id + '-titlebar'">
+                @if (header) {
+                <span class="p-panel-title" [attr.id]="id + '_header'">{{ header }}</span>
+                }
                 <ng-content select="p-header"></ng-content>
                 <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
                 <div class="p-panel-icons" [ngClass]="{ 'p-panel-icons-start': iconPos === 'start', 'p-panel-icons-end': iconPos === 'end', 'p-panel-icons-center': iconPos === 'center' }">
                     <ng-template *ngTemplateOutlet="iconTemplate"></ng-template>
+                    @if (toggleable) {
                     <button
-                        *ngIf="toggleable"
                         [attr.id]="id + '_header'"
                         pRipple
                         type="button"
@@ -36,22 +39,21 @@ import { PanelAfterToggleEvent, PanelBeforeToggleEvent } from './panel.interface
                         (click)="onIconClick($event)"
                         (keydown)="onKeyDown($event)"
                     >
-                        <ng-container *ngIf="!headerIconTemplate">
-                            <ng-container *ngIf="!collapsed">
-                                <span *ngIf="expandIcon" [class]="expandIcon" [ngClass]="iconClass"></span>
-                                <MinusIcon *ngIf="!expandIcon" [styleClass]="iconClass" />
-                            </ng-container>
-
-                            <ng-container *ngIf="collapsed">
-                                <span *ngIf="collapseIcon" [class]="collapseIcon" [ngClass]="iconClass"></span>
-                                <PlusIcon *ngIf="!collapseIcon" [styleClass]="iconClass" />
-                            </ng-container>
-                        </ng-container>
-
+                        @if (!headerIconTemplate) { @if (!collapsed) { @if (expandIcon) {
+                        <span [class]="expandIcon" [ngClass]="iconClass"></span>
+                        } @if (!expandIcon) {
+                        <MinusIcon [styleClass]="iconClass" />
+                        } } @if (collapsed) { @if (collapseIcon) {
+                        <span [class]="collapseIcon" [ngClass]="iconClass"></span>
+                        } @if (!collapseIcon) {
+                        <PlusIcon [styleClass]="iconClass" />
+                        } } }
                         <ng-template *ngTemplateOutlet="headerIconTemplate; context: { $implicit: collapsed }"></ng-template>
                     </button>
+                    }
                 </div>
             </div>
+            }
             <div
                 class="p-toggleable-content"
                 [id]="id + '_content'"
@@ -71,24 +73,36 @@ import { PanelAfterToggleEvent, PanelBeforeToggleEvent } from './panel.interface
                     <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
                 </div>
 
-                <div class="p-panel-footer" *ngIf="footerFacet || footerTemplate">
+                @if (footerFacet || footerTemplate) {
+                <div class="p-panel-footer">
                     <ng-content select="p-footer"></ng-content>
                     <ng-container *ngTemplateOutlet="footerTemplate"></ng-container>
                 </div>
+                }
             </div>
         </div>
     `,
     animations: [
         trigger('panelContent', [
-            state('hidden', style({
-                height: '0'
-            })),
-            state('void', style({
-                height: '{{height}}'
-            }), { params: { height: '0' } }),
-            state('visible', style({
-                height: '*'
-            })),
+            state(
+                'hidden',
+                style({
+                    height: '0'
+                })
+            ),
+            state(
+                'void',
+                style({
+                    height: '{{height}}'
+                }),
+                { params: { height: '0' } }
+            ),
+            state(
+                'visible',
+                style({
+                    height: '*'
+                })
+            ),
             transition('visible <=> hidden', [animate('{{transitionParams}}')]),
             transition('void => hidden', animate('{{transitionParams}}')),
             transition('void => visible', animate('{{transitionParams}}'))

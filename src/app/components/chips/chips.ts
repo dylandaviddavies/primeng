@@ -1,24 +1,24 @@
 import { CommonModule } from '@angular/common';
 import {
-  AfterContentInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ContentChildren,
-  ElementRef,
-  EventEmitter,
-  Inject,
-  Input,
-  NgModule,
-  Output,
-  QueryList,
-  TemplateRef,
-  ViewChild,
-  ViewEncapsulation,
-  booleanAttribute,
-  forwardRef,
-  numberAttribute,
-  DOCUMENT
+    AfterContentInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ContentChildren,
+    ElementRef,
+    EventEmitter,
+    Inject,
+    Input,
+    NgModule,
+    Output,
+    QueryList,
+    TemplateRef,
+    ViewChild,
+    ViewEncapsulation,
+    booleanAttribute,
+    forwardRef,
+    numberAttribute,
+    DOCUMENT
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { PrimeNGConfig, PrimeTemplate, SharedModule } from 'primeng/api';
@@ -70,9 +70,9 @@ export const CHIPS_VALUE_ACCESSOR: any = {
                 (keydown)="onContainerKeyDown($event)"
                 [attr.data-pc-section]="'container'"
             >
+                @for (item of value; track item; let i = $index) {
                 <li
                     #token
-                    *ngFor="let item of value; let i = index"
                     [attr.id]="id + '_chips_item_' + i"
                     role="option"
                     [attr.ariaLabel]="item"
@@ -85,14 +85,17 @@ export const CHIPS_VALUE_ACCESSOR: any = {
                     [attr.data-pc-section]="'token'"
                 >
                     <ng-container *ngTemplateOutlet="itemTemplate; context: { $implicit: item }"></ng-container>
-                    <span *ngIf="!itemTemplate" class="p-chips-token-label" [attr.data-pc-section]="'label'">{{ field ? resolveFieldData(item, field) : item }}</span>
-                    <ng-container *ngIf="!disabled">
-                        <TimesCircleIcon [styleClass]="'p-chips-token-icon'" *ngIf="!removeTokenIconTemplate" (click)="removeItem($event, i)" [attr.data-pc-section]="'removeTokenIcon'" [attr.aria-hidden]="true" />
-                        <span *ngIf="removeTokenIconTemplate" class="p-chips-token-icon" (click)="removeItem($event, i)" [attr.data-pc-section]="'removeTokenIcon'" [attr.aria-hidden]="true">
-                            <ng-template *ngTemplateOutlet="removeTokenIconTemplate"></ng-template>
-                        </span>
-                    </ng-container>
+                    @if (!itemTemplate) {
+                    <span class="p-chips-token-label" [attr.data-pc-section]="'label'">{{ field ? resolveFieldData(item, field) : item }}</span>
+                    } @if (!disabled) { @if (!removeTokenIconTemplate) {
+                    <TimesCircleIcon [styleClass]="'p-chips-token-icon'" (click)="removeItem($event, i)" [attr.data-pc-section]="'removeTokenIcon'" [attr.aria-hidden]="true" />
+                    } @if (removeTokenIconTemplate) {
+                    <span class="p-chips-token-icon" (click)="removeItem($event, i)" [attr.data-pc-section]="'removeTokenIcon'" [attr.aria-hidden]="true">
+                        <ng-template *ngTemplateOutlet="removeTokenIconTemplate"></ng-template>
+                    </span>
+                    } }
                 </li>
+                }
                 <li class="p-chips-input-token" [ngClass]="{ 'p-chips-clearable': showClear && !disabled }" [attr.data-pc-section]="'inputToken'" role="option">
                     <input
                         #inputtext
@@ -113,12 +116,17 @@ export const CHIPS_VALUE_ACCESSOR: any = {
                         [autofocus]="autofocus"
                     />
                 </li>
-                <li *ngIf="value != null && filled && !disabled && showClear">
-                    <TimesIcon *ngIf="!clearIconTemplate" [styleClass]="'p-chips-clear-icon'" (click)="clear()" />
-                    <span *ngIf="clearIconTemplate" class="p-chips-clear-icon" (click)="clear()">
+                @if (value != null && filled && !disabled && showClear) {
+                <li>
+                    @if (!clearIconTemplate) {
+                    <TimesIcon [styleClass]="'p-chips-clear-icon'" (click)="clear()" />
+                    } @if (clearIconTemplate) {
+                    <span class="p-chips-clear-icon" (click)="clear()">
                         <ng-template *ngTemplateOutlet="clearIconTemplate"></ng-template>
                     </span>
+                    }
                 </li>
+                }
             </ul>
         </div>
     `,

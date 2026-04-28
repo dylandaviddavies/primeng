@@ -10,12 +10,13 @@ import { PrimeTemplate, SharedModule } from 'primeng/api';
     template: `
         <span [ngClass]="containerClass()" [class]="styleClass" [ngStyle]="style">
             <ng-content></ng-content>
-            <ng-container *ngIf="!iconTemplate">
-                <span class="p-tag-icon" [ngClass]="icon" *ngIf="icon"></span>
-            </ng-container>
-            <span class="p-tag-icon" *ngIf="iconTemplate">
+            @if (!iconTemplate) { @if (icon) {
+            <span class="p-tag-icon" [ngClass]="icon"></span>
+            } } @if (iconTemplate) {
+            <span class="p-tag-icon">
                 <ng-template *ngTemplateOutlet="iconTemplate"></ng-template>
             </span>
+            }
             <span class="p-tag-value">{{ value }}</span>
         </span>
     `,

@@ -1,24 +1,24 @@
 import { CommonModule } from '@angular/common';
 import {
-  AfterContentInit,
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  Component,
-  ContentChildren,
-  Directive,
-  ElementRef,
-  EventEmitter,
-  Inject,
-  Input,
-  NgModule,
-  OnDestroy,
-  Output,
-  QueryList,
-  TemplateRef,
-  ViewEncapsulation,
-  booleanAttribute,
-  numberAttribute,
-  DOCUMENT
+    AfterContentInit,
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    Component,
+    ContentChildren,
+    Directive,
+    ElementRef,
+    EventEmitter,
+    Inject,
+    Input,
+    NgModule,
+    OnDestroy,
+    Output,
+    QueryList,
+    TemplateRef,
+    ViewEncapsulation,
+    booleanAttribute,
+    numberAttribute,
+    DOCUMENT
 } from '@angular/core';
 import { PrimeTemplate, SharedModule } from 'primeng/api';
 import { DomHandler } from 'primeng/dom';
@@ -350,19 +350,21 @@ export class ButtonDirective implements AfterViewInit, OnDestroy {
         >
             <ng-content></ng-content>
             <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
-            <ng-container *ngIf="loading">
-                <ng-container *ngIf="!loadingIconTemplate">
-                    <span *ngIf="loadingIcon" [ngClass]="iconClass()" [attr.aria-hidden]="true" [attr.data-pc-section]="'loadingicon'"></span>
-                    <SpinnerIcon *ngIf="!loadingIcon" [styleClass]="spinnerIconClass()" [spin]="true" [attr.aria-hidden]="true" [attr.data-pc-section]="'loadingicon'" />
-                </ng-container>
-                <ng-template [ngIf]="loadingIconTemplate" *ngTemplateOutlet="loadingIconTemplate; context: { class: iconClass() }"></ng-template>
-            </ng-container>
-            <ng-container *ngIf="!loading">
-                <span *ngIf="icon && !iconTemplate" [class]="icon" [ngClass]="iconClass()" [attr.data-pc-section]="'icon'"></span>
-                <ng-template [ngIf]="!icon && iconTemplate" *ngTemplateOutlet="iconTemplate; context: { class: iconClass() }"></ng-template>
-            </ng-container>
-            <span class="p-button-label" [attr.aria-hidden]="icon && !label" *ngIf="!contentTemplate && label" [attr.data-pc-section]="'label'">{{ label }}</span>
-            <span [ngClass]="badgeStyleClass()" [class]="badgeClass" *ngIf="!contentTemplate && badge" [attr.data-pc-section]="'badge'">{{ badge }}</span>
+            @if (loading) { @if (!loadingIconTemplate) { @if (loadingIcon) {
+            <span [ngClass]="iconClass()" [attr.aria-hidden]="true" [attr.data-pc-section]="'loadingicon'"></span>
+            } @if (!loadingIcon) {
+            <SpinnerIcon [styleClass]="spinnerIconClass()" [spin]="true" [attr.aria-hidden]="true" [attr.data-pc-section]="'loadingicon'" />
+            } } @if (loadingIconTemplate) {
+            <ng-template *ngTemplateOutlet="loadingIconTemplate; context: { class: iconClass() }"></ng-template>
+            } } @if (!loading) { @if (icon && !iconTemplate) {
+            <span [class]="icon" [ngClass]="iconClass()" [attr.data-pc-section]="'icon'"></span>
+            } @if (!icon && iconTemplate) {
+            <ng-template *ngTemplateOutlet="iconTemplate; context: { class: iconClass() }"></ng-template>
+            } } @if (!contentTemplate && label) {
+            <span class="p-button-label" [attr.aria-hidden]="icon && !label" [attr.data-pc-section]="'label'">{{ label }}</span>
+            } @if (!contentTemplate && badge) {
+            <span [ngClass]="badgeStyleClass()" [class]="badgeClass" [attr.data-pc-section]="'badge'">{{ badge }}</span>
+            }
         </button>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,

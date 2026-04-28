@@ -13,24 +13,32 @@ import { MinusIcon } from 'primeng/icons/minus';
             <ng-template pTemplate="caption"> FileSystem </ng-template>
             <ng-template pTemplate="header" let-columns>
                 <tr>
-                    <th *ngFor="let col of columns">
+                    @for (col of columns; track col) {
+                    <th>
                         {{ col.header }}
                     </th>
+                    }
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
                 <tr [ttRow]="rowNode">
-                    <td *ngFor="let col of columns; let i = index">
-                        <p-treeTableToggler [rowNode]="rowNode" *ngIf="i == 0"></p-treeTableToggler>
+                    @for (col of columns; track col; let i = $index) {
+                    <td>
+                        @if (i == 0) {
+                        <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+                        }
                         {{ rowData[col.field] }}
                     </td>
+                    }
                 </tr>
             </ng-template>
             <ng-template pTemplate="footer" let-columns>
                 <tr>
-                    <td *ngFor="let col of columns">
+                    @for (col of columns; track col) {
+                    <td>
                         {{ col.header }}
                     </td>
+                    }
                 </tr>
             </ng-template>
             <ng-template pTemplate="summary"> Summary </ng-template>
@@ -38,87 +46,117 @@ import { MinusIcon } from 'primeng/icons/minus';
         <p-treeTable class="paginationTreeTable" [value]="files" [columns]="cols" [paginator]="true" [rows]="3">
             <ng-template pTemplate="header" let-columns>
                 <tr>
-                    <th *ngFor="let col of columns">
+                    @for (col of columns; track col) {
+                    <th>
                         {{ col.header }}
                     </th>
+                    }
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
                 <tr>
-                    <td *ngFor="let col of columns; let i = index">
-                        <p-treeTableToggler [rowNode]="rowNode" *ngIf="i == 0"></p-treeTableToggler>
+                    @for (col of columns; track col; let i = $index) {
+                    <td>
+                        @if (i == 0) {
+                        <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+                        }
                         {{ rowData[col.field] }}
                     </td>
+                    }
                 </tr>
             </ng-template>
         </p-treeTable>
         <p-treeTable class="basicSortTreeTable" [value]="files" [columns]="cols">
             <ng-template pTemplate="header" let-columns>
                 <tr>
-                    <th *ngFor="let col of columns" [ttSortableColumn]="col.field">
+                    @for (col of columns; track col) {
+                    <th [ttSortableColumn]="col.field">
                         {{ col.header }}
                         <p-treeTableSortIcon [field]="col.field"></p-treeTableSortIcon>
                     </th>
+                    }
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
                 <tr>
-                    <td *ngFor="let col of columns; let i = index">
-                        <p-treeTableToggler [rowNode]="rowNode" *ngIf="i == 0"></p-treeTableToggler>
+                    @for (col of columns; track col; let i = $index) {
+                    <td>
+                        @if (i == 0) {
+                        <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+                        }
                         {{ rowData[col.field] }}
                     </td>
+                    }
                 </tr>
             </ng-template>
         </p-treeTable>
         <p-treeTable class="multipleSortTreeTable" [value]="files" [columns]="cols" sortMode="multiple">
             <ng-template pTemplate="header" let-columns>
                 <tr>
-                    <th *ngFor="let col of columns" [ttSortableColumn]="col.field">
+                    @for (col of columns; track col) {
+                    <th [ttSortableColumn]="col.field">
                         {{ col.header }}
                         <p-treeTableSortIcon [field]="col.field"></p-treeTableSortIcon>
                     </th>
+                    }
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
                 <tr>
-                    <td *ngFor="let col of columns; let i = index">
-                        <p-treeTableToggler [rowNode]="rowNode" *ngIf="i == 0"></p-treeTableToggler>
+                    @for (col of columns; track col; let i = $index) {
+                    <td>
+                        @if (i == 0) {
+                        <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+                        }
                         {{ rowData[col.field] }}
                     </td>
+                    }
                 </tr>
             </ng-template>
         </p-treeTable>
         <p-treeTable class="singleSelectionTreeTable" [value]="files" [columns]="cols" selectionMode="single" [(selection)]="selectedNode" dataKey="name">
             <ng-template pTemplate="header" let-columns>
                 <tr>
-                    <th *ngFor="let col of columns">
+                    @for (col of columns; track col) {
+                    <th>
                         {{ col.header }}
                     </th>
+                    }
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
                 <tr [ttRow]="rowNode" [ttSelectableRow]="rowNode">
-                    <td *ngFor="let col of columns; let i = index">
-                        <p-treeTableToggler [rowNode]="rowNode" *ngIf="i == 0"></p-treeTableToggler>
+                    @for (col of columns; track col; let i = $index) {
+                    <td>
+                        @if (i == 0) {
+                        <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+                        }
                         {{ rowData[col.field] }}
                     </td>
+                    }
                 </tr>
             </ng-template>
         </p-treeTable>
         <p-treeTable class="multipleSelectionTreeTable" [value]="files" [columns]="cols" selectionMode="multiple" [(selection)]="selectedNode" dataKey="name">
             <ng-template pTemplate="header" let-columns>
                 <tr>
-                    <th *ngFor="let col of columns">
+                    @for (col of columns; track col) {
+                    <th>
                         {{ col.header }}
                     </th>
+                    }
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
                 <tr [ttRow]="rowNode" [ttSelectableRow]="rowNode">
-                    <td *ngFor="let col of columns; let i = index">
-                        <p-treeTableToggler [rowNode]="rowNode" *ngIf="i == 0"></p-treeTableToggler>
+                    @for (col of columns; track col; let i = $index) {
+                    <td>
+                        @if (i == 0) {
+                        <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+                        }
                         {{ rowData[col.field] }}
                     </td>
+                    }
                 </tr>
             </ng-template>
         </p-treeTable>
@@ -131,33 +169,45 @@ import { MinusIcon } from 'primeng/icons/minus';
             </ng-template>
             <ng-template pTemplate="header" let-columns>
                 <tr>
-                    <th *ngFor="let col of columns">
+                    @for (col of columns; track col) {
+                    <th>
                         {{ col.header }}
                     </th>
+                    }
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
                 <tr>
-                    <td *ngFor="let col of columns; let i = index">
-                        <p-treeTableToggler [rowNode]="rowNode" *ngIf="i == 0"></p-treeTableToggler>
-                        <p-treeTableCheckbox [value]="rowNode" *ngIf="i == 0"></p-treeTableCheckbox>
+                    @for (col of columns; track col; let i = $index) {
+                    <td>
+                        @if (i == 0) {
+                        <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+                        } @if (i == 0) {
+                        <p-treeTableCheckbox [value]="rowNode"></p-treeTableCheckbox>
+                        }
                         {{ rowData[col.field] }}
                     </td>
+                    }
                 </tr>
             </ng-template>
         </p-treeTable>
         <p-treeTable class="editableTreeTable" [value]="files" [columns]="cols">
             <ng-template pTemplate="header" let-columns>
                 <tr>
-                    <th *ngFor="let col of columns">
+                    @for (col of columns; track col) {
+                    <th>
                         {{ col.header }}
                     </th>
+                    }
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
                 <tr>
-                    <td *ngFor="let col of columns; let i = index" ttEditableColumn [ngClass]="{ 'p-toggler-column': i === 0 }">
-                        <p-treeTableToggler [rowNode]="rowNode" *ngIf="i === 0"></p-treeTableToggler>
+                    @for (col of columns; track col; let i = $index) {
+                    <td ttEditableColumn [ngClass]="{ 'p-toggler-column': i === 0 }">
+                        @if (i === 0) {
+                        <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+                        }
                         <p-treeTableCellEditor>
                             <ng-template pTemplate="input">
                                 <input pInputText type="text" [(ngModel)]="rowData[col.field]" [ngStyle]="{ width: i == 0 ? '90%' : '100%' }" />
@@ -165,74 +215,99 @@ import { MinusIcon } from 'primeng/icons/minus';
                             <ng-template pTemplate="output">{{ rowData[col.field] }}</ng-template>
                         </p-treeTableCellEditor>
                     </td>
+                    }
                 </tr>
             </ng-template>
         </p-treeTable>
         <p-treeTable class="basicScrollTable" [value]="files" [columns]="cols" [scrollable]="true" scrollHeight="200px">
             <ng-template pTemplate="header" let-columns>
                 <tr>
-                    <th *ngFor="let col of columns">
+                    @for (col of columns; track col) {
+                    <th>
                         {{ col.header }}
                     </th>
+                    }
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
                 <tr>
-                    <td *ngFor="let col of columns; let i = index">
-                        <p-treeTableToggler [rowNode]="rowNode" *ngIf="i == 0"></p-treeTableToggler>
+                    @for (col of columns; track col; let i = $index) {
+                    <td>
+                        @if (i == 0) {
+                        <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+                        }
                         {{ rowData[col.field] }}
                     </td>
+                    }
                 </tr>
             </ng-template>
         </p-treeTable>
         <p-treeTable class="resizableTreeTable" [value]="files" [columns]="cols" [resizableColumns]="true">
             <ng-template pTemplate="header" let-columns>
                 <tr>
-                    <th *ngFor="let col of columns" ttResizableColumn>
+                    @for (col of columns; track col) {
+                    <th ttResizableColumn>
                         {{ col.header }}
                     </th>
+                    }
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
                 <tr>
-                    <td *ngFor="let col of columns; let i = index">
-                        <p-treeTableToggler [rowNode]="rowNode" *ngIf="i == 0"></p-treeTableToggler>
+                    @for (col of columns; track col; let i = $index) {
+                    <td>
+                        @if (i == 0) {
+                        <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+                        }
                         {{ rowData[col.field] }}
                     </td>
+                    }
                 </tr>
             </ng-template>
         </p-treeTable>
         <p-treeTable class="reorderableTreeTable" [value]="files" [columns]="cols" [reorderableColumns]="true">
             <ng-template pTemplate="header" let-columns>
                 <tr>
-                    <th *ngFor="let col of columns" ttReorderableColumn>
+                    @for (col of columns; track col) {
+                    <th ttReorderableColumn>
                         {{ col.header }}
                     </th>
+                    }
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
                 <tr>
-                    <td *ngFor="let col of columns; let i = index">
-                        <p-treeTableToggler [rowNode]="rowNode" *ngIf="i == 0"></p-treeTableToggler>
+                    @for (col of columns; track col; let i = $index) {
+                    <td>
+                        @if (i == 0) {
+                        <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+                        }
                         {{ rowData[col.field] }}
                     </td>
+                    }
                 </tr>
             </ng-template>
         </p-treeTable>
         <p-treeTable class="contextMenuTreeTable" [value]="files" [columns]="cols" dataKey="name" [(contextMenuSelection)]="selectedNode" [contextMenu]="cm">
             <ng-template pTemplate="header" let-columns>
                 <tr>
-                    <th *ngFor="let col of columns">
+                    @for (col of columns; track col) {
+                    <th>
                         {{ col.header }}
                     </th>
+                    }
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
                 <tr [ttContextMenuRow]="rowNode">
-                    <td *ngFor="let col of columns; let i = index">
-                        <p-treeTableToggler [rowNode]="rowNode" *ngIf="i == 0"></p-treeTableToggler>
+                    @for (col of columns; track col; let i = $index) {
+                    <td>
+                        @if (i == 0) {
+                        <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+                        }
                         {{ rowData[col.field] }}
                     </td>
+                    }
                 </tr>
             </ng-template>
         </p-treeTable>
@@ -248,22 +323,30 @@ import { MinusIcon } from 'primeng/icons/minus';
             </ng-template>
             <ng-template pTemplate="header" let-columns>
                 <tr>
-                    <th *ngFor="let col of cols">
+                    @for (col of cols; track col) {
+                    <th>
                         {{ col.header }}
                     </th>
+                    }
                 </tr>
                 <tr>
-                    <th *ngFor="let col of cols">
+                    @for (col of cols; track col) {
+                    <th>
                         <input pInputText type="text" class="filterInput" (input)="tt.filter($event.target.value, col.field, filterMode)" />
                     </th>
+                    }
                 </tr>
             </ng-template>
             <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
                 <tr>
-                    <td *ngFor="let col of cols; let i = index">
-                        <p-treeTableToggler [rowNode]="rowNode" *ngIf="i == 0"></p-treeTableToggler>
+                    @for (col of cols; track col; let i = $index) {
+                    <td>
+                        @if (i == 0) {
+                        <p-treeTableToggler [rowNode]="rowNode"></p-treeTableToggler>
+                        }
                         {{ rowData[col.field] }}
                     </td>
+                    }
                 </tr>
             </ng-template>
             <ng-template pTemplate="emptymessage">

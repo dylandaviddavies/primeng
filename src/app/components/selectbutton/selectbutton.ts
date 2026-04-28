@@ -21,8 +21,8 @@ export const SELECTBUTTON_VALUE_ACCESSOR: any = {
     selector: 'p-selectButton',
     template: `
         <div #container [ngClass]="'p-selectbutton p-buttonset p-component'" [ngStyle]="style" [class]="styleClass" role="group" [attr.aria-labelledby]="ariaLabelledBy" [attr.data-pc-name]="'selectbutton'" [attr.data-pc-section]="'root'">
+            @for (option of options; track option; let i = $index) {
             <div
-                *ngFor="let option of options; let i = index"
                 pRipple
                 [attr.tabindex]="i === focusedIndex ? '0' : '-1'"
                 [attr.aria-label]="option.label"
@@ -43,14 +43,15 @@ export const SELECTBUTTON_VALUE_ACCESSOR: any = {
                 pAutoFocus
                 [autofocus]="autofocus"
             >
-                <ng-container *ngIf="!itemTemplate; else customcontent">
-                    <span [ngClass]="'p-button-icon p-button-icon-left'" [class]="option.icon" *ngIf="option.icon" [attr.data-pc-section]="'icon'"></span>
-                    <span class="p-button-label" [attr.data-pc-section]="'label'">{{ getOptionLabel(option) }}</span>
-                </ng-container>
-                <ng-template #customcontent>
-                    <ng-container *ngTemplateOutlet="selectButtonTemplate; context: { $implicit: option, index: i }"></ng-container>
-                </ng-template>
+                @if (!itemTemplate) { @if (option.icon) {
+                <span [ngClass]="'p-button-icon p-button-icon-left'" [class]="option.icon" [attr.data-pc-section]="'icon'"></span>
+                }
+                <span class="p-button-label" [attr.data-pc-section]="'label'">{{ getOptionLabel(option) }}</span>
+                } @else {
+                <ng-container *ngTemplateOutlet="selectButtonTemplate; context: { $implicit: option, index: i }"></ng-container>
+                }
             </div>
+            }
         </div>
     `,
     providers: [SELECTBUTTON_VALUE_ACCESSOR],

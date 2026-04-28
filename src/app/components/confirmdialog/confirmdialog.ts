@@ -1,30 +1,30 @@
 import { AnimationEvent, animate, animation, style, transition, trigger, useAnimation } from '@angular/animations';
 import { CommonModule } from '@angular/common';
 import {
-  AfterContentInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ContentChild,
-  ContentChildren,
-  ElementRef,
-  EventEmitter,
-  Inject,
-  Input,
-  NgModule,
-  NgZone,
-  OnDestroy,
-  OnInit,
-  Output,
-  QueryList,
-  Renderer2,
-  TemplateRef,
-  ViewChild,
-  ViewEncapsulation,
-  ViewRef,
-  booleanAttribute,
-  numberAttribute,
-  DOCUMENT
+    AfterContentInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ContentChild,
+    ContentChildren,
+    ElementRef,
+    EventEmitter,
+    Inject,
+    Input,
+    NgModule,
+    NgZone,
+    OnDestroy,
+    OnInit,
+    Output,
+    QueryList,
+    Renderer2,
+    TemplateRef,
+    ViewChild,
+    ViewEncapsulation,
+    ViewRef,
+    booleanAttribute,
+    numberAttribute,
+    DOCUMENT
 } from '@angular/core';
 import { ConfirmEventType, Confirmation, ConfirmationService, Footer, PrimeNGConfig, PrimeTemplate, SharedModule, TranslationKeys } from 'primeng/api';
 import { ButtonModule } from 'primeng/button';
@@ -46,7 +46,9 @@ const hideAnimation = animation([animate('{{transition}}', style({ transform: '{
 @Component({
     selector: 'p-confirmDialog',
     template: `
-        <div [class]="maskStyleClass" [ngClass]="getMaskClass()" *ngIf="maskVisible">
+        @if (maskVisible) {
+        <div [class]="maskStyleClass" [ngClass]="getMaskClass()">
+            @if (visible) {
             <div
                 [ngClass]="{ 'p-dialog p-confirm-dialog p-component': true, 'p-dialog-rtl': rtl }"
                 [ngStyle]="style"
@@ -55,82 +57,78 @@ const hideAnimation = animation([animate('{{transition}}', style({ transform: '{
                 (@animation.start)="onAnimationStart($event)"
                 (@animation.done)="onAnimationEnd($event)"
                 role="alertdialog"
-                *ngIf="visible"
                 [attr.aria-labelledby]="ariaLabelledBy"
                 [attr.aria-modal]="true"
             >
-                <ng-container *ngIf="headlessTemplate; else notHeadless">
-                    <ng-container *ngTemplateOutlet="headlessTemplate; context: { $implicit: confirmation }"></ng-container>
-                </ng-container>
-                <ng-template #notHeadless>
-                    <div class="p-dialog-header" *ngIf="headerTemplate">
-                        <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
-                    </div>
-                    <div class="p-dialog-header" *ngIf="!headerTemplate">
-                        <span class="p-dialog-title" [id]="ariaLabelledBy" *ngIf="option('header')">{{ option('header') }}</span>
-                        <div class="p-dialog-header-icons">
-                            <button *ngIf="closable" type="button" role="button" [attr.aria-label]="closeAriaLabel" [ngClass]="{ 'p-dialog-header-icon p-dialog-header-close p-link': true }" (click)="close($event)" (keydown.enter)="close($event)">
-                                <TimesIcon />
-                            </button>
-                        </div>
-                    </div>
-                    <div #content class="p-dialog-content">
-                        <i [ngClass]="'p-confirm-dialog-icon'" [class]="option('icon')" *ngIf="!iconTemplate && option('icon')"></i>
-                        <ng-container *ngIf="iconTemplate">
-                            <ng-template *ngTemplateOutlet="iconTemplate"></ng-template>
-                        </ng-container>
-                        <span class="p-confirm-dialog-message" *ngIf="!messageTemplate" [innerHTML]="option('message')"></span>
-                        <ng-container *ngIf="messageTemplate">
-                            <ng-template *ngTemplateOutlet="messageTemplate; context: { $implicit: confirmation }"></ng-template>
-                        </ng-container>
-                    </div>
-                    <div class="p-dialog-footer" *ngIf="footer || footerTemplate">
-                        <ng-content select="p-footer"></ng-content>
-                        <ng-container *ngTemplateOutlet="footerTemplate"></ng-container>
-                    </div>
-                    <div class="p-dialog-footer" *ngIf="!footer && !footerTemplate">
-                        <button
-                            type="button"
-                            pRipple
-                            pButton
-                            [label]="rejectButtonLabel"
-                            (click)="reject()"
-                            [ngClass]="'p-confirm-dialog-reject'"
-                            [class]="option('rejectButtonStyleClass')"
-                            *ngIf="option('rejectVisible')"
-                            [attr.aria-label]="rejectAriaLabel"
-                        >
-                            <ng-container *ngIf="!rejectIconTemplate">
-                                <i *ngIf="option('rejectIcon')" [class]="option('rejectIcon')"></i>
-                                <TimesIcon *ngIf="!option('rejectIcon')" [styleClass]="'p-button-icon-left'" />
-                            </ng-container>
-                            <span *ngIf="rejectIconTemplate" class="p-button-icon-left">
-                                <ng-template *ngTemplateOutlet="rejectIconTemplate"></ng-template>
-                            </span>
+                @if (headlessTemplate) {
+                <ng-container *ngTemplateOutlet="headlessTemplate; context: { $implicit: confirmation }"></ng-container>
+                } @else { @if (headerTemplate) {
+                <div class="p-dialog-header">
+                    <ng-container *ngTemplateOutlet="headerTemplate"></ng-container>
+                </div>
+                } @if (!headerTemplate) {
+                <div class="p-dialog-header">
+                    @if (option('header')) {
+                    <span class="p-dialog-title" [id]="ariaLabelledBy">{{ option('header') }}</span>
+                    }
+                    <div class="p-dialog-header-icons">
+                        @if (closable) {
+                        <button type="button" role="button" [attr.aria-label]="closeAriaLabel" [ngClass]="{ 'p-dialog-header-icon p-dialog-header-close p-link': true }" (click)="close($event)" (keydown.enter)="close($event)">
+                            <TimesIcon />
                         </button>
-                        <button
-                            type="button"
-                            pRipple
-                            pButton
-                            [label]="acceptButtonLabel"
-                            (click)="accept()"
-                            [ngClass]="'p-confirm-dialog-accept'"
-                            [class]="option('acceptButtonStyleClass')"
-                            *ngIf="option('acceptVisible')"
-                            [attr.aria-label]="acceptAriaLabel"
-                        >
-                            <ng-container *ngIf="!acceptIconTemplate">
-                                <i *ngIf="option('acceptIcon')" [class]="option('acceptIcon')"></i>
-                                <CheckIcon *ngIf="!option('acceptIcon')" [styleClass]="'p-button-icon-left'" />
-                            </ng-container>
-                            <span *ngIf="acceptIconTemplate" class="p-button-icon-left">
-                                <ng-template *ngTemplateOutlet="acceptIconTemplate"></ng-template>
-                            </span>
-                        </button>
+                        }
                     </div>
-                </ng-template>
+                </div>
+                }
+                <div #content class="p-dialog-content">
+                    @if (!iconTemplate && option('icon')) {
+                    <i [ngClass]="'p-confirm-dialog-icon'" [class]="option('icon')"></i>
+                    } @if (iconTemplate) {
+                    <ng-template *ngTemplateOutlet="iconTemplate"></ng-template>
+                    } @if (!messageTemplate) {
+                    <span class="p-confirm-dialog-message" [innerHTML]="option('message')"></span>
+                    } @if (messageTemplate) {
+                    <ng-template *ngTemplateOutlet="messageTemplate; context: { $implicit: confirmation }"></ng-template>
+                    }
+                </div>
+                @if (footer || footerTemplate) {
+                <div class="p-dialog-footer">
+                    <ng-content select="p-footer"></ng-content>
+                    <ng-container *ngTemplateOutlet="footerTemplate"></ng-container>
+                </div>
+                } @if (!footer && !footerTemplate) {
+                <div class="p-dialog-footer">
+                    @if (option('rejectVisible')) {
+                    <button type="button" pRipple pButton [label]="rejectButtonLabel" (click)="reject()" [ngClass]="'p-confirm-dialog-reject'" [class]="option('rejectButtonStyleClass')" [attr.aria-label]="rejectAriaLabel">
+                        @if (!rejectIconTemplate) { @if (option('rejectIcon')) {
+                        <i [class]="option('rejectIcon')"></i>
+                        } @if (!option('rejectIcon')) {
+                        <TimesIcon [styleClass]="'p-button-icon-left'" />
+                        } } @if (rejectIconTemplate) {
+                        <span class="p-button-icon-left">
+                            <ng-template *ngTemplateOutlet="rejectIconTemplate"></ng-template>
+                        </span>
+                        }
+                    </button>
+                    } @if (option('acceptVisible')) {
+                    <button type="button" pRipple pButton [label]="acceptButtonLabel" (click)="accept()" [ngClass]="'p-confirm-dialog-accept'" [class]="option('acceptButtonStyleClass')" [attr.aria-label]="acceptAriaLabel">
+                        @if (!acceptIconTemplate) { @if (option('acceptIcon')) {
+                        <i [class]="option('acceptIcon')"></i>
+                        } @if (!option('acceptIcon')) {
+                        <CheckIcon [styleClass]="'p-button-icon-left'" />
+                        } } @if (acceptIconTemplate) {
+                        <span class="p-button-icon-left">
+                            <ng-template *ngTemplateOutlet="acceptIconTemplate"></ng-template>
+                        </span>
+                        }
+                    </button>
+                    }
+                </div>
+                } }
             </div>
+            }
         </div>
+        }
     `,
     animations: [trigger('animation', [transition('void => visible', [useAnimation(showAnimation)]), transition('visible => void', [useAnimation(hideAnimation)])])],
     changeDetection: ChangeDetectionStrategy.OnPush,

@@ -12,10 +12,12 @@ import { default as IconData } from 'src/assets/showcase/data/icons.json';
         </div>
         <div class="card">
             <div class="grid text-center">
-                <div class="col-12 md:col-2 mb-5" *ngFor="let icon of filteredIcons">
+                @for (icon of filteredIcons; track icon) {
+                <div class="col-12 md:col-2 mb-5">
                     <i class="pi pi-{{ icon.properties.name }} text-2xl mb-3 text-color-secondary"></i>
                     <div>pi-{{ icon.properties.name }}</div>
                 </div>
+                }
             </div>
         </div>
     `,

@@ -10,7 +10,9 @@ import { PhotoService } from '@service/photoservice';
         </app-docsectiontext>
         <div class="card">
             <div class="flex flex-wrap gap-3 mb-5">
-                <p-radioButton *ngFor="let option of positionOptions" [name]="option.label" [value]="option.value" [label]="option.label" [(ngModel)]="position" [inputId]="label" />
+                @for (option of positionOptions; track option) {
+                <p-radioButton [name]="option.label" [value]="option.value" [label]="option.label" [(ngModel)]="position" [inputId]="label" />
+                }
             </div>
             <p-galleria [(value)]="images" [thumbnailsPosition]="position" [responsiveOptions]="responsiveOptions" [containerStyle]="{ 'max-width': '640px' }" [numVisible]="5">
                 <ng-template pTemplate="item" let-item>

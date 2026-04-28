@@ -1,4 +1,3 @@
-import { CommonModule } from '@angular/common';
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, afterNextRender } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { StyleClassModule } from 'primeng/styleclass';
@@ -9,7 +8,7 @@ import { AppConfigService } from '@service/appconfigservice';
     selector: 'app-news',
     templateUrl: './app.news.component.html',
     changeDetection: ChangeDetectionStrategy.OnPush,
-    imports: [CommonModule, FormsModule, StyleClassModule]
+    imports: [FormsModule, StyleClassModule]
 })
 export class AppNewsComponent {
     storageKey: string = 'primeng';

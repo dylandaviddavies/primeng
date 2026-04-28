@@ -18,48 +18,47 @@ type SplitButtonIconPosition = 'left' | 'right';
     selector: 'p-splitButton',
     template: `
         <div #container [ngClass]="containerClass" [class]="styleClass" [ngStyle]="style">
-            <ng-container *ngIf="contentTemplate; else defaultButton">
-                <button
-                    class="p-splitbutton-defaultbutton"
-                    type="button"
-                    pButton
-                    [severity]="severity"
-                    [text]="text"
-                    [outlined]="outlined"
-                    [size]="size"
-                    [icon]="icon"
-                    [iconPos]="iconPos"
-                    (click)="onDefaultButtonClick($event)"
-                    [disabled]="disabled"
-                    [attr.tabindex]="tabindex"
-                    [ariaLabel]="buttonProps?.['ariaLabel'] || label"
-                    pAutoFocus
-                    [autofocus]="autofocus"
-                >
-                    <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
-                </button>
-            </ng-container>
-            <ng-template #defaultButton>
-                <button
-                    #defaultbtn
-                    class="p-splitbutton-defaultbutton"
-                    type="button"
-                    pButton
-                    [severity]="severity"
-                    [text]="text"
-                    [outlined]="outlined"
-                    [size]="size"
-                    [icon]="icon"
-                    [iconPos]="iconPos"
-                    [label]="label"
-                    (click)="onDefaultButtonClick($event)"
-                    [disabled]="buttonDisabled"
-                    [attr.tabindex]="tabindex"
-                    [ariaLabel]="buttonProps?.['ariaLabel']"
-                    pAutoFocus
-                    [autofocus]="autofocus"
-                ></button>
-            </ng-template>
+            @if (contentTemplate) {
+            <button
+                class="p-splitbutton-defaultbutton"
+                type="button"
+                pButton
+                [severity]="severity"
+                [text]="text"
+                [outlined]="outlined"
+                [size]="size"
+                [icon]="icon"
+                [iconPos]="iconPos"
+                (click)="onDefaultButtonClick($event)"
+                [disabled]="disabled"
+                [attr.tabindex]="tabindex"
+                [ariaLabel]="buttonProps?.['ariaLabel'] || label"
+                pAutoFocus
+                [autofocus]="autofocus"
+            >
+                <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
+            </button>
+            } @else {
+            <button
+                #defaultbtn
+                class="p-splitbutton-defaultbutton"
+                type="button"
+                pButton
+                [severity]="severity"
+                [text]="text"
+                [outlined]="outlined"
+                [size]="size"
+                [icon]="icon"
+                [iconPos]="iconPos"
+                [label]="label"
+                (click)="onDefaultButtonClick($event)"
+                [disabled]="buttonDisabled"
+                [attr.tabindex]="tabindex"
+                [ariaLabel]="buttonProps?.['ariaLabel']"
+                pAutoFocus
+                [autofocus]="autofocus"
+            ></button>
+            }
             <button
                 type="button"
                 pButton
@@ -76,7 +75,9 @@ type SplitButtonIconPosition = 'left' | 'right';
                 [attr.aria-expanded]="menuButtonProps?.['ariaExpanded'] || isExpanded()"
                 [attr.aria-controls]="menuButtonProps?.['ariaControls'] || ariaId"
             >
-                <ChevronDownIcon *ngIf="!dropdownIconTemplate" />
+                @if (!dropdownIconTemplate) {
+                <ChevronDownIcon />
+                }
                 <ng-template *ngTemplateOutlet="dropdownIconTemplate"></ng-template>
             </button>
             <p-tieredMenu

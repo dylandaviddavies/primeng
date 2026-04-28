@@ -49,27 +49,28 @@ export const TRISTATECHECKBOX_VALUE_ACCESSOR: any = {
                 />
             </div>
             <div class="p-checkbox-box" role="checkbox" [attr.aria-checked]="value === true" [ngClass]="{ 'p-highlight': value != null, 'p-disabled': disabled, 'p-focus': focused }">
-                <ng-container *ngIf="value === true">
-                    <span *ngIf="checkboxTrueIcon" [ngClass]="checkboxTrueIcon" class="p-checkbox-icon" [attr.data-pc-section]="'checkIcon'"></span>
-                    <ng-container *ngIf="!checkboxTrueIcon">
-                        <CheckIcon [styleClass]="'p-checkbox-icon'" *ngIf="!checkIconTemplate" [attr.data-pc-section]="'checkIcon'" />
-                        <span *ngIf="checkIconTemplate" class="p-checkbox-icon" [attr.data-pc-section]="'checkIcon'">
-                            <ng-template *ngTemplateOutlet="checkIconTemplate"></ng-template>
-                        </span>
-                    </ng-container>
-                </ng-container>
-                <ng-container *ngIf="value === false">
-                    <span *ngIf="checkboxFalseIcon" [ngClass]="checkboxFalseIcon" class="p-checkbox-icon" [attr.data-pc-section]="'uncheckIcon'"></span>
-                    <ng-container *ngIf="!checkboxFalseIcon">
-                        <TimesIcon [styleClass]="'p-checkbox-icon'" *ngIf="!uncheckIconTemplate" [attr.data-pc-section]="'uncheckIcon'" />
-                        <span class="p-checkbox-icon" *ngIf="uncheckIconTemplate" [attr.data-pc-section]="'uncheckIcon'">
-                            <ng-template *ngTemplateOutlet="uncheckIconTemplate"></ng-template>
-                        </span>
-                    </ng-container>
-                </ng-container>
+                @if (value === true) { @if (checkboxTrueIcon) {
+                <span [ngClass]="checkboxTrueIcon" class="p-checkbox-icon" [attr.data-pc-section]="'checkIcon'"></span>
+                } @if (!checkboxTrueIcon) { @if (!checkIconTemplate) {
+                <CheckIcon [styleClass]="'p-checkbox-icon'" [attr.data-pc-section]="'checkIcon'" />
+                } @if (checkIconTemplate) {
+                <span class="p-checkbox-icon" [attr.data-pc-section]="'checkIcon'">
+                    <ng-template *ngTemplateOutlet="checkIconTemplate"></ng-template>
+                </span>
+                } } } @if (value === false) { @if (checkboxFalseIcon) {
+                <span [ngClass]="checkboxFalseIcon" class="p-checkbox-icon" [attr.data-pc-section]="'uncheckIcon'"></span>
+                } @if (!checkboxFalseIcon) { @if (!uncheckIconTemplate) {
+                <TimesIcon [styleClass]="'p-checkbox-icon'" [attr.data-pc-section]="'uncheckIcon'" />
+                } @if (uncheckIconTemplate) {
+                <span class="p-checkbox-icon" [attr.data-pc-section]="'uncheckIcon'">
+                    <ng-template *ngTemplateOutlet="uncheckIconTemplate"></ng-template>
+                </span>
+                } } }
             </div>
         </div>
-        <label class="p-checkbox-label" (click)="onClick($event, input)" [ngClass]="{ 'p-checkbox-label-active': value != null, 'p-disabled': disabled, 'p-checkbox-label-focus': focused }" *ngIf="label" [attr.for]="inputId">{{ label }}</label>
+        @if (label) {
+        <label class="p-checkbox-label" (click)="onClick($event, input)" [ngClass]="{ 'p-checkbox-label-active': value != null, 'p-disabled': disabled, 'p-checkbox-label-focus': focused }" [attr.for]="inputId">{{ label }}</label>
+        }
     `,
     providers: [TRISTATECHECKBOX_VALUE_ACCESSOR],
     changeDetection: ChangeDetectionStrategy.OnPush,

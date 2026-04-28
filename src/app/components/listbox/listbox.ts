@@ -59,12 +59,15 @@ export const LISTBOX_VALUE_ACCESSOR: any = {
                 [attr.data-p-hidden-focusable]="true"
             >
             </span>
-            <div class="p-listbox-header" *ngIf="headerFacet || headerTemplate">
+            @if (headerFacet || headerTemplate) {
+            <div class="p-listbox-header">
                 <ng-content select="p-header"></ng-content>
                 <ng-container *ngTemplateOutlet="headerTemplate; context: { $implicit: modelValue(), options: visibleOptions() }"></ng-container>
             </div>
-            <div class="p-listbox-header" *ngIf="(checkbox && multiple && showToggleAll) || filter">
-                <div *ngIf="checkbox && multiple && showToggleAll" class="p-checkbox p-component" [ngClass]="{ 'p-checkbox-disabled': disabled || toggleAllDisabled }" (click)="onToggleAll($event)" (keydown)="onHeaderCheckboxKeyDown($event)">
+            } @if ((checkbox && multiple && showToggleAll) || filter) {
+            <div class="p-listbox-header">
+                @if (checkbox && multiple && showToggleAll) {
+                <div class="p-checkbox p-component" [ngClass]="{ 'p-checkbox-disabled': disabled || toggleAllDisabled }" (click)="onToggleAll($event)" (keydown)="onHeaderCheckboxKeyDown($event)">
                     <div class="p-hidden-accessible" [attr.data-p-hidden-accessible]="true">
                         <input
                             #headerchkbox
@@ -78,49 +81,54 @@ export const LISTBOX_VALUE_ACCESSOR: any = {
                         />
                     </div>
                     <div class="p-checkbox-box" role="checkbox" [attr.aria-checked]="allSelected()" [ngClass]="{ 'p-highlight': allSelected(), 'p-focus': headerCheckboxFocus, 'p-disabled': disabled || toggleAllDisabled }">
-                        <ng-container *ngIf="allSelected()">
-                            <CheckIcon [styleClass]="'p-checkbox-icon'" *ngIf="!checkIconTemplate" [attr.aria-hidden]="true" />
-                            <span *ngIf="checkIconTemplate" class="p-checkbox-icon" [attr.aria-hidden]="true">
-                                <ng-template *ngTemplateOutlet="checkIconTemplate"></ng-template>
-                            </span>
-                        </ng-container>
+                        @if (allSelected()) { @if (!checkIconTemplate) {
+                        <CheckIcon [styleClass]="'p-checkbox-icon'" [attr.aria-hidden]="true" />
+                        } @if (checkIconTemplate) {
+                        <span class="p-checkbox-icon" [attr.aria-hidden]="true">
+                            <ng-template *ngTemplateOutlet="checkIconTemplate"></ng-template>
+                        </span>
+                        } }
                     </div>
                 </div>
-                <ng-container *ngIf="filterTemplate; else builtInFilterElement">
-                    <ng-container *ngTemplateOutlet="filterTemplate; context: { options: filterOptions }"></ng-container>
-                </ng-container>
-                <ng-template #builtInFilterElement>
-                    <div class="p-listbox-filter-container" *ngIf="filter">
-                        <input
-                            #filterInput
-                            type="text"
-                            class="p-listbox-filter p-inputtext p-component"
-                            role="searchbox"
-                            [value]="_filterValue() || ''"
-                            [disabled]="disabled"
-                            [attr.aria-owns]="id + '_list'"
-                            [attr.aria-activedescendant]="focusedOptionId"
-                            [attr.placeholder]="filterPlaceHolder"
-                            [attr.aria-label]="ariaFilterLabel"
-                            [tabindex]="!disabled && !focused ? tabindex : -1"
-                            (input)="onFilterChange($event)"
-                            (keydown)="onFilterKeyDown($event)"
-                            (blur)="onFilterBlur($event)"
-                        />
-                        <SearchIcon *ngIf="!filterIconTemplate" [styleClass]="'p-listbox-filter-icon'" [attr.aria-hidden]="true" />
-                        <span *ngIf="filterIconTemplate" class="p-listbox-filter-icon" [attr.aria-hidden]="true">
-                            <ng-template *ngTemplateOutlet="filterIconTemplate"></ng-template>
-                        </span>
-                    </div>
-                    <span role="status" attr.aria-live="polite" class="p-hidden-accessible" [attr.data-p-hidden-accessible]="true">
-                        {{ filterResultMessageText }}
+                } @if (filterTemplate) {
+                <ng-container *ngTemplateOutlet="filterTemplate; context: { options: filterOptions }"></ng-container>
+                } @else { @if (filter) {
+                <div class="p-listbox-filter-container">
+                    <input
+                        #filterInput
+                        type="text"
+                        class="p-listbox-filter p-inputtext p-component"
+                        role="searchbox"
+                        [value]="_filterValue() || ''"
+                        [disabled]="disabled"
+                        [attr.aria-owns]="id + '_list'"
+                        [attr.aria-activedescendant]="focusedOptionId"
+                        [attr.placeholder]="filterPlaceHolder"
+                        [attr.aria-label]="ariaFilterLabel"
+                        [tabindex]="!disabled && !focused ? tabindex : -1"
+                        (input)="onFilterChange($event)"
+                        (keydown)="onFilterKeyDown($event)"
+                        (blur)="onFilterBlur($event)"
+                    />
+                    @if (!filterIconTemplate) {
+                    <SearchIcon [styleClass]="'p-listbox-filter-icon'" [attr.aria-hidden]="true" />
+                    } @if (filterIconTemplate) {
+                    <span class="p-listbox-filter-icon" [attr.aria-hidden]="true">
+                        <ng-template *ngTemplateOutlet="filterIconTemplate"></ng-template>
                     </span>
-                </ng-template>
+                    }
+                </div>
+                }
+                <span role="status" attr.aria-live="polite" class="p-hidden-accessible" [attr.data-p-hidden-accessible]="true">
+                    {{ filterResultMessageText }}
+                </span>
+                }
             </div>
+            }
             <div [ngClass]="'p-listbox-list-wrapper'" [ngStyle]="listStyle" [class]="listStyleClass" [style.max-height]="virtualScroll ? 'auto' : scrollHeight || 'auto'">
+                @if (virtualScroll) {
                 <p-scroller
                     #scroller
-                    *ngIf="virtualScroll"
                     [items]="visibleOptions()"
                     [style]="{ height: scrollHeight }"
                     [itemSize]="virtualScrollItemSize"
@@ -133,15 +141,15 @@ export const LISTBOX_VALUE_ACCESSOR: any = {
                     <ng-template pTemplate="content" let-items let-scrollerOptions="options">
                         <ng-container *ngTemplateOutlet="buildInItems; context: { $implicit: items, options: scrollerOptions }"></ng-container>
                     </ng-template>
-                    <ng-container *ngIf="loaderTemplate">
-                        <ng-template pTemplate="loader" let-scrollerOptions="options">
-                            <ng-container *ngTemplateOutlet="loaderTemplate; context: { options: scrollerOptions }"></ng-container>
-                        </ng-template>
-                    </ng-container>
+                    @if (loaderTemplate) {
+                    <ng-template pTemplate="loader" let-scrollerOptions="options">
+                        <ng-container *ngTemplateOutlet="loaderTemplate; context: { options: scrollerOptions }"></ng-container>
+                    </ng-template>
+                    }
                 </p-scroller>
-                <ng-container *ngIf="!virtualScroll">
-                    <ng-container *ngTemplateOutlet="buildInItems; context: { $implicit: visibleOptions(), options: {} }"></ng-container>
-                </ng-container>
+                } @if (!virtualScroll) {
+                <ng-container *ngTemplateOutlet="buildInItems; context: { $implicit: visibleOptions(), options: {} }"></ng-container>
+                }
 
                 <ng-template #buildInItems let-items let-scrollerOptions="options">
                     <ul
@@ -160,69 +168,81 @@ export const LISTBOX_VALUE_ACCESSOR: any = {
                         (blur)="onListBlur($event)"
                         (keydown)="onListKeyDown($event)"
                     >
-                        <ng-template ngFor let-option [ngForOf]="items" let-i="index">
-                            <ng-container *ngIf="isOptionGroup(option)">
-                                <li [attr.id]="id + '_' + getOptionIndex(i, scrollerOptions)" class="p-listbox-item-group" [ngStyle]="{ height: scrollerOptions.itemSize + 'px' }" role="option">
-                                    <span *ngIf="!groupTemplate">{{ getOptionGroupLabel(option.optionGroup) }}</span>
-                                    <ng-container *ngTemplateOutlet="groupTemplate; context: { $implicit: option.optionGroup }"></ng-container>
-                                </li>
-                            </ng-container>
-                            <ng-container *ngIf="!isOptionGroup(option)">
-                                <li
-                                    pRipple
-                                    class="p-listbox-item"
-                                    role="option"
-                                    [attr.id]="id + '_' + getOptionIndex(i, scrollerOptions)"
-                                    [ngStyle]="{ height: scrollerOptions.itemSize + 'px' }"
-                                    [ngClass]="{ 'p-listbox-item': true, 'p-highlight': isSelected(option), 'p-focus': focusedOptionIndex() === getOptionIndex(i, scrollerOptions), 'p-disabled': isOptionDisabled(option) }"
-                                    [attr.aria-label]="getOptionLabel(option)"
-                                    [attr.aria-selected]="isSelected(option)"
-                                    [attr.aria-disabled]="isOptionDisabled(option)"
-                                    [attr.aria-setsize]="ariaSetSize"
-                                    [attr.ariaPosInset]="getAriaPosInset(getOptionIndex(i, scrollerOptions))"
-                                    (click)="onOptionSelect($event, option, getOptionIndex(i, scrollerOptions))"
-                                    (dblclick)="onOptionDoubleClick($event, option)"
-                                    (mousedown)="onOptionMouseDown($event, getOptionIndex(i, scrollerOptions))"
-                                    (mouseenter)="onOptionMouseEnter($event, getOptionIndex(i, scrollerOptions))"
-                                    (touchend)="onOptionTouchEnd()"
-                                >
-                                    <div class="p-checkbox p-component" *ngIf="checkbox && multiple" [ngClass]="{ 'p-checkbox-disabled': disabled || isOptionDisabled(option) }">
-                                        <div class="p-checkbox-box" [ngClass]="{ 'p-highlight': isSelected(option) }">
-                                            <ng-container *ngIf="isSelected(option)">
-                                                <CheckIcon [styleClass]="'p-checkbox-icon'" *ngIf="!checkIconTemplate" [attr.aria-hidden]="true" />
-                                                <span *ngIf="checkIconTemplate" class="p-checkbox-icon" [attr.aria-hidden]="true">
-                                                    <ng-template *ngTemplateOutlet="checkIconTemplate"></ng-template>
-                                                </span>
-                                            </ng-container>
-                                        </div>
-                                    </div>
-                                    <span *ngIf="!itemTemplate">{{ getOptionLabel(option) }}</span>
-                                    <ng-container *ngTemplateOutlet="itemTemplate; context: { $implicit: option, index: getOptionIndex(i, scrollerOptions) }"></ng-container>
-                                </li>
-                            </ng-container>
-                        </ng-template>
-                        <li *ngIf="hasFilter() && isEmpty()" class="p-listbox-empty-message" role="option">
-                            <ng-container *ngIf="!emptyFilterTemplate && !emptyTemplate; else emptyFilter">
-                                {{ emptyFilterMessageText }}
-                            </ng-container>
+                        @for (option of items; track option; let i = $index) { @if (isOptionGroup(option)) {
+                        <li [attr.id]="id + '_' + getOptionIndex(i, scrollerOptions)" class="p-listbox-item-group" [ngStyle]="{ height: scrollerOptions.itemSize + 'px' }" role="option">
+                            @if (!groupTemplate) {
+                            <span>{{ getOptionGroupLabel(option.optionGroup) }}</span>
+                            }
+                            <ng-container *ngTemplateOutlet="groupTemplate; context: { $implicit: option.optionGroup }"></ng-container>
+                        </li>
+                        } @if (!isOptionGroup(option)) {
+                        <li
+                            pRipple
+                            class="p-listbox-item"
+                            role="option"
+                            [attr.id]="id + '_' + getOptionIndex(i, scrollerOptions)"
+                            [ngStyle]="{ height: scrollerOptions.itemSize + 'px' }"
+                            [ngClass]="{ 'p-listbox-item': true, 'p-highlight': isSelected(option), 'p-focus': focusedOptionIndex() === getOptionIndex(i, scrollerOptions), 'p-disabled': isOptionDisabled(option) }"
+                            [attr.aria-label]="getOptionLabel(option)"
+                            [attr.aria-selected]="isSelected(option)"
+                            [attr.aria-disabled]="isOptionDisabled(option)"
+                            [attr.aria-setsize]="ariaSetSize"
+                            [attr.ariaPosInset]="getAriaPosInset(getOptionIndex(i, scrollerOptions))"
+                            (click)="onOptionSelect($event, option, getOptionIndex(i, scrollerOptions))"
+                            (dblclick)="onOptionDoubleClick($event, option)"
+                            (mousedown)="onOptionMouseDown($event, getOptionIndex(i, scrollerOptions))"
+                            (mouseenter)="onOptionMouseEnter($event, getOptionIndex(i, scrollerOptions))"
+                            (touchend)="onOptionTouchEnd()"
+                        >
+                            @if (checkbox && multiple) {
+                            <div class="p-checkbox p-component" [ngClass]="{ 'p-checkbox-disabled': disabled || isOptionDisabled(option) }">
+                                <div class="p-checkbox-box" [ngClass]="{ 'p-highlight': isSelected(option) }">
+                                    @if (isSelected(option)) { @if (!checkIconTemplate) {
+                                    <CheckIcon [styleClass]="'p-checkbox-icon'" [attr.aria-hidden]="true" />
+                                    } @if (checkIconTemplate) {
+                                    <span class="p-checkbox-icon" [attr.aria-hidden]="true">
+                                        <ng-template *ngTemplateOutlet="checkIconTemplate"></ng-template>
+                                    </span>
+                                    } }
+                                </div>
+                            </div>
+                            } @if (!itemTemplate) {
+                            <span>{{ getOptionLabel(option) }}</span>
+                            }
+                            <ng-container *ngTemplateOutlet="itemTemplate; context: { $implicit: option, index: getOptionIndex(i, scrollerOptions) }"></ng-container>
+                        </li>
+                        } } @if (hasFilter() && isEmpty()) {
+                        <li class="p-listbox-empty-message" role="option">
+                            @if (!emptyFilterTemplate && !emptyTemplate) {
+                            {{ emptyFilterMessageText }}
+                            } @else {
+                            <ng-template [ngTemplateOutlet]="emptyFilter"></ng-template>
+                            }
                             <ng-container #emptyFilter *ngTemplateOutlet="emptyFilterTemplate || emptyTemplate"></ng-container>
                         </li>
-                        <li *ngIf="!hasFilter() && isEmpty()" class="p-listbox-empty-message" role="option">
-                            <ng-container *ngIf="!emptyTemplate; else empty">
-                                {{ emptyMessage }}
-                            </ng-container>
+                        } @if (!hasFilter() && isEmpty()) {
+                        <li class="p-listbox-empty-message" role="option">
+                            @if (!emptyTemplate) {
+                            {{ emptyMessage }}
+                            } @else {
+                            <ng-template [ngTemplateOutlet]="empty"></ng-template>
+                            }
                             <ng-container #empty *ngTemplateOutlet="emptyTemplate"></ng-container>
                         </li>
+                        }
                     </ul>
                 </ng-template>
             </div>
-            <div class="p-listbox-footer" *ngIf="footerFacet || footerTemplate">
+            @if (footerFacet || footerTemplate) {
+            <div class="p-listbox-footer">
                 <ng-content select="p-footer"></ng-content>
                 <ng-container *ngTemplateOutlet="footerTemplate; context: { $implicit: modelValue(), options: visibleOptions() }"></ng-container>
             </div>
-            <span *ngIf="isEmpty()" role="status" aria-live="polite" class="p-hidden-accessible">
+            } @if (isEmpty()) {
+            <span role="status" aria-live="polite" class="p-hidden-accessible">
                 {{ emptyMessage }}
             </span>
+            }
             <span role="status" aria-live="polite" class="p-hidden-accessible">
                 {{ selectedMessageText }}
             </span>

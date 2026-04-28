@@ -1,10 +1,9 @@
-import { CommonModule } from '@angular/common';
 import { Component } from '@angular/core';
 import { AppConfigService } from '@service/appconfigservice';
 
 @Component({
     selector: 'features-section',
-    imports: [CommonModule],
+    imports: [],
     template: `
         <section class="landing-features py-8">
             <div class="section-header">Features</div>

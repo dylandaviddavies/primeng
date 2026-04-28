@@ -1,34 +1,34 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
-  AfterContentInit,
-  AfterViewInit,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ContentChildren,
-  Directive,
-  ElementRef,
-  EventEmitter,
-  HostListener,
-  Inject,
-  Injectable,
-  Input,
-  NgModule,
-  NgZone,
-  OnChanges,
-  OnDestroy,
-  OnInit,
-  Output,
-  PLATFORM_ID,
-  QueryList,
-  Renderer2,
-  SimpleChanges,
-  TemplateRef,
-  ViewChild,
-  ViewEncapsulation,
-  booleanAttribute,
-  numberAttribute,
-  DOCUMENT
+    AfterContentInit,
+    AfterViewInit,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ContentChildren,
+    Directive,
+    ElementRef,
+    EventEmitter,
+    HostListener,
+    Inject,
+    Injectable,
+    Input,
+    NgModule,
+    NgZone,
+    OnChanges,
+    OnDestroy,
+    OnInit,
+    Output,
+    PLATFORM_ID,
+    QueryList,
+    Renderer2,
+    SimpleChanges,
+    TemplateRef,
+    ViewChild,
+    ViewEncapsulation,
+    booleanAttribute,
+    numberAttribute,
+    DOCUMENT
 } from '@angular/core';
 import { BlockableUI, FilterMetadata, FilterService, PrimeNGConfig, PrimeTemplate, ScrollerOptions, SharedModule, SortMeta, TreeNode, TreeTableNode } from 'primeng/api';
 import { DomHandler } from 'primeng/dom';
@@ -119,20 +119,25 @@ export class TreeTableService {
                 'p-treetable-flex-scrollable': scrollable && scrollHeight === 'flex'
             }"
         >
-            <div class="p-treetable-loading" *ngIf="loading && showLoader">
+            @if (loading && showLoader) {
+            <div class="p-treetable-loading">
                 <div class="p-treetable-loading-overlay p-component-overlay">
-                    <i *ngIf="loadingIcon" [class]="'p-treetable-loading-icon pi-spin ' + loadingIcon"></i>
-                    <ng-container *ngIf="!loadingIcon">
-                        <SpinnerIcon *ngIf="!loadingIconTemplate" [spin]="true" [styleClass]="'p-treetable-loading-icon'" />
-                        <span *ngIf="loadingIconTemplate" class="p-treetable-loading-icon">
-                            <ng-template *ngTemplateOutlet="loadingIconTemplate"></ng-template>
-                        </span>
-                    </ng-container>
+                    @if (loadingIcon) {
+                    <i [class]="'p-treetable-loading-icon pi-spin ' + loadingIcon"></i>
+                    } @if (!loadingIcon) { @if (!loadingIconTemplate) {
+                    <SpinnerIcon [spin]="true" [styleClass]="'p-treetable-loading-icon'" />
+                    } @if (loadingIconTemplate) {
+                    <span class="p-treetable-loading-icon">
+                        <ng-template *ngTemplateOutlet="loadingIconTemplate"></ng-template>
+                    </span>
+                    } }
                 </div>
             </div>
-            <div *ngIf="captionTemplate" class="p-treetable-header">
+            } @if (captionTemplate) {
+            <div class="p-treetable-header">
                 <ng-container *ngTemplateOutlet="captionTemplate"></ng-container>
             </div>
+            } @if (paginator && (paginatorPosition === 'top' || paginatorPosition == 'both')) {
             <p-paginator
                 [rows]="rows"
                 [first]="first"
@@ -142,7 +147,6 @@ export class TreeTableService {
                 [alwaysShow]="alwaysShowPaginator"
                 (onPageChange)="onPageChange($event)"
                 [rowsPerPageOptions]="rowsPerPageOptions"
-                *ngIf="paginator && (paginatorPosition === 'top' || paginatorPosition == 'both')"
                 [templateLeft]="paginatorLeftTemplate"
                 [templateRight]="paginatorRightTemplate"
                 [dropdownAppendTo]="paginatorDropdownAppendTo"
@@ -155,24 +159,26 @@ export class TreeTableService {
                 [styleClass]="paginatorStyleClass"
                 [locale]="paginatorLocale"
             >
-                <ng-template pTemplate="firstpagelinkicon" *ngIf="paginatorFirstPageLinkIconTemplate">
+                @if (paginatorFirstPageLinkIconTemplate) {
+                <ng-template pTemplate="firstpagelinkicon">
                     <ng-container *ngTemplateOutlet="paginatorFirstPageLinkIconTemplate"></ng-container>
                 </ng-template>
-
-                <ng-template pTemplate="previouspagelinkicon" *ngIf="paginatorPreviousPageLinkIconTemplate">
+                } @if (paginatorPreviousPageLinkIconTemplate) {
+                <ng-template pTemplate="previouspagelinkicon">
                     <ng-container *ngTemplateOutlet="paginatorPreviousPageLinkIconTemplate"></ng-container>
                 </ng-template>
-
-                <ng-template pTemplate="lastpagelinkicon" *ngIf="paginatorLastPageLinkIconTemplate">
+                } @if (paginatorLastPageLinkIconTemplate) {
+                <ng-template pTemplate="lastpagelinkicon">
                     <ng-container *ngTemplateOutlet="paginatorLastPageLinkIconTemplate"></ng-container>
                 </ng-template>
-
-                <ng-template pTemplate="nextpagelinkicon" *ngIf="paginatorNextPageLinkIconTemplate">
+                } @if (paginatorNextPageLinkIconTemplate) {
+                <ng-template pTemplate="nextpagelinkicon">
                     <ng-container *ngTemplateOutlet="paginatorNextPageLinkIconTemplate"></ng-container>
                 </ng-template>
+                }
             </p-paginator>
-
-            <div class="p-treetable-wrapper" *ngIf="!scrollable">
+            } @if (!scrollable) {
+            <div class="p-treetable-wrapper">
                 <table role="table" #table [ngClass]="tableStyleClass" [ngStyle]="tableStyle">
                     <ng-container *ngTemplateOutlet="colGroupTemplate; context: { $implicit: columns }"></ng-container>
                     <thead role="rowgroup" class="p-treetable-thead">
@@ -184,20 +190,14 @@ export class TreeTableService {
                     </tfoot>
                 </table>
             </div>
-
-            <div class="p-treetable-scrollable-wrapper" *ngIf="scrollable">
-                <div
-                    class="p-treetable-scrollable-view p-treetable-frozen-view"
-                    *ngIf="frozenColumns || frozenBodyTemplate"
-                    #scrollableFrozenView
-                    [ttScrollableView]="frozenColumns"
-                    [frozen]="true"
-                    [ngStyle]="{ width: frozenWidth }"
-                    [scrollHeight]="scrollHeight"
-                ></div>
+            } @if (scrollable) {
+            <div class="p-treetable-scrollable-wrapper">
+                @if (frozenColumns || frozenBodyTemplate) {
+                <div class="p-treetable-scrollable-view p-treetable-frozen-view" #scrollableFrozenView [ttScrollableView]="frozenColumns" [frozen]="true" [ngStyle]="{ width: frozenWidth }" [scrollHeight]="scrollHeight"></div>
+                }
                 <div class="p-treetable-scrollable-view" #scrollableView [ttScrollableView]="columns" [frozen]="false" [scrollHeight]="scrollHeight" [ngStyle]="{ left: frozenWidth, width: 'calc(100% - ' + frozenWidth + ')' }"></div>
             </div>
-
+            } @if (paginator && (paginatorPosition === 'bottom' || paginatorPosition == 'both')) {
             <p-paginator
                 [rows]="rows"
                 [first]="first"
@@ -207,7 +207,6 @@ export class TreeTableService {
                 [alwaysShow]="alwaysShowPaginator"
                 (onPageChange)="onPageChange($event)"
                 [rowsPerPageOptions]="rowsPerPageOptions"
-                *ngIf="paginator && (paginatorPosition === 'bottom' || paginatorPosition == 'both')"
                 [templateLeft]="paginatorLeftTemplate"
                 [templateRight]="paginatorRightTemplate"
                 [dropdownAppendTo]="paginatorDropdownAppendTo"
@@ -220,35 +219,45 @@ export class TreeTableService {
                 [styleClass]="paginatorStyleClass"
                 [locale]="paginatorLocale"
             >
-                <ng-template pTemplate="firstpagelinkicon" *ngIf="paginatorFirstPageLinkIconTemplate">
+                @if (paginatorFirstPageLinkIconTemplate) {
+                <ng-template pTemplate="firstpagelinkicon">
                     <ng-container *ngTemplateOutlet="paginatorFirstPageLinkIconTemplate"></ng-container>
                 </ng-template>
-
-                <ng-template pTemplate="previouspagelinkicon" *ngIf="paginatorPreviousPageLinkIconTemplate">
+                } @if (paginatorPreviousPageLinkIconTemplate) {
+                <ng-template pTemplate="previouspagelinkicon">
                     <ng-container *ngTemplateOutlet="paginatorPreviousPageLinkIconTemplate"></ng-container>
                 </ng-template>
-
-                <ng-template pTemplate="lastpagelinkicon" *ngIf="paginatorLastPageLinkIconTemplate">
+                } @if (paginatorLastPageLinkIconTemplate) {
+                <ng-template pTemplate="lastpagelinkicon">
                     <ng-container *ngTemplateOutlet="paginatorLastPageLinkIconTemplate"></ng-container>
                 </ng-template>
-
-                <ng-template pTemplate="nextpagelinkicon" *ngIf="paginatorNextPageLinkIconTemplate">
+                } @if (paginatorNextPageLinkIconTemplate) {
+                <ng-template pTemplate="nextpagelinkicon">
                     <ng-container *ngTemplateOutlet="paginatorNextPageLinkIconTemplate"></ng-container>
                 </ng-template>
+                }
             </p-paginator>
-            <div *ngIf="summaryTemplate" class="p-treetable-footer">
+            } @if (summaryTemplate) {
+            <div class="p-treetable-footer">
                 <ng-container *ngTemplateOutlet="summaryTemplate"></ng-container>
             </div>
-
-            <div #resizeHelper class="p-column-resizer-helper" style="display:none" *ngIf="resizableColumns"></div>
-            <span #reorderIndicatorUp class="p-treetable-reorder-indicator-up" style="display: none;" *ngIf="reorderableColumns">
-                <ArrowDownIcon *ngIf="!reorderIndicatorUpIconTemplate" />
+            } @if (resizableColumns) {
+            <div #resizeHelper class="p-column-resizer-helper" style="display:none"></div>
+            } @if (reorderableColumns) {
+            <span #reorderIndicatorUp class="p-treetable-reorder-indicator-up" style="display: none;">
+                @if (!reorderIndicatorUpIconTemplate) {
+                <ArrowDownIcon />
+                }
                 <ng-template *ngTemplateOutlet="reorderIndicatorUpIconTemplate"></ng-template>
             </span>
-            <span #reorderIndicatorDown class="p-treetable-reorder-indicator-down" style="display: none;" *ngIf="reorderableColumns">
-                <ArrowUpIcon *ngIf="!reorderIndicatorDownIconTemplate" />
+            } @if (reorderableColumns) {
+            <span #reorderIndicatorDown class="p-treetable-reorder-indicator-down" style="display: none;">
+                @if (!reorderIndicatorDownIconTemplate) {
+                <ArrowUpIcon />
+                }
                 <ng-template *ngTemplateOutlet="reorderIndicatorDownIconTemplate"></ng-template>
             </span>
+            }
         </div>
     `,
     providers: [TreeTableService],
@@ -2238,14 +2247,11 @@ export class TreeTable implements AfterContentInit, OnInit, OnDestroy, Blockable
 @Component({
     selector: '[pTreeTableBody]',
     template: `
-        <ng-template ngFor let-serializedNode let-rowIndex="index" [ngForOf]="serializedNodes || tt.serializedValue" [ngForTrackBy]="tt.rowTrackBy">
-            <ng-container *ngIf="serializedNode.visible">
-                <ng-container *ngTemplateOutlet="template; context: { $implicit: serializedNode, node: serializedNode.node, rowData: serializedNode.node.data, columns: columns }"></ng-container>
-            </ng-container>
-        </ng-template>
-        <ng-container *ngIf="tt.isEmpty()">
-            <ng-container *ngTemplateOutlet="tt.emptyMessageTemplate; context: { $implicit: columns, frozen: frozen }"></ng-container>
-        </ng-container>
+        @for (serializedNode of serializedNodes || tt.serializedValue; track tt.rowTrackBy(rowIndex, serializedNode); let rowIndex = $index) { @if (serializedNode.visible) {
+        <ng-container *ngTemplateOutlet="template; context: { $implicit: serializedNode, node: serializedNode.node, rowData: serializedNode.node.data, columns: columns }"></ng-container>
+        } } @if (tt.isEmpty()) {
+        <ng-container *ngTemplateOutlet="tt.emptyMessageTemplate; context: { $implicit: columns, frozen: frozen }"></ng-container>
+        }
     `,
     encapsulation: ViewEncapsulation.None,
     host: {
@@ -2309,8 +2315,8 @@ export class TTBody {
             </div>
         </div>
 
+        @if (tt.virtualScroll) {
         <p-scroller
-            *ngIf="tt.virtualScroll"
             #scroller
             [items]="tt.serializedValue"
             styleClass="p-treetable-scrollable-body"
@@ -2324,27 +2330,30 @@ export class TTBody {
             <ng-template pTemplate="content" let-items let-scrollerOptions="options">
                 <ng-container *ngTemplateOutlet="buildInItems; context: { $implicit: items, options: scrollerOptions }"></ng-container>
             </ng-template>
-            <ng-container *ngIf="loaderTemplate">
-                <ng-template pTemplate="loader" let-scrollerOptions="options">
-                    <ng-container *ngTemplateOutlet="loaderTemplate; context: { options: scrollerOptions }"></ng-container>
-                </ng-template>
-            </ng-container>
+            @if (loaderTemplate) {
+            <ng-template pTemplate="loader" let-scrollerOptions="options">
+                <ng-container *ngTemplateOutlet="loaderTemplate; context: { options: scrollerOptions }"></ng-container>
+            </ng-template>
+            }
         </p-scroller>
-        <ng-container *ngIf="!tt.virtualScroll">
-            <div #scrollBody class="p-treetable-scrollable-body" [ngStyle]="{ 'max-height': tt.scrollHeight !== 'flex' ? scrollHeight : undefined, 'overflow-y': !frozen && tt.scrollHeight ? 'scroll' : undefined }">
-                <ng-container *ngTemplateOutlet="buildInItems; context: { $implicit: serializedValue, options: {} }"></ng-container>
-            </div>
-        </ng-container>
+        } @if (!tt.virtualScroll) {
+        <div #scrollBody class="p-treetable-scrollable-body" [ngStyle]="{ 'max-height': tt.scrollHeight !== 'flex' ? scrollHeight : undefined, 'overflow-y': !frozen && tt.scrollHeight ? 'scroll' : undefined }">
+            <ng-container *ngTemplateOutlet="buildInItems; context: { $implicit: serializedValue, options: {} }"></ng-container>
+        </div>
+        }
 
         <ng-template #buildInItems let-items let-scrollerOptions="options">
             <table role="table" #scrollTable [class]="tt.tableStyleClass" [ngClass]="scrollerOptions.contentStyleClass" [ngStyle]="tt.tableStyle" [style]="scrollerOptions.contentStyle">
                 <ng-container *ngTemplateOutlet="frozen ? tt.frozenColGroupTemplate || tt.colGroupTemplate : tt.colGroupTemplate; context: { $implicit: columns }"></ng-container>
                 <tbody role="rowgroup" class="p-treetable-tbody" [pTreeTableBody]="columns" [pTreeTableBodyTemplate]="frozen ? tt.frozenBodyTemplate || tt.bodyTemplate : tt.bodyTemplate" [serializedNodes]="items" [frozen]="frozen"></tbody>
             </table>
-            <div #scrollableAligner style="background-color:transparent" *ngIf="frozen"></div>
+            @if (frozen) {
+            <div #scrollableAligner style="background-color:transparent"></div>
+            }
         </ng-template>
 
-        <div #scrollFooter *ngIf="tt.footerTemplate" class="p-treetable-scrollable-footer">
+        @if (tt.footerTemplate) {
+        <div #scrollFooter class="p-treetable-scrollable-footer">
             <div #scrollFooterBox class="p-treetable-scrollable-footer-box">
                 <table class="p-treetable-scrollable-footer-table" [ngClass]="tt.tableStyleClass" [ngStyle]="tt.tableStyle">
                     <ng-container *ngTemplateOutlet="frozen ? tt.frozenColGroupTemplate || tt.colGroupTemplate : tt.colGroupTemplate; context: { $implicit: columns }"></ng-container>
@@ -2354,6 +2363,7 @@ export class TTBody {
                 </table>
             </div>
         </div>
+        }
     `,
     encapsulation: ViewEncapsulation.None,
     host: {
@@ -2637,14 +2647,17 @@ export class TTSortableColumn implements OnInit, OnDestroy {
 
 @Component({
     selector: 'p-treeTableSortIcon',
-    template: ` <ng-container *ngIf="!tt.sortIconTemplate">
-            <SortAltIcon [styleClass]="'p-sortable-column-icon'" *ngIf="sortOrder === 0" />
-            <SortAmountUpAltIcon [styleClass]="'p-sortable-column-icon'" *ngIf="sortOrder === 1" />
-            <SortAmountDownIcon [styleClass]="'p-sortable-column-icon'" *ngIf="sortOrder === -1" />
-        </ng-container>
-        <span *ngIf="tt.sortIconTemplate" class="p-sortable-column-icon">
+    template: ` @if (!tt.sortIconTemplate) { @if (sortOrder === 0) {
+        <SortAltIcon [styleClass]="'p-sortable-column-icon'" />
+        } @if (sortOrder === 1) {
+        <SortAmountUpAltIcon [styleClass]="'p-sortable-column-icon'" />
+        } @if (sortOrder === -1) {
+        <SortAmountDownIcon [styleClass]="'p-sortable-column-icon'" />
+        } } @if (tt.sortIconTemplate) {
+        <span class="p-sortable-column-icon">
             <ng-template *ngTemplateOutlet="tt.sortIconTemplate; context: { $implicit: sortOrder }"></ng-template>
-        </span>`,
+        </span>
+        }`,
     encapsulation: ViewEncapsulation.None,
     changeDetection: ChangeDetectionStrategy.OnPush,
     host: {
@@ -3074,13 +3087,15 @@ export class TTContextMenuRow {
                 <input type="checkbox" [checked]="checked" (focus)="onFocus()" (blur)="onBlur()" tabindex="-1" />
             </div>
             <div #box [ngClass]="{ 'p-checkbox-box': true, 'p-highlight': checked, 'p-focus': focused, 'p-indeterminate': partialChecked, 'p-disabled': disabled }" role="checkbox" [attr.aria-checked]="checked">
-                <ng-container *ngIf="!tt.checkboxIconTemplate">
-                    <CheckIcon [styleClass]="'p-checkbox-icon'" *ngIf="checked" />
-                    <MinusIcon [styleClass]="'p-checkbox-icon'" *ngIf="partialChecked" />
-                </ng-container>
-                <span *ngIf="tt.checkboxIconTemplate">
+                @if (!tt.checkboxIconTemplate) { @if (checked) {
+                <CheckIcon [styleClass]="'p-checkbox-icon'" />
+                } @if (partialChecked) {
+                <MinusIcon [styleClass]="'p-checkbox-icon'" />
+                } } @if (tt.checkboxIconTemplate) {
+                <span>
                     <ng-template *ngTemplateOutlet="tt.checkboxIconTemplate; context: { $implicit: checked, partialSelected: partialChecked }"></ng-template>
                 </span>
+                }
             </div>
         </div>
     `,
@@ -3170,12 +3185,13 @@ export class TTCheckbox {
                 <input #cb type="checkbox" [checked]="checked" (focus)="onFocus()" (blur)="onBlur()" [disabled]="!tt.value || tt.value.length === 0" />
             </div>
             <div #box [ngClass]="{ 'p-checkbox-box': true, 'p-highlight': checked, 'p-focus': focused, 'p-disabled': !tt.value || tt.value.length === 0 }" role="checkbox" [attr.aria-checked]="checked">
-                <ng-container *ngIf="!tt.headerCheckboxIconTemplate">
-                    <CheckIcon *ngIf="checked" [styleClass]="'p-checkbox-icon'" />
-                </ng-container>
-                <span class="p-checkbox-icon" *ngIf="tt.headerCheckboxIconTemplate">
+                @if (!tt.headerCheckboxIconTemplate) { @if (checked) {
+                <CheckIcon [styleClass]="'p-checkbox-icon'" />
+                } } @if (tt.headerCheckboxIconTemplate) {
+                <span class="p-checkbox-icon">
                     <ng-template *ngTemplateOutlet="tt.headerCheckboxIconTemplate; context: { $implicit: checked }"></ng-template>
                 </span>
+                }
             </div>
         </div>
     `,
@@ -3451,12 +3467,11 @@ export class TTEditableColumn implements AfterViewInit {
 @Component({
     selector: 'p-treeTableCellEditor',
     template: `
-        <ng-container *ngIf="tt.editingCell === editableColumn.el.nativeElement">
-            <ng-container *ngTemplateOutlet="inputTemplate"></ng-container>
-        </ng-container>
-        <ng-container *ngIf="!tt.editingCell || tt.editingCell !== editableColumn.el.nativeElement">
-            <ng-container *ngTemplateOutlet="outputTemplate"></ng-container>
-        </ng-container>
+        @if (tt.editingCell === editableColumn.el.nativeElement) {
+        <ng-container *ngTemplateOutlet="inputTemplate"></ng-container>
+        } @if (!tt.editingCell || tt.editingCell !== editableColumn.el.nativeElement) {
+        <ng-container *ngTemplateOutlet="outputTemplate"></ng-container>
+        }
     `,
     encapsulation: ViewEncapsulation.None,
     host: {
@@ -3700,10 +3715,11 @@ export class TTRow {
             [attr.data-pc-group-section]="'rowactionbutton'"
             [attr.aria-label]="toggleButtonAriaLabel"
         >
-            <ng-container *ngIf="!tt.togglerIconTemplate">
-                <ChevronDownIcon *ngIf="rowNode.node.expanded" [attr.aria-hidden]="true" />
-                <ChevronRightIcon *ngIf="!rowNode.node.expanded" [attr.aria-hidden]="true" />
-            </ng-container>
+            @if (!tt.togglerIconTemplate) { @if (rowNode.node.expanded) {
+            <ChevronDownIcon [attr.aria-hidden]="true" />
+            } @if (!rowNode.node.expanded) {
+            <ChevronRightIcon [attr.aria-hidden]="true" />
+            } }
             <ng-template *ngTemplateOutlet="tt.togglerIconTemplate; context: { $implicit: rowNode.node.expanded }"></ng-template>
         </button>
     `,

@@ -7,15 +7,11 @@ import { SharedModule } from 'primeng/api';
     template: `
         <div class="template-features-animation-right-inline">
             <div class="template-features-animation-right-inline-tabs">
-                <button
-                    *ngFor="let data of inlineFeaturesData; let i = index"
-                    (mouseenter)="enterCardArea(data.id)"
-                    (mouseleave)="leaveCardArea(data.id)"
-                    [class.template-features-animation-right-inline-tabs-btnActive]="data.id === selectedID"
-                    (click)="handleBtnClick(data.id)"
-                >
+                @for (data of inlineFeaturesData; track data; let i = $index) {
+                <button (mouseenter)="enterCardArea(data.id)" (mouseleave)="leaveCardArea(data.id)" [class.template-features-animation-right-inline-tabs-btnActive]="data.id === selectedID" (click)="handleBtnClick(data.id)">
                     {{ data.title }}
                 </button>
+                }
             </div>
             <div class="template-features-animation-right-inline-image">
                 <img [src]="inlineFeaturesData[selectedID - 1]?.src" alt="Animation Inline Feature Image" />

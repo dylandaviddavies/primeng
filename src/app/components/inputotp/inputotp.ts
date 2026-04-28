@@ -19,35 +19,32 @@ export const INPUT_OTP_VALUE_ACCESSOR: any = {
 @Component({
     selector: 'p-inputOtp',
     template: `
-        <ng-container *ngFor="let i of getRange(length); trackBy: trackByFn">
-            <ng-container *ngIf="!inputTemplate">
-                <input
-                    type="text"
-                    pInputText
-                    [value]="getModelValue(i)"
-                    [maxLength]="1"
-                    [type]="inputType"
-                    class="p-inputotp-input"
-                    [inputmode]="inputMode"
-                    [variant]="variant"
-                    [readonly]="readonly"
-                    [disabled]="disabled"
-                    [invalid]="invalid"
-                    [tabindex]="tabindex"
-                    [unstyled]="unstyled"
-                    (input)="onInput($event, i - 1)"
-                    (focus)="onInputFocus($event)"
-                    (blur)="onInputBlur($event)"
-                    (paste)="onPaste($event)"
-                    (keydown)="onKeyDown($event)"
-                    pAutoFocus
-                    [autofocus]="getAutofocus(i)"
-                />
-            </ng-container>
-            <ng-container *ngIf="inputTemplate">
-                <ng-container *ngTemplateOutlet="inputTemplate; context: { $implicit: getToken(i - 1), events: getTemplateEvents(i - 1), index: i }"> </ng-container>
-            </ng-container>
-        </ng-container>
+        @for (i of getRange(length); track trackByFn($index, i)) { @if (!inputTemplate) {
+        <input
+            type="text"
+            pInputText
+            [value]="getModelValue(i)"
+            [maxLength]="1"
+            [type]="inputType"
+            class="p-inputotp-input"
+            [inputmode]="inputMode"
+            [variant]="variant"
+            [readonly]="readonly"
+            [disabled]="disabled"
+            [invalid]="invalid"
+            [tabindex]="tabindex"
+            [unstyled]="unstyled"
+            (input)="onInput($event, i - 1)"
+            (focus)="onInputFocus($event)"
+            (blur)="onInputBlur($event)"
+            (paste)="onPaste($event)"
+            (keydown)="onKeyDown($event)"
+            pAutoFocus
+            [autofocus]="getAutofocus(i)"
+        />
+        } @if (inputTemplate) {
+        <ng-container *ngTemplateOutlet="inputTemplate; context: { $implicit: getToken(i - 1), events: getTemplateEvents(i - 1), index: i }"> </ng-container>
+        } }
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,
     encapsulation: ViewEncapsulation.None,

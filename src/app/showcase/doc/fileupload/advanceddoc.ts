@@ -18,9 +18,13 @@ interface UploadEvent {
                     <div class="py-3">Drag and drop files to here to upload.</div>
                 </ng-template>
                 <ng-template pTemplate="content">
-                    <ul *ngIf="uploadedFiles.length">
-                        <li *ngFor="let file of uploadedFiles">{{ file.name }} - {{ file.size }} bytes</li>
+                    @if (uploadedFiles.length) {
+                    <ul>
+                        @for (file of uploadedFiles; track file) {
+                        <li>{{ file.name }} - {{ file.size }} bytes</li>
+                        }
                     </ul>
+                    }
                 </ng-template>
             </p-fileUpload>
         </div>

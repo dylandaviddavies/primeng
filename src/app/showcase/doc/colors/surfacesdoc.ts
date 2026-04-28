@@ -8,9 +8,11 @@ import { Component } from '@angular/core';
         </app-docsectiontext>
         <div class="card">
             <div class="color-stack">
-                <div *ngFor="let shade of shades">
+                @for (shade of shades; track shade) {
+                <div>
                     <div class="color-box" [ngStyle]="{ backgroundColor: 'var(--surface-' + shade + ')', color: shade < 600 ? 'var(--surface-900)' : 'var(--surface-0)' }">surface-{{ shade }}</div>
                 </div>
+                }
             </div>
         </div>
         <div class="doc-tablewrapper">

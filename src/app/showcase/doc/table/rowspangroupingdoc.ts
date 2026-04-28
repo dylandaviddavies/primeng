@@ -25,10 +25,12 @@ import { CustomerService } from '@service/customerservice';
                     <ng-template pTemplate="body" let-customer let-rowIndex="rowIndex" let-rowgroup="rowgroup" let-rowspan="rowspan">
                         <tr>
                             <td>{{ rowIndex }}</td>
-                            <td *ngIf="rowgroup" [attr.rowspan]="rowspan">
+                            @if (rowgroup) {
+                            <td [attr.rowspan]="rowspan">
                                 <img [alt]="customer.representative.name" src="https://primefaces.org/cdn/primeng/images/demo/avatar/{{ customer.representative.image }}" width="32" style="vertical-align: middle" />
                                 <span class="font-bold ml-2">{{ customer.representative.name }}</span>
                             </td>
+                            }
                             <td>
                                 {{ customer.name }}
                             </td>

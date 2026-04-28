@@ -14,9 +14,13 @@ import { Code } from '@domain/code';
                     <a pRipple class="flex align-items-center p-menuitem-link">
                         <span [class]="item.icon" class="p-menuitem-icon"></span>
                         <span class="ml-2">{{ item.label }}</span>
-                        <p-badge *ngIf="item.badge" class="ml-auto" [value]="item.badge" />
-                        <span *ngIf="item.shortcut" class="ml-auto border-1 surface-border border-round surface-100 text-xs p-1">{{ item.shortcut }}</span>
-                        <i *ngIf="hasSubmenu" class="pi pi-angle-right ml-auto text-primary"></i>
+                        @if (item.badge) {
+                        <p-badge class="ml-auto" [value]="item.badge" />
+                        } @if (item.shortcut) {
+                        <span class="ml-auto border-1 surface-border border-round surface-100 text-xs p-1">{{ item.shortcut }}</span>
+                        } @if (hasSubmenu) {
+                        <i class="pi pi-angle-right ml-auto text-primary"></i>
+                        }
                     </a>
                 </ng-template>
             </p-tieredMenu>

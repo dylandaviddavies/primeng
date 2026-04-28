@@ -15,19 +15,11 @@ import { BreadcrumbItemClickEvent } from './breadcrumb.interface';
     template: `
         <nav [class]="styleClass" [ngStyle]="style" [ngClass]="'p-breadcrumb p-component'" [attr.data-pc-name]="'breadcrumb'" [attr.data-pc-section]="'root'">
             <ol [attr.data-pc-section]="'menu'" class="p-breadcrumb-list">
-                <li
-                    [class]="home.styleClass"
-                    [attr.id]="home.id"
-                    [ngClass]="{ 'p-breadcrumb-home': true, 'p-disabled': home.disabled }"
-                    [ngStyle]="home.style"
-                    *ngIf="home"
-                    pTooltip
-                    [tooltipOptions]="home.tooltipOptions"
-                    [attr.data-pc-section]="'home'"
-                >
+                @if (home) {
+                <li [class]="home.styleClass" [attr.id]="home.id" [ngClass]="{ 'p-breadcrumb-home': true, 'p-disabled': home.disabled }" [ngStyle]="home.style" pTooltip [tooltipOptions]="home.tooltipOptions" [attr.data-pc-section]="'home'">
+                    @if (!home.routerLink) {
                     <a
                         [href]="home.url ? home.url : null"
-                        *ngIf="!home.routerLink"
                         [attr.aria-label]="homeAriaLabel"
                         class="p-menuitem-link"
                         (click)="onClick($event, home)"
@@ -36,15 +28,18 @@ import { BreadcrumbItemClickEvent } from './breadcrumb.interface';
                         [attr.tabindex]="home.disabled ? null : '0'"
                         [attr.ariaCurrentWhenActive]="isCurrentUrl(home)"
                     >
-                        <span *ngIf="home.icon" class="p-menuitem-icon" [ngClass]="home.icon" [ngStyle]="home.iprivateyle"></span>
-                        <HomeIcon *ngIf="!home.icon" [styleClass]="'p-menuitem-icon'" />
-                        <ng-container *ngIf="home.label">
-                            <span *ngIf="home.escape !== false; else htmlHomeLabel" class="p-menuitem-text">{{ home.label }}</span>
-                            <ng-template #htmlHomeLabel><span class="p-menuitem-text" [innerHTML]="home.label"></span></ng-template>
-                        </ng-container>
+                        @if (home.icon) {
+                        <span class="p-menuitem-icon" [ngClass]="home.icon" [ngStyle]="home.iprivateyle"></span>
+                        } @if (!home.icon) {
+                        <HomeIcon [styleClass]="'p-menuitem-icon'" />
+                        } @if (home.label) { @if (home.escape !== false) {
+                        <span class="p-menuitem-text">{{ home.label }}</span>
+                        } @else {
+                        <span class="p-menuitem-text" [innerHTML]="home.label"></span>
+                        } }
                     </a>
+                    } @if (home.routerLink) {
                     <a
-                        *ngIf="home.routerLink"
                         [routerLink]="home.routerLink"
                         [attr.aria-label]="homeAriaLabel"
                         [queryParams]="home.queryParams"
@@ -63,77 +58,86 @@ import { BreadcrumbItemClickEvent } from './breadcrumb.interface';
                         [replaceUrl]="home.replaceUrl"
                         [state]="home.state"
                     >
-                        <span *ngIf="home.icon" class="p-menuitem-icon" [ngClass]="home.icon" [ngStyle]="home.iconStyle"></span>
-                        <HomeIcon *ngIf="!home.icon" [styleClass]="'p-menuitem-icon'" />
-                        <ng-container *ngIf="home.label">
-                            <span *ngIf="home.escape !== false; else htmlHomeRouteLabel" class="p-menuitem-text">{{ home.label }}</span>
-                            <ng-template #htmlHomeRouteLabel><span class="p-menuitem-text" [innerHTML]="home.label"></span></ng-template>
-                        </ng-container>
+                        @if (home.icon) {
+                        <span class="p-menuitem-icon" [ngClass]="home.icon" [ngStyle]="home.iconStyle"></span>
+                        } @if (!home.icon) {
+                        <HomeIcon [styleClass]="'p-menuitem-icon'" />
+                        } @if (home.label) { @if (home.escape !== false) {
+                        <span class="p-menuitem-text">{{ home.label }}</span>
+                        } @else {
+                        <span class="p-menuitem-text" [innerHTML]="home.label"></span>
+                        } }
                     </a>
+                    }
                 </li>
-                <li *ngIf="model && home" class="p-menuitem-separator" [attr.data-pc-section]="'separator'">
-                    <ChevronRightIcon *ngIf="!separatorTemplate" />
+                } @if (model && home) {
+                <li class="p-menuitem-separator" [attr.data-pc-section]="'separator'">
+                    @if (!separatorTemplate) {
+                    <ChevronRightIcon />
+                    }
                     <ng-template *ngTemplateOutlet="separatorTemplate"></ng-template>
                 </li>
-                <ng-template ngFor let-item let-end="last" [ngForOf]="model">
-                    <li [class]="item.styleClass" [attr.id]="item.id" [ngStyle]="item.style" [ngClass]="{ 'p-disabled': item.disabled }" pTooltip [tooltipOptions]="item.tooltipOptions" [attr.data-pc-section]="'menuitem'">
-                        <a
-                            *ngIf="!item.routerLink"
-                            [attr.href]="item.url ? item.url : null"
-                            class="p-menuitem-link"
-                            (click)="onClick($event, item)"
-                            [target]="item.target"
-                            [attr.title]="item.title"
-                            [attr.tabindex]="item.disabled ? null : '0'"
-                            [attr.ariaCurrentWhenActive]="isCurrentUrl(item)"
-                        >
-                            <ng-container *ngIf="!itemTemplate">
-                                <span *ngIf="item.icon" class="p-menuitem-icon" [ngClass]="item.icon" [ngStyle]="item.iconStyle"></span>
-                                <ng-container *ngIf="item.label">
-                                    <span *ngIf="item.escape !== false; else htmlLabel" class="p-menuitem-text">{{ item.label }}</span>
-                                    <ng-template #htmlLabel><span class="p-menuitem-text" [innerHTML]="item.label"></span></ng-template>
-                                </ng-container>
-                            </ng-container>
-                            <ng-container *ngIf="itemTemplate">
-                                <ng-template *ngTemplateOutlet="itemTemplate; context: { $implicit: item }"></ng-template>
-                            </ng-container>
-                        </a>
-                        <a
-                            *ngIf="item.routerLink"
-                            [routerLink]="item.routerLink"
-                            [queryParams]="item.queryParams"
-                            [routerLinkActive]="'p-menuitem-link-active'"
-                            [routerLinkActiveOptions]="item.routerLinkActiveOptions || { exact: false }"
-                            class="p-menuitem-link"
-                            (click)="onClick($event, item)"
-                            [target]="item.target"
-                            [attr.title]="item.title"
-                            [attr.tabindex]="item.disabled ? null : '0'"
-                            [fragment]="item.fragment"
-                            [queryParamsHandling]="item.queryParamsHandling"
-                            [preserveFragment]="item.preserveFragment"
-                            [skipLocationChange]="item.skipLocationChange"
-                            [replaceUrl]="item.replaceUrl"
-                            [state]="item.state"
-                            [attr.ariaCurrentWhenActive]="isCurrentUrl(item)"
-                        >
-                            <ng-container *ngIf="!itemTemplate">
-                                <span *ngIf="item.icon" class="p-menuitem-icon" [ngClass]="item.icon" [ngStyle]="item.iconStyle"></span>
-                                <ng-container *ngIf="item.label">
-                                    <span *ngIf="item.escape !== false; else htmlRouteLabel" class="p-menuitem-text">{{ item.label }}</span>
-                                    <ng-template #htmlRouteLabel><span class="p-menuitem-text" [innerHTML]="item.label"></span></ng-template>
-                                </ng-container>
-                            </ng-container>
-                            <ng-container *ngIf="itemTemplate">
-                                <ng-template *ngTemplateOutlet="itemTemplate; context: { $implicit: item }"></ng-template>
-                            </ng-container>
-                        </a>
-                    </li>
-                    <li *ngIf="!end" class="p-menuitem-separator" [attr.data-pc-section]="'separator'">
-                        <ChevronRightIcon *ngIf="!separatorTemplate" />
-                        <ng-template *ngTemplateOutlet="separatorTemplate"></ng-template>
-                    </li>
-                </ng-template>
+                } @for (item of model; track item; let end = $last) {
+                <li [class]="item.styleClass" [attr.id]="item.id" [ngStyle]="item.style" [ngClass]="{ 'p-disabled': item.disabled }" pTooltip [tooltipOptions]="item.tooltipOptions" [attr.data-pc-section]="'menuitem'">
+                    @if (!item.routerLink) {
+                    <a
+                        [attr.href]="item.url ? item.url : null"
+                        class="p-menuitem-link"
+                        (click)="onClick($event, item)"
+                        [target]="item.target"
+                        [attr.title]="item.title"
+                        [attr.tabindex]="item.disabled ? null : '0'"
+                        [attr.ariaCurrentWhenActive]="isCurrentUrl(item)"
+                    >
+                        @if (!itemTemplate) { @if (item.icon) {
+                        <span class="p-menuitem-icon" [ngClass]="item.icon" [ngStyle]="item.iconStyle"></span>
+                        } @if (item.label) { @if (item.escape !== false) {
+                        <span class="p-menuitem-text">{{ item.label }}</span>
+                        } @else {
+                        <span class="p-menuitem-text" [innerHTML]="item.label"></span>
+                        } } } @if (itemTemplate) {
+                        <ng-template *ngTemplateOutlet="itemTemplate; context: { $implicit: item }"></ng-template>
+                        }
+                    </a>
+                    } @if (item.routerLink) {
+                    <a
+                        [routerLink]="item.routerLink"
+                        [queryParams]="item.queryParams"
+                        [routerLinkActive]="'p-menuitem-link-active'"
+                        [routerLinkActiveOptions]="item.routerLinkActiveOptions || { exact: false }"
+                        class="p-menuitem-link"
+                        (click)="onClick($event, item)"
+                        [target]="item.target"
+                        [attr.title]="item.title"
+                        [attr.tabindex]="item.disabled ? null : '0'"
+                        [fragment]="item.fragment"
+                        [queryParamsHandling]="item.queryParamsHandling"
+                        [preserveFragment]="item.preserveFragment"
+                        [skipLocationChange]="item.skipLocationChange"
+                        [replaceUrl]="item.replaceUrl"
+                        [state]="item.state"
+                        [attr.ariaCurrentWhenActive]="isCurrentUrl(item)"
+                    >
+                        @if (!itemTemplate) { @if (item.icon) {
+                        <span class="p-menuitem-icon" [ngClass]="item.icon" [ngStyle]="item.iconStyle"></span>
+                        } @if (item.label) { @if (item.escape !== false) {
+                        <span class="p-menuitem-text">{{ item.label }}</span>
+                        } @else {
+                        <span class="p-menuitem-text" [innerHTML]="item.label"></span>
+                        } } } @if (itemTemplate) {
+                        <ng-template *ngTemplateOutlet="itemTemplate; context: { $implicit: item }"></ng-template>
+                        }
+                    </a>
+                    }
+                </li>
+                @if (!end) {
+                <li class="p-menuitem-separator" [attr.data-pc-section]="'separator'">
+                    @if (!separatorTemplate) {
+                    <ChevronRightIcon />
+                    }
+                    <ng-template *ngTemplateOutlet="separatorTemplate"></ng-template>
+                </li>
+                } }
             </ol>
         </nav>
     `,

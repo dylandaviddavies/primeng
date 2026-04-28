@@ -33,22 +33,30 @@ interface Column {
                     </ng-template>
                     <ng-template pTemplate="header" let-columns>
                         <tr>
-                            <th *ngFor="let col of cols">
+                            @for (col of cols; track col) {
+                            <th>
                                 {{ col.header }}
                             </th>
+                            }
                         </tr>
                         <tr>
-                            <th *ngFor="let col of cols">
+                            @for (col of cols; track col) {
+                            <th>
                                 <input pInputText type="text" (input)="tt.filter($event.target.value, col.field, col.filterMatchMode)" />
                             </th>
+                            }
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-rowNode let-rowData="rowData">
                         <tr [ttRow]="rowNode">
-                            <td *ngFor="let col of cols; let i = index">
-                                <p-treeTableToggler [rowNode]="rowNode" *ngIf="i === 0" />
+                            @for (col of cols; track col; let i = $index) {
+                            <td>
+                                @if (i === 0) {
+                                <p-treeTableToggler [rowNode]="rowNode" />
+                                }
                                 {{ rowData[col.field] }}
                             </td>
+                            }
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="emptymessage">

@@ -30,7 +30,8 @@ import { Code } from '@domain/code';
                     <div>
                         <span class="font-medium text-900 block mb-2">Team Members</span>
                         <ul class="list-none p-0 m-0 flex flex-column gap-3">
-                            <li *ngFor="let member of members" class="flex align-items-center gap-2">
+                            @for (member of members; track member) {
+                            <li class="flex align-items-center gap-2">
                                 <img [src]="'https://primefaces.org/cdn/primeng/images/demo/avatar/' + member.image" style="width: 32px" />
                                 <div>
                                     <span class="font-medium">{{ member.name }}</span>
@@ -41,6 +42,7 @@ import { Code } from '@domain/code';
                                     <i class="pi pi-angle-down"></i>
                                 </div>
                             </li>
+                            }
                         </ul>
                     </div>
                 </div>

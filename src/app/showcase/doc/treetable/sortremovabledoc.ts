@@ -32,18 +32,24 @@ interface Column {
                 >
                     <ng-template pTemplate="header" let-columns>
                         <tr>
-                            <th *ngFor="let col of columns" [ttSortableColumn]="col.field">
+                            @for (col of columns; track col) {
+                            <th [ttSortableColumn]="col.field">
                                 {{ col.header }}
                                 <p-treeTableSortIcon [field]="col.field" />
                             </th>
+                            }
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-rowNode let-rowData="rowData" let-columns="columns">
                         <tr [ttRow]="rowNode" [ttSelectableRow]="rowNode">
-                            <td *ngFor="let col of columns; let i = index">
-                                <p-treeTableToggler [rowNode]="rowNode" *ngIf="i === 0" />
+                            @for (col of columns; track col; let i = $index) {
+                            <td>
+                                @if (i === 0) {
+                                <p-treeTableToggler [rowNode]="rowNode" />
+                                }
                                 {{ rowData[col.field] }}
                             </td>
+                            }
                         </tr>
                     </ng-template>
                 </p-treeTable>

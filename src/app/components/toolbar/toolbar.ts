@@ -10,15 +10,19 @@ import { BlockableUI, PrimeTemplate } from 'primeng/api';
     template: `
         <div [ngClass]="'p-toolbar p-component'" [attr.aria-labelledby]="ariaLabelledBy" [ngStyle]="style" [class]="styleClass" role="toolbar" [attr.data-pc-name]="'toolbar'">
             <ng-content></ng-content>
-            <div class="p-toolbar-group-left p-toolbar-group-start" *ngIf="startTemplate" [attr.data-pc-section]="'start'">
+            @if (startTemplate) {
+            <div class="p-toolbar-group-left p-toolbar-group-start" [attr.data-pc-section]="'start'">
                 <ng-container *ngTemplateOutlet="startTemplate"></ng-container>
             </div>
-            <div class="p-toolbar-group-center" *ngIf="centerTemplate" [attr.data-pc-section]="'center'">
+            } @if (centerTemplate) {
+            <div class="p-toolbar-group-center" [attr.data-pc-section]="'center'">
                 <ng-container *ngTemplateOutlet="centerTemplate"></ng-container>
             </div>
-            <div class="p-toolbar-group-right p-toolbar-group-end" *ngIf="endTemplate" [attr.data-pc-section]="'end'">
+            } @if (endTemplate) {
+            <div class="p-toolbar-group-right p-toolbar-group-end" [attr.data-pc-section]="'end'">
                 <ng-container *ngTemplateOutlet="endTemplate"></ng-container>
             </div>
+            }
         </div>
     `,
     changeDetection: ChangeDetectionStrategy.OnPush,

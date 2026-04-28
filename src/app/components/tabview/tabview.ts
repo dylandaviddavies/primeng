@@ -45,21 +45,14 @@ import { Nullable } from 'primeng/ts-helpers';
 @Component({
     selector: 'p-tabPanel',
     template: `
-        <div
-            *ngIf="!closed"
-            class="p-tabview-panel"
-            role="tabpanel"
-            [hidden]="!selected"
-            [attr.id]="tabView.getTabContentId(id)"
-            [attr.aria-hidden]="!selected"
-            [attr.aria-labelledby]="tabView.getTabHeaderActionId(id)"
-            [attr.data-pc-name]="'tabpanel'"
-        >
+        @if (!closed) {
+        <div class="p-tabview-panel" role="tabpanel" [hidden]="!selected" [attr.id]="tabView.getTabContentId(id)" [attr.aria-hidden]="!selected" [attr.aria-labelledby]="tabView.getTabHeaderActionId(id)" [attr.data-pc-name]="'tabpanel'">
             <ng-content></ng-content>
-            <ng-container *ngIf="contentTemplate && (cache ? loaded : selected)">
-                <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
-            </ng-container>
+            @if (contentTemplate && (cache ? loaded : selected)) {
+            <ng-container *ngTemplateOutlet="contentTemplate"></ng-container>
+            }
         </div>
+        }
     `,
     host: {
         class: 'p-element'
@@ -274,77 +267,73 @@ export class TabPanel implements AfterContentInit, OnDestroy {
     template: `
         <div [ngClass]="{ 'p-tabview p-component': true, 'p-tabview-scrollable': scrollable }" [ngStyle]="style" [class]="styleClass" [attr.data-pc-name]="'tabview'">
             <div #elementToObserve class="p-tabview-nav-container">
-                <button
-                    *ngIf="scrollable && !backwardIsDisabled && autoHideButtons"
-                    #prevBtn
-                    class="p-tabview-nav-prev p-tabview-nav-btn p-link"
-                    (click)="navBackward()"
-                    [attr.tabindex]="tabindex"
-                    [attr.aria-label]="prevButtonAriaLabel"
-                    type="button"
-                    pRipple
-                >
-                    <ChevronLeftIcon *ngIf="!previousIconTemplate" [attr.aria-hidden]="true" />
+                @if (scrollable && !backwardIsDisabled && autoHideButtons) {
+                <button #prevBtn class="p-tabview-nav-prev p-tabview-nav-btn p-link" (click)="navBackward()" [attr.tabindex]="tabindex" [attr.aria-label]="prevButtonAriaLabel" type="button" pRipple>
+                    @if (!previousIconTemplate) {
+                    <ChevronLeftIcon [attr.aria-hidden]="true" />
+                    }
                     <ng-template *ngTemplateOutlet="previousIconTemplate"></ng-template>
                 </button>
+                }
                 <div #content class="p-tabview-nav-content" (scroll)="onScroll($event)" [attr.data-pc-section]="'navcontent'">
                     <ul #navbar class="p-tabview-nav" role="tablist" [attr.data-pc-section]="'nav'">
-                        <ng-template ngFor let-tab [ngForOf]="tabs" let-i="index">
-                            <li role="presentation" [ngClass]="{ 'p-highlight': tab.selected, 'p-disabled': tab.disabled }" [attr.data-p-disabled]="tab.disabled" [ngStyle]="tab.headerStyle" [class]="tab.headerStyleClass" *ngIf="!tab.closed">
-                                <a
-                                    role="tab"
-                                    class="p-tabview-nav-link"
-                                    [pTooltip]="tab.tooltip"
-                                    [tooltipPosition]="tab.tooltipPosition"
-                                    [positionStyle]="tab.tooltipPositionStyle"
-                                    [tooltipStyleClass]="tab.tooltipStyleClass"
-                                    [attr.id]="getTabHeaderActionId(tab.id)"
-                                    [attr.aria-controls]="getTabContentId(tab.id)"
-                                    [attr.aria-selected]="tab.selected"
-                                    [attr.tabindex]="tab.disabled || !tab.selected ? '-1' : tabindex"
-                                    [attr.aria-disabled]="tab.disabled"
-                                    [attr.data-pc-index]="i"
-                                    [attr.data-pc-section]="'headeraction'"
-                                    (click)="open($event, tab)"
-                                    (keydown)="onTabKeyDown($event, tab)"
-                                    pRipple
-                                >
-                                    <ng-container *ngIf="!tab.headerTemplate">
-                                        <span class="p-tabview-left-icon" [ngClass]="tab.leftIcon" *ngIf="tab.leftIcon && !tab.leftIconTemplate"></span>
-                                        <span *ngIf="tab.leftIconTemplate" class="p-tabview-left-icon">
-                                            <ng-template *ngTemplateOutlet="tab.leftIconTemplate"></ng-template>
-                                        </span>
-                                        <span class="p-tabview-title">{{ tab.header }}</span>
-                                        <span class="p-tabview-right-icon" [ngClass]="tab.rightIcon" *ngIf="tab.rightIcon && !tab.rightIconTemplate"></span>
-                                        <span *ngIf="tab.rightIconTemplate" class="p-tabview-right-icon">
-                                            <ng-template *ngTemplateOutlet="tab.rightIconTemplate"></ng-template>
-                                        </span>
-                                    </ng-container>
-                                    <ng-container *ngTemplateOutlet="tab.headerTemplate"></ng-container>
-                                    <ng-container *ngIf="tab.closable">
-                                        <TimesIcon *ngIf="!tab.closeIconTemplate" [styleClass]="'p-tabview-close'" (click)="close($event, tab)" />
-                                        <span class="tab.closeIconTemplate" *ngIf="tab.closeIconTemplate"></span>
-                                        <ng-template *ngTemplateOutlet="tab.closeIconTemplate"></ng-template>
-                                    </ng-container>
-                                </a>
-                            </li>
-                        </ng-template>
+                        @for (tab of tabs; track tab; let i = $index) { @if (!tab.closed) {
+                        <li role="presentation" [ngClass]="{ 'p-highlight': tab.selected, 'p-disabled': tab.disabled }" [attr.data-p-disabled]="tab.disabled" [ngStyle]="tab.headerStyle" [class]="tab.headerStyleClass">
+                            <a
+                                role="tab"
+                                class="p-tabview-nav-link"
+                                [pTooltip]="tab.tooltip"
+                                [tooltipPosition]="tab.tooltipPosition"
+                                [positionStyle]="tab.tooltipPositionStyle"
+                                [tooltipStyleClass]="tab.tooltipStyleClass"
+                                [attr.id]="getTabHeaderActionId(tab.id)"
+                                [attr.aria-controls]="getTabContentId(tab.id)"
+                                [attr.aria-selected]="tab.selected"
+                                [attr.tabindex]="tab.disabled || !tab.selected ? '-1' : tabindex"
+                                [attr.aria-disabled]="tab.disabled"
+                                [attr.data-pc-index]="i"
+                                [attr.data-pc-section]="'headeraction'"
+                                (click)="open($event, tab)"
+                                (keydown)="onTabKeyDown($event, tab)"
+                                pRipple
+                            >
+                                @if (!tab.headerTemplate) { @if (tab.leftIcon && !tab.leftIconTemplate) {
+                                <span class="p-tabview-left-icon" [ngClass]="tab.leftIcon"></span>
+                                } @if (tab.leftIconTemplate) {
+                                <span class="p-tabview-left-icon">
+                                    <ng-template *ngTemplateOutlet="tab.leftIconTemplate"></ng-template>
+                                </span>
+                                }
+                                <span class="p-tabview-title">{{ tab.header }}</span>
+                                @if (tab.rightIcon && !tab.rightIconTemplate) {
+                                <span class="p-tabview-right-icon" [ngClass]="tab.rightIcon"></span>
+                                } @if (tab.rightIconTemplate) {
+                                <span class="p-tabview-right-icon">
+                                    <ng-template *ngTemplateOutlet="tab.rightIconTemplate"></ng-template>
+                                </span>
+                                } }
+                                <ng-container *ngTemplateOutlet="tab.headerTemplate"></ng-container>
+                                @if (tab.closable) { @if (!tab.closeIconTemplate) {
+                                <TimesIcon [styleClass]="'p-tabview-close'" (click)="close($event, tab)" />
+                                } @if (tab.closeIconTemplate) {
+                                <span class="tab.closeIconTemplate"></span>
+                                }
+                                <ng-template *ngTemplateOutlet="tab.closeIconTemplate"></ng-template>
+                                }
+                            </a>
+                        </li>
+                        } }
                         <li #inkbar class="p-tabview-ink-bar" role="presentation" aria-hidden="true" [attr.data-pc-section]="'inkbar'"></li>
                     </ul>
                 </div>
-                <button
-                    *ngIf="scrollable && !forwardIsDisabled && buttonVisible"
-                    #nextBtn
-                    [attr.tabindex]="tabindex"
-                    [attr.aria-label]="nextButtonAriaLabel"
-                    class="p-tabview-nav-next p-tabview-nav-btn p-link"
-                    (click)="navForward()"
-                    type="button"
-                    pRipple
-                >
-                    <ChevronRightIcon *ngIf="!nextIconTemplate" [attr.aria-hidden]="true" />
+                @if (scrollable && !forwardIsDisabled && buttonVisible) {
+                <button #nextBtn [attr.tabindex]="tabindex" [attr.aria-label]="nextButtonAriaLabel" class="p-tabview-nav-next p-tabview-nav-btn p-link" (click)="navForward()" type="button" pRipple>
+                    @if (!nextIconTemplate) {
+                    <ChevronRightIcon [attr.aria-hidden]="true" />
+                    }
                     <ng-template *ngTemplateOutlet="nextIconTemplate"></ng-template>
                 </button>
+                }
             </div>
             <div class="p-tabview-panels">
                 <ng-content></ng-content>

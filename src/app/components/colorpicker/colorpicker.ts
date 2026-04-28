@@ -1,25 +1,25 @@
 import { AnimationEvent, animate, style, transition, trigger } from '@angular/animations';
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ElementRef,
-  EventEmitter,
-  Inject,
-  Input,
-  NgModule,
-  OnDestroy,
-  Output,
-  PLATFORM_ID,
-  Renderer2,
-  TemplateRef,
-  ViewChild,
-  ViewEncapsulation,
-  booleanAttribute,
-  forwardRef,
-  numberAttribute,
-  DOCUMENT
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ElementRef,
+    EventEmitter,
+    Inject,
+    Input,
+    NgModule,
+    OnDestroy,
+    Output,
+    PLATFORM_ID,
+    Renderer2,
+    TemplateRef,
+    ViewChild,
+    ViewEncapsulation,
+    booleanAttribute,
+    forwardRef,
+    numberAttribute,
+    DOCUMENT
 } from '@angular/core';
 import { ControlValueAccessor, NG_VALUE_ACCESSOR } from '@angular/forms';
 import { OverlayService, PrimeNGConfig, TranslationKeys } from 'primeng/api';
@@ -49,8 +49,8 @@ export const COLORPICKER_VALUE_ACCESSOR: any = {
             [attr.data-pc-name]="'colorpicker'"
             [attr.data-pc-section]="'root'"
         >
+            @if (!inline) {
             <input
-                *ngIf="!inline"
                 #input
                 type="text"
                 class="p-colorpicker-preview p-inputtext"
@@ -68,8 +68,8 @@ export const COLORPICKER_VALUE_ACCESSOR: any = {
                 pAutoFocus
                 [autofocus]="autofocus"
             />
+            } @if (inline || overlayVisible) {
             <div
-                *ngIf="inline || overlayVisible"
                 [ngClass]="{ 'p-colorpicker-panel': true, 'p-colorpicker-overlay-panel': !inline, 'p-disabled': disabled }"
                 (click)="onOverlayClick($event)"
                 [@overlayAnimation]="{ value: 'visible', params: { showTransitionParams: showTransitionOptions, hideTransitionParams: hideTransitionOptions } }"
@@ -89,6 +89,7 @@ export const COLORPICKER_VALUE_ACCESSOR: any = {
                     </div>
                 </div>
             </div>
+            }
         </div>
     `,
     animations: [trigger('overlayAnimation', [transition(':enter', [style({ opacity: 0, transform: 'scaleY(0.8)' }), animate('{{showTransitionParams}}')]), transition(':leave', [animate('{{hideTransitionParams}}', style({ opacity: 0 }))])])],

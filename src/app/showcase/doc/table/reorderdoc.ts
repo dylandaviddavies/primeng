@@ -23,9 +23,11 @@ interface Column {
                     <ng-template pTemplate="header" let-columns>
                         <tr>
                             <th style="width:3rem"></th>
-                            <th *ngFor="let col of columns" pReorderableColumn>
+                            @for (col of columns; track col) {
+                            <th pReorderableColumn>
                                 {{ col.header }}
                             </th>
+                            }
                         </tr>
                     </ng-template>
                     <ng-template pTemplate="body" let-rowData let-columns="columns" let-index="rowIndex">
@@ -33,9 +35,11 @@ interface Column {
                             <td>
                                 <span class="pi pi-bars" pReorderableRowHandle></span>
                             </td>
-                            <td *ngFor="let col of columns">
+                            @for (col of columns; track col) {
+                            <td>
                                 {{ rowData[col.field] }}
                             </td>
+                            }
                         </tr>
                     </ng-template>
                 </p-table>

@@ -9,11 +9,13 @@ import { Code } from '@domain/code';
         </app-docsectiontext>
         <div class="card">
             <p-tabView>
-                <p-tabPanel *ngFor="let tab of tabs" [header]="tab.title">
+                @for (tab of tabs; track tab) {
+                <p-tabPanel [header]="tab.title">
                     <p>
                         {{ tab.content }}
                     </p>
                 </p-tabPanel>
+                }
             </p-tabView>
         </div>
         <app-code [code]="code" selector="tab-view-dynamic-demo"></app-code>

@@ -1,28 +1,28 @@
 import { CommonModule, isPlatformBrowser } from '@angular/common';
 import {
-  AfterContentInit,
-  AfterViewChecked,
-  ChangeDetectionStrategy,
-  ChangeDetectorRef,
-  Component,
-  ContentChildren,
-  ElementRef,
-  EventEmitter,
-  Inject,
-  Input,
-  NgModule,
-  NgZone,
-  OnDestroy,
-  OnInit,
-  Output,
-  PLATFORM_ID,
-  QueryList,
-  Renderer2,
-  SimpleChanges,
-  TemplateRef,
-  ViewChild,
-  ViewEncapsulation,
-  DOCUMENT
+    AfterContentInit,
+    AfterViewChecked,
+    ChangeDetectionStrategy,
+    ChangeDetectorRef,
+    Component,
+    ContentChildren,
+    ElementRef,
+    EventEmitter,
+    Inject,
+    Input,
+    NgModule,
+    NgZone,
+    OnDestroy,
+    OnInit,
+    Output,
+    PLATFORM_ID,
+    QueryList,
+    Renderer2,
+    SimpleChanges,
+    TemplateRef,
+    ViewChild,
+    ViewEncapsulation,
+    DOCUMENT
 } from '@angular/core';
 import { PrimeTemplate, ScrollerOptions, SharedModule } from 'primeng/api';
 import { DomHandler } from 'primeng/dom';
@@ -36,52 +36,45 @@ import { ScrollerLazyLoadEvent, ScrollerScrollEvent, ScrollerScrollIndexChangeEv
 @Component({
     selector: 'p-scroller',
     template: `
-        <ng-container *ngIf="!_disabled; else disabledContainer">
-            <div
-                #element
-                [attr.id]="_id"
-                [attr.tabindex]="tabindex"
-                [ngStyle]="_style"
-                [class]="_styleClass"
-                [ngClass]="{ 'p-scroller': true, 'p-scroller-inline': inline, 'p-both-scroll': both, 'p-horizontal-scroll': horizontal }"
-                (scroll)="onContainerScroll($event)"
-                [attr.data-pc-name]="'scroller'"
-                [attr.data-pc-section]="'root'"
-            >
-                <ng-container *ngIf="contentTemplate; else buildInContent">
-                    <ng-container *ngTemplateOutlet="contentTemplate; context: { $implicit: loadedItems, options: getContentOptions() }"></ng-container>
-                </ng-container>
-                <ng-template #buildInContent>
-                    <div #content class="p-scroller-content" [ngClass]="{ 'p-scroller-loading': d_loading }" [ngStyle]="contentStyle" [attr.data-pc-section]="'content'">
-                        <ng-container *ngFor="let item of loadedItems; let index = index; trackBy: _trackBy || index">
-                            <ng-container *ngTemplateOutlet="itemTemplate; context: { $implicit: item, options: getOptions(index) }"></ng-container>
-                        </ng-container>
-                    </div>
-                </ng-template>
-                <div *ngIf="_showSpacer" class="p-scroller-spacer" [ngStyle]="spacerStyle" [attr.data-pc-section]="'spacer'"></div>
-                <div *ngIf="!loaderDisabled && _showLoader && d_loading" class="p-scroller-loader" [ngClass]="{ 'p-component-overlay': !loaderTemplate }" [attr.data-pc-section]="'loader'">
-                    <ng-container *ngIf="loaderTemplate; else buildInLoader">
-                        <ng-container *ngFor="let item of loaderArr; let index = index">
-                            <ng-container *ngTemplateOutlet="loaderTemplate; context: { options: getLoaderOptions(index, both && { numCols: _numItemsInViewport.cols }) }"></ng-container>
-                        </ng-container>
-                    </ng-container>
-                    <ng-template #buildInLoader>
-                        <ng-container *ngIf="loaderIconTemplate; else buildInLoaderIcon">
-                            <ng-container *ngTemplateOutlet="loaderIconTemplate; context: { options: { styleClass: 'p-scroller-loading-icon' } }"></ng-container>
-                        </ng-container>
-                        <ng-template #buildInLoaderIcon>
-                            <SpinnerIcon [styleClass]="'p-scroller-loading-icon pi-spin'" [attr.data-pc-section]="'loadingIcon'" />
-                        </ng-template>
-                    </ng-template>
-                </div>
+        @if (!_disabled) {
+        <div
+            #element
+            [attr.id]="_id"
+            [attr.tabindex]="tabindex"
+            [ngStyle]="_style"
+            [class]="_styleClass"
+            [ngClass]="{ 'p-scroller': true, 'p-scroller-inline': inline, 'p-both-scroll': both, 'p-horizontal-scroll': horizontal }"
+            (scroll)="onContainerScroll($event)"
+            [attr.data-pc-name]="'scroller'"
+            [attr.data-pc-section]="'root'"
+        >
+            @if (contentTemplate) {
+            <ng-container *ngTemplateOutlet="contentTemplate; context: { $implicit: loadedItems, options: getContentOptions() }"></ng-container>
+            } @else {
+            <div #content class="p-scroller-content" [ngClass]="{ 'p-scroller-loading': d_loading }" [ngStyle]="contentStyle" [attr.data-pc-section]="'content'">
+                @for (item of loadedItems; track _trackBy || index(index, item); let index = $index) {
+                <ng-container *ngTemplateOutlet="itemTemplate; context: { $implicit: item, options: getOptions(index) }"></ng-container>
+                }
             </div>
-        </ng-container>
-        <ng-template #disabledContainer>
-            <ng-content></ng-content>
-            <ng-container *ngIf="contentTemplate">
-                <ng-container *ngTemplateOutlet="contentTemplate; context: { $implicit: items, options: { rows: _items, columns: loadedColumns } }"></ng-container>
-            </ng-container>
-        </ng-template>
+            } @if (_showSpacer) {
+            <div class="p-scroller-spacer" [ngStyle]="spacerStyle" [attr.data-pc-section]="'spacer'"></div>
+            } @if (!loaderDisabled && _showLoader && d_loading) {
+            <div class="p-scroller-loader" [ngClass]="{ 'p-component-overlay': !loaderTemplate }" [attr.data-pc-section]="'loader'">
+                @if (loaderTemplate) { @for (item of loaderArr; track item; let index = $index) {
+                <ng-container *ngTemplateOutlet="loaderTemplate; context: { options: getLoaderOptions(index, both && { numCols: _numItemsInViewport.cols }) }"></ng-container>
+                } } @else { @if (loaderIconTemplate) {
+                <ng-container *ngTemplateOutlet="loaderIconTemplate; context: { options: { styleClass: 'p-scroller-loading-icon' } }"></ng-container>
+                } @else {
+                <SpinnerIcon [styleClass]="'p-scroller-loading-icon pi-spin'" [attr.data-pc-section]="'loadingIcon'" />
+                } }
+            </div>
+            }
+        </div>
+        } @else {
+        <ng-content></ng-content>
+        @if (contentTemplate) {
+        <ng-container *ngTemplateOutlet="contentTemplate; context: { $implicit: items, options: { rows: _items, columns: loadedColumns } }"></ng-container>
+        } }
     `,
     changeDetection: ChangeDetectionStrategy.Default,
     encapsulation: ViewEncapsulation.None,

@@ -13,10 +13,12 @@ import { Code } from '@domain/code';
         <div class="card flex justify-content-center">
             <p-dropdown [options]="countries" [(ngModel)]="selectedCountry" optionLabel="name" [showClear]="true" placeholder="Select a country">
                 <ng-template pTemplate="selectedItem" let-selectedOption>
-                    <div class="flex align-items-center gap-2" *ngIf="selectedOption">
+                    @if (selectedOption) {
+                    <div class="flex align-items-center gap-2">
                         <img src="https://primefaces.org/cdn/primeng/images/demo/flag/flag_placeholder.png" [class]="'flag flag-' + selectedOption.code.toLowerCase()" style="width: 18px" />
                         <div>{{ selectedOption.name }}</div>
                     </div>
+                    }
                 </ng-template>
                 <ng-template let-country pTemplate="item">
                     <div class="flex align-items-center gap-2">
