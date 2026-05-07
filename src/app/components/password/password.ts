@@ -111,7 +111,7 @@ export class PasswordDirective implements OnDestroy, DoCheck {
 
     documentResizeListener: VoidListener;
 
-    constructor(@Inject(DOCUMENT) private document: Document, @Inject(PLATFORM_ID) private platformId: any, private renderer: Renderer2, public el: ElementRef, public zone: NgZone) {}
+    constructor(public config: PrimeNGConfig, @Inject(DOCUMENT) private document: Document, @Inject(PLATFORM_ID) private platformId: any, private renderer: Renderer2, public el: ElementRef, public zone: NgZone) {}
 
     ngDoCheck() {
         this.updateFilledState();

@@ -11,7 +11,7 @@ import { Subscription } from 'rxjs';
 @Component({
     selector: 'p-terminal',
     template: `
-        <div [ngClass]="'p-terminal p-component'" [ngStyle]="style" [class]="styleClass" (click)="focus(in)">
+        <div [ngClass]="'p-terminal p-component'" [ngStyle]="style" [class]="styleClass" (click)="focus(inEl)">
             @if (welcomeMessage) {
             <div>{{ welcomeMessage }}</div>
             }
@@ -26,7 +26,7 @@ import { Subscription } from 'rxjs';
             </div>
             <div class="p-terminal-prompt-container">
                 <span class="p-terminal-content-prompt">{{ prompt }}</span>
-                <input #in type="text" [(ngModel)]="command" class="p-terminal-input" autocomplete="off" (keydown)="handleCommand($event)" autofocus />
+                <input #inEl type="text" [(ngModel)]="command" class="p-terminal-input" autocomplete="off" (keydown)="handleCommand($event)" autofocus />
             </div>
         </div>
     `,

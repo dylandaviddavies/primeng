@@ -3314,7 +3314,7 @@ export class FrozenColumn implements AfterViewInit {
         });
     }
 
-    @HostListener('window:resize', ['$event'])
+    @HostListener('window:resize')
     recalculateColumns() {
         const siblings = DomHandler.siblings(this.el.nativeElement);
         const index = DomHandler.index(this.el.nativeElement);

@@ -156,9 +156,7 @@ import { FileBeforeUploadEvent, FileProgressEvent, FileRemoveEvent, FileSelectEv
                     </div>
                     } @if (fileTemplate) {
                     <div>
-                        @for ( of files; track ) {
-                        <ng-template [ngForOf]="files" [ngForTemplate]="fileTemplate"></ng-template>
-                        }
+                        <ng-template ngFor [ngForOf]="files" [ngForTemplate]="fileTemplate"></ng-template>
                     </div>
                     }
                 </div>

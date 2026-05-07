@@ -8,7 +8,7 @@ import { MeterItem } from './metergroup.interface';
     selector: 'p-meterGroupLabel',
     template: `
         <ol [ngClass]="labelClass">
-            @for (labelItem of value; track parentInstance.trackByFn(index, labelItem); let index = $index) {
+            @for (labelItem of value; track parentInstance.trackByFn(index); let index = $index) {
             <li class="p-metergroup-label">
                 @if (!iconTemplate) { @if (labelItem.icon) {
                 <i [class]="labelItem.icon" [ngClass]="{ 'p-metergroup-label-icon': true }" [ngStyle]="{ color: labelItem.color }"></i>
@@ -63,7 +63,7 @@ export class MeterGroupLabel {
             }
             <ng-container *ngTemplateOutlet="startTemplate; context: { $implicit: value, totalPercent: totalPercent(), percentages: percentages() }"></ng-container>
             <div class="p-metergroup-meters">
-                @for (meterItem of value; track trackByFn(index, meterItem); let index = $index) {
+                @for (meterItem of value; track trackByFn(index); let index = $index) {
                 <ng-container *ngTemplateOutlet="meterTemplate; context: { $implicit: meterItem, index: index, orientation: this.orientation, class: 'p-metergroup-meter', size: percentValue(meterItem.value), totalPercent: totalPercent() }">
                 </ng-container>
                 @if (!meterTemplate) {

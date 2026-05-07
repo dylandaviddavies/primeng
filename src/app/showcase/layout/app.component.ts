@@ -23,10 +23,7 @@ import { AppTopBarComponent } from './topbar/app.topbar.component';
     selector: 'app-root',
     templateUrl: './app.component.html',
     imports: [RouterOutlet, FormsModule, ReactiveFormsModule,
-        // TODO: `HttpClientModule` should not be imported into a component directly.
-        // Please refactor the code to add `provideHttpClient()` call to the provider list in the
-        // application bootstrap logic and remove the `HttpClientModule` import from this component.
-        HttpClientModule, AppMainComponent, LandingComponent, AppNewsComponent, AppConfigComponent, AppTopBarComponent, AppMenuComponent],
+         AppMainComponent, LandingComponent, AppNewsComponent, AppConfigComponent, AppTopBarComponent, AppMenuComponent],
     providers: [
         CarService,
         CountryService,
@@ -71,7 +68,7 @@ export class AppComponent implements OnInit {
           window.dataLayer = window.dataLayer || [];
           function gtag() { dataLayer.push(arguments); }
           gtag('js', new Date());
-    
+
           gtag('config', 'G-W297P962XH');
         `;
         this.renderer.appendChild(this.document.body, scriptBody);

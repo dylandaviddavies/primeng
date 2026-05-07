@@ -19,7 +19,7 @@ export const INPUT_OTP_VALUE_ACCESSOR: any = {
 @Component({
     selector: 'p-inputOtp',
     template: `
-        @for (i of getRange(length); track trackByFn($index, i)) { @if (!inputTemplate) {
+        @for (i of getRange(length); track trackByFn($index)) { @if (!inputTemplate) {
         <input
             type="text"
             pInputText
