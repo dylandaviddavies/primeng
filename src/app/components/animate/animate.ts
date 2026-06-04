@@ -9,7 +9,8 @@ import { DomHandler } from 'primeng/dom';
     selector: '[pAnimate]',
     host: {
         '[class.p-animate]': 'true'
-    }
+    },
+    standalone: false
 })
 export class Animate implements OnInit, AfterViewInit {
     /**
@@ -27,7 +28,11 @@ export class Animate implements OnInit, AfterViewInit {
 
     timeout: any;
 
-    constructor(private host: ElementRef, public el: ElementRef, public renderer: Renderer2) {}
+    constructor(
+        private host: ElementRef,
+        public el: ElementRef,
+        public renderer: Renderer2
+    ) {}
 
     ngOnInit() {
         console.log('pAnimate directive is deprecated in 16.7.0 and will be removed in the future. Use pAnimateOnScroll directive instead');
@@ -86,6 +91,6 @@ export class Animate implements OnInit, AfterViewInit {
 @NgModule({
     imports: [CommonModule],
     exports: [Animate],
-    declarations: [Animate]
+    declarations: [Animate],
 })
 export class AnimateModule {}
